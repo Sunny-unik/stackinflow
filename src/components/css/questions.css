@@ -11,22 +11,20 @@
 }
 .headq h2{
   margin-top: 0%;
+  margin-bottom: 0%;
 }
-/* .searchq{ */
-  /* margin-right: 10px; */
-/* } */
 .searchb{
-  display: inline-block;
   margin-top: 0%;
   padding: 0.5%;
+  border-radius: 10px;
 }
 .questions {
   /* padding: 16px; */
   border: 1px solid grey;
+  display: block;
   border-radius: 10px;
   margin: 1% 0% 0% 0%;
   padding: 0%;
-
   background-color:whitesmoke;
 }
 .allq{
@@ -34,23 +32,24 @@
 }
 
 /* Full-width input fields */
-input[type=text] {
+#searchq, #answer {
   width: 60% ;  
   padding: 10px;
   margin: 5px 0 5px 0;
   display: inline-block;
-  /* border: 1px solid grey ; */
+  border: 1px solid grey ;
   border-radius: 20px;
   /* background: white; */
 }
 
-input[type=text]:focus, input[type=password]:focus {
+#searchq:focus, #answer:focus {
   background-color: #ddd;
   outline: none;
+  border-radius: 0px;
 }
 
 /* Overwrite default styles of hr */
-hr {
+.loginhr {
   border: 1px solid #f1f1f1;
   margin-bottom: 25px;
 }
