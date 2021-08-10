@@ -1,61 +1,111 @@
-import React, { useState} from 'react'
+import React, { useState } from 'react'
 import './css/signup.css'
+import axios from 'axios'
 
-export default function Signup() {
+export default function Signup(props) {
+
+    // function hide(){
+    //     var Signup = document.getElementsByClassName('createdetail');
+    //     Signup.style.display = "none";
+    //     var Signup = document.getElementsByClassName('createotp');
+    //     Signup.style.display = "block";
+    // }
     
     const [email, setemail] = useState("")
+    const [name, setname] = useState("")
     const [dname, setdname] = useState("")
     const [password, setpassword] = useState("")
 
-    function setvalue(e){
-        e.target.name==="cemail" && setemail(e.target.value)
-        e.target.name==="cdname" && setdname(e.target.value)
-        e.target.name==="cpassword" && setpassword(e.target.value)
+    function setvalue(e) {
+        e.target.name === "cemail" && setemail(e.target.value)
+        e.target.name === "cname" && setname(e.target.value)
+        e.target.name === "cdname" && setdname(e.target.value)
+        e.target.name === "cpassword" && setpassword(e.target.value)
     }
 
     function create(){
-        // var s = {
-        //     email,dname,password
-        // }
-        // axios.post('http://localhost:3000/update-student',s).then((res)=>{
-        //     console.log(res.data);
-        //     })
-        //     alert("Student Updated Successfully");
-        //     }
-    }
-    return (
-        <div>
-                <div class="container d-flex py-2 justify-content-center">
-                {/* displayflex and contentcenter not working now and signup.css also need some time */}
-                    <div class="row ">
-            <form >
-                        <div className="col-sm-10 col-md-6 " >
-                            <h1>Create an account</h1>
-                            <p>Please fill this form and get verified for register.</p>
-                            <hr className="signuphr" />
-                        <div className="form-group">
-                            <label for="createemail"><b>Email</b></label>
-                            <input type="email" value={email} onChange={(e)=>{setvalue(e);}} placeholder="Enter Email" name="cemail" id="createemail" required />
-                        </div>
-                        <div className="form-group">
-                            <label for="createdname"><b>Display Name</b></label>
-                            <input type="text" value={dname} onChange={(e)=>{setvalue(e);}}  placeholder="Enter Display Name" name="cdname" id="createdname" required />
-                        </div>
-                        <div className="form-group">
-                            <label for="createpassword"><b>Password</b></label>
-                            <input type="password" value={password} onChange={(e)=>{setvalue(e);}}  placeholder="Enter Password" name="cpassword" id="createpassword" required />
-                        </div>
-                            <button type="submit" class="btn btn-primary registerbtn" onClick={create()}>Get Verfiy</button>
+        var isvalid=true;
 
-                            <hr className="signuphr" />
-                            {/* <label for="otp" className="inputotp"><b>Otp sent on gievn email-address</b></label>
-                            <input type="text" placeholder="Enter Verfication Code" name="otp" id="otp" required />
-                            <button type="submit" class="registerbtn" onClick={otpcheck}>Sign Up</button> */}
-                            
-                        </div>
-            </form>
-                    </div>
-                </div>
+        // validate for Name
+        // var name = document.getElementsByName('Uname').value;       
+        if(name=="" || name==null)
+        {
+            isvalid=false;
+            alert("Please enter your name");
+        }
+    
+        //validate for email
+        // var email = document.getElementsByName('Uemail').value;
+        var emailregex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(!emailregex.test(email)){
+          alert("Email is not valid");
+          isvalid=false;
+        }
+        
+        //validate for username
+        // var username = document.getElementsByName('Uusername').value;       
+        if(dname=="" || dname==null)
+        {
+            isvalid=false;
+            alert("Please enter username");
+        }
+        var userregex=/^[a-z0-9_\.]+$/;
+        if(!userregex.test(dname)){
+          alert("Usernames can only have: Lowercase Letters (a-z), Numbers (0-9), Dots (.), Underscores (_)");
+          isvalid = false;
+        }
+
+        //validate for password
+        // var password = document.getElementsByName('Upassword').value;
+        var passregex = /(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/ ;
+        if(!passregex.test(password)){
+            alert("Password should have 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character and be at least 8 characters long");
+            isvalid=false;
+        }
+
+        if(isvalid==true){
+        var s = {email,name,dname,password }
+        console.log(s);
+        }
+          axios.post('http://localhost:3000/create-account',s).then((res)=>{
+                alert(res.data.data);
+                props.history.push("/");
+            }) 
+        }
+
+    function otpcheck() {
+        console.log("checking otp")
+        // create()
+    }
+
+    return (
+        <div className="container signupcon column">
+            <div className="col-md-5 col-lg-4 createdetail" >
+                <form className="d-inline-block ">
+                    <h1>Create an account</h1>
+                    <p>Please fill this form and get verified for register.</p>
+                    <hr className="signuphr" />
+                    <label for="createemail"><b>Email</b></label>
+                    <input type="email" value={email} onChange={(e) => { setvalue(e); }} minlength="5" placeholder="example@eg.co" name="cemail" id="createemail" required />
+                    <label for="createname"><b>Your Name</b></label>
+                    <input type="text" value={name} onChange={(e) => { setvalue(e); }} minlength="2" maxlength="25"  placeholder="name lastname" name="cname" id="createname" required />
+                    <label for="createdname"><b>Display Name</b></label>
+                    <input type="text" value={dname} onChange={(e) => { setvalue(e); }} minlength="2" maxLength="12" placeholder="display_name" name="cdname" id="createdname" required />
+                    <label for="createpassword"><b>Password</b></label>
+                    <input type="password" value={password} onChange={(e) => { setvalue(e); }} minlength="8" maxLength="16" placeholder="password should be strong" name="cpassword" id="createpassword" required />
+                    <hr className="signuphr" />
+                    <button type="button" class="registerbtn" onClick={()=>{create()}}> Sign Up </button>
+                </form>
+            </div>
+            <div class="createotp  col-md-5 col-lg-4">
+                <form className="d-inline-block ">
+                    <hr className="signuphr" />
+                    <label for="otp" className="inputotp"><b>Otp sent on gievn email-address</b></label>
+                    <input type="text" placeholder="Enter Verfication Code" name="otp" id="otp" required />
+                    <hr className="signuphr" />
+                    <button type="button" class="registerbtn" onClick={otpcheck}> Submit </button>
+                </form>
+            </div>
         </div>
     )
 }
