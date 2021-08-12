@@ -1,0 +1,1 @@
+var stackmail = process.env.APP_PASSWORD

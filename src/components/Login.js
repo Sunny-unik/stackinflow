@@ -1,6 +1,6 @@
 import "./css/login.css"
-// import axios from 'axios'
-import React, { useState } from 'react'
+import axios from 'axios'
+import React, { useState,useEffect } from 'react'
 
 export default function Login(props) {
 
@@ -10,6 +10,8 @@ export default function Login(props) {
     const [newpassword, setnewpassword] = useState("")
     const [confirmpassword, setconfirmpassword] = useState("")
 
+    const [user,setUser] = useState([])
+
     function setvalue(e) {
         e.target.name === "email" && setemail(e.target.value)
         e.target.name === "otp" && setotp(e.target.value)
@@ -18,49 +20,83 @@ export default function Login(props) {
         e.target.name === "confirmpassword" && setconfirmpassword(e.target.value)
     }
 
-    function checkauth(props) {
+    useEffect(()=>{
+     axios.get('http://localhost:3001/list-user').then((res)=>{
+         console.log(res.data.data)
+         setUser(res.data.data)
+     })   
+    },[])
 
-        console.log("your fun working ")
-        // props.history.push('/')
+    function checkauth() {
+        var check=user.some((s)=>{
+            return s.email===email && s.password ===password
+        })
+        console.log(check); 
+        if(check===true){
+            alert("you have successfully login")
+            console.log(user)
+            props.history.push("/");            
+        }
+        else{
+            alert("!incorrect email or password, please check email and password")
+        }
     }
+    
     function forgotpass(){
         console.log("forgot password attempted")
-        // var forgotpass = document.getElementsByClassName('logindetial');
-        // forgotpass.style.display = "none";
-        // var forgotpass2 = document.getElementsByClassName('loginotp');
-        // forgotpass2.style.display = "block";
+        var forgotpass = document.getElementById('logindetial');
+        forgotpass.style.display = "none";
+        var forgotpass2 = document.getElementById('loginotp');
+        forgotpass2.style.display = "block";
     }
+    
     function otppassword() {
-
-        console.log("your otp time")
-        // var logotp = document.getElementsByClassName('loginotp');
+        var check=user.some((s)=>{
+            return s.email===email && s.otp===otp
+        })
+        console.log(check); 
+        if(check===true){
+            alert("you have successfully login")
+            console.log(user)
+            props.history.push("/");            
+        }
+        else{
+            alert("! incorrect otp")
+        }
+        // var logotp = document.getElementById('loginotp');
         // logotp.style.display = "none";
-        // var logotp2 = document.getElementsByClassName('loginpass');
+        // var logotp2 = document.getElementById('loginpass');
         // logotp2.style.display = "block";
     }
-    function otplogin(props) {
 
-        console.log("your password working ")
-        // props.history.push('/')
-    }
+    // function otplogin(props) {
+    //     console.log("your password working ")
+    //     if(newpassword==confirmpassword){
+    //         props.history.push('/')
+    //     }
+    //     else{
+    //         alert("password should be same in both textbox")
+    //     }
+    // }
+    
     return (
         <div className="container logincon column">
-            <div className="col-md-5 col-lg-4 logindetail" >
+            <div className="col-md-5 col-lg-4 " id="logindetail" >
                 <form className="d-inline-block ">
                     <h1>Log In</h1>
                     <p>Please fill log in details for login your account.</p>
                     <hr className="signuphr" />
                     <label for="email"><b>Registered Email</b></label>
-                    <input type="email" value={email} onChange={(e) => { setvalue(e); }} minlength="5" placeholder="example@eg.com" name="email" id="email" required />
+                    <input type="email" value={email} onChange={(e) => { setvalue(e); }} placeholder="example@eg.com" name="email" id="email" required />
                     <label for="password"><b>Your   Password</b></label>
-                    <input type="password" value={password} onChange={(e) => { setvalue(e); }} minlength="8" maxLength="16" placeholder="password" name="password" id="password" required />
+                    <input type="password" value={password} onChange={(e) => { setvalue(e); }} placeholder="password" name="password" id="password" required />
                     <hr className="signuphr" />
                     <button type="button" class="loginbtn" onClick={() => { checkauth() }}> Log In </button>
                     <hr className="signuphr" />
-                    <p className="forgotpasslink"><span className="forgotpasslink" onClick={forgotpass()}>Forgot Password</span>?</p>
+                    <p className="forgotpasslink"><span className="forgotpasslink" onClick={()=>{forgotpass()}}>Forgot Password</span>?</p>
                 </form>
             </div>
-            <div class="loginotp  col-md-5 col-lg-4">
+            <div class="col-md-5 col-lg-4" id="loginotp">
                 <form className="d-inline-block ">
                     <h1>Forgot Password</h1>
                     <p>Please fill registered email for recover your account.</p>
@@ -73,7 +109,7 @@ export default function Login(props) {
                     <button type="button" class="loginbtn" onClick={otppassword()}> Submit </button>
                 </form>
             </div>
-            <div class="loginpass  col-md-5 col-lg-4">
+            {/* <div class="col-md-5 col-lg-4" id="loginpass">
                 <form className="d-inline-block ">
                     <h1>Recreate Password</h1>
                     <p>Please fill new password for login your account.</p>
@@ -85,7 +121,7 @@ export default function Login(props) {
                     <hr className="signuphr" />
                     <button type="button" class="loginbtn" onClick={otplogin()}> Submit </button>
                 </form>
-            </div>
+            </div> */}
         </div>
     )
 }

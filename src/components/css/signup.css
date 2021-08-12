@@ -11,12 +11,12 @@
   justify-content: center !important;
 }
 
-.createdetail{
+#createdetail{
   box-shadow: 2% !important;
   /* display: none; */
 }
 
-.createotp{
+#createotp{
   margin-top: 2%;
   display: none;
 }

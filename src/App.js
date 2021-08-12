@@ -8,8 +8,8 @@ import Aboutus from './components/Aboutus';
 import Signup from './components/Signup'
 
 function App() {
-  return (
 
+  return (
     <Router>
       <nav class="navbar navbar-inverse mainnavbar">
         <div class="container ">
@@ -23,11 +23,11 @@ function App() {
           </div>
           <div className="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
-              <li><NavLink activeClassName="active" to="/About"><span class="glyphicon glyphicon-info-sign"></span> About Us</NavLink></li>
-              <li><NavLink activeClassName="active" to="/Login"><span class="glyphicon glyphicon-log-in"></span> Log In</NavLink></li>
-              <li><NavLink activeClassName="active" to="/Signup"><span class="glyphicon glyphicon-registration-mark"></span> Sign Up</NavLink></li>
-              <li><NavLink activeClassName="active" to="/Profile"><span class="glyphicon glyphicon-user"></span> Profile</NavLink></li>
-              <li><NavLink activeClassName="active" to="/Login"><span class="glyphicon glyphicon-log-out"></span> Log Out</NavLink></li>
+              <li><NavLink activeClassName="active" to="/About"><span class="glyphicon glyphicon-info-sign"></span> About Us </NavLink></li>
+              <li><NavLink activeClassName="active" to="/Login"><span class="glyphicon glyphicon-log-in"></span> Log In </NavLink></li>
+              <li><NavLink activeClassName="active" to="/Signup"><span class="glyphicon glyphicon-registration-mark"></span> Sign Up </NavLink></li>
+            <li><NavLink activeClassName="active" to="/Profile"><span class="glyphicon glyphicon-user"></span> Profile </NavLink></li>
+              <li><NavLink activeClassName="active" to="/Login"><span class="glyphicon glyphicon-log-out"></span> Log Out </NavLink></li>
             </ul>
           </div>
         </div>

@@ -5,6 +5,11 @@
 /* .container {
   padding: 16px;
 } */
+
+.forgotpasslink{
+  cursor: pointer;
+}
+
 .logincon{
   margin: 0px !important;
   margin-top: 2% !important;
@@ -15,16 +20,16 @@
   justify-content: center !important;
 }
 
-.logindetail{
+#logindetail{
   box-shadow: 2% !important;
   /* display: none; */
 }
 
-.loginotp{ 
+#loginotp{ 
   display: none;
 }
 
-.loginpass{
+#loginpass{
   display: none;
 }
 
