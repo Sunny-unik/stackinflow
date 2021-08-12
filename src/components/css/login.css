@@ -2,54 +2,89 @@
 *{
     box-sizing: border-box
 }
-.container {
+/* .container {
   padding: 16px;
+} */
+.logincon{
+  margin: 0px !important;
+  margin-top: 2% !important;
+  padding: 0px !important;
+  /* height: 100vh !important; */
+  width: 100vw !important;
+  display: inline-flex !important;
+  justify-content: center !important;
+}
+
+.logindetail{
+  box-shadow: 2% !important;
+  /* display: none; */
+}
+
+.loginotp{ 
+  display: none;
+}
+
+.loginpass{
+  display: none;
 }
 
 /* Full-width input fields */
-input[type=text], input[type=password] {
+#email,#password,#otpemail,#otplogin,#newpassword,#confirmpassword {
   width: 100%;
   padding: 15px;
-  margin: 5px 0 22px 0;
+  margin: 5px 0 5px 0;
   display: inline-block;
   border: none;
+  border-radius: 10px;
   background: #f1f1f1;
 }
 
-input[type=text]:focus, input[type=password]:focus {
+#email:focus, #password:focus, #otpemail:focus, #otplogin:focus, #newpassword:focus, #confirmpassword:focus {
   background-color: #ddd;
+  border-radius: 6px;
   outline: none;
 }
 
 /* Overwrite default styles of hr */
-hr {
-  border: 1px solid #f1f1f1;
-  margin-bottom: 25px;
+.loginphr {
+  border: 1px solid #1e90ff;
+  background-color : #1e90ff;
+  margin-bottom: 25px ;
+}
+.loginhr:hover {
+  border: 1px solid black;
+  background-color : black;
+  margin-bottom: 25px ;
 }
 
 /* Set a style for the submit/register button */
-.registerbtn {
-  background-color: #1e90ff;
+.loginbtn {
+  background-color: black;
   color: white;
   padding: 16px 20px;
-  margin: 8px 0;
+  margin: 5px 0 0px 0;
+  border-radius: 7px;
   border: none;
   cursor: pointer;
   width: 100%;
   opacity: 0.9;
 }
 
-.registerbtn:hover {
+.loginbtn:hover {
   opacity:1;
+  background-color: #1e90ff;
 }
 
 /* Add a blue text color to links */
 span {
-  color: dodgerblue;
+  color: #1e90ff;
 }
 
-/* Set a grey background color and center the text of the "sign in" section */
-.signin {
-  background-color: #f1f1f1;
+.forgotpasslink {
+  /* background-color: #f1f1f1; */
   text-align: center;
+  margin: 2%;
+  font-weight: 700;
+  font-size: medium;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }

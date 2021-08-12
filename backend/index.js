@@ -44,7 +44,7 @@ app.get('/delete-user',(req,res)=>{
 })
 
 app.post('/create-user', bodyparser.json(),(req,res)=>{
-    var usercollection = connection.db('stackinflow').collection('user')
+    var usercollection = connection.db('stackinflow').collection('user');
     usercollection.insert(req.body,(err,result)=>{
         if(!err){
             res.send({status:"ok",data:"user created successfully"})
