@@ -51,13 +51,27 @@ export default function Signup(props) {
         console.log(s);
         axios.post('http://localhost:3001/create-user', s).then((res) => {
             alert(res.data.data);
-            // props.history.push("/");
+            if(res.data.status=="ok")
+            {
+                hidereg();
+            }
+            
         })
     }
 
     function otpcheck() {
         console.log("checking otp")
-        create()
+        var s = { email, otp, status:"pending" }
+        console.log(s);
+        axios.post('http://localhost:3001/check-user-register-otp', s).then((res) => {
+            alert(res.data.data);
+            if(res.data.status=="ok")
+            {
+                alert("registration Successfull");
+            }
+            props.history.push("/");
+        });
+       
     }
 
     return (
@@ -76,7 +90,7 @@ export default function Signup(props) {
                     <label for="createpassword"><b>Password</b></label>
                     <input type="password" value={password} onChange={(e) => { setvalue(e); }} minlength="8" maxLength="16" placeholder="password should be strong" name="cpassword" id="createpassword" required />
                     <hr className="signuphr" />
-                    <button type="button" class="registerbtn" onClick={() => {hidereg()}}> Sign Up </button>
+                    <button type="button" class="registerbtn" onClick={() => {create()}}> Sign Up </button>
                 </form>
             </div>
             <div class=" col-md-5 col-lg-4" id="createotp">
@@ -87,7 +101,7 @@ export default function Signup(props) {
                     <label for="otp" className="inputotp"><b>Otp sent on gievn email-address</b></label>
                     <input type="text" value={otp} onChange={(e) => { setvalue(e); }} placeholder="Enter Verfication Code" name="otp" id="otp" required />
                     <hr className="signuphr" />
-                    <button type="button" class="registerbtn" onClick={otpcheck()}> Submit </button>
+                    <button type="button" class="registerbtn" onClick={otpcheck}> Submit </button>
                 </form>
             </div>
         </div>
