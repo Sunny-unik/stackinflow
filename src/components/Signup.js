@@ -20,24 +20,19 @@ export default function Signup(props) {
 
     function hidereg() {
         var isvalid = true;
-
         // eslint-disable-next-line
         var emailregex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (!emailregex.test(email)) {
             alert("Email is not valid");
             isvalid = false;
         }
-
         // eslint-disable-next-line
         var passregex = /(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/;
         if (!passregex.test(password)) {
             alert("Password should have 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character and be at least 8 characters long");
-            // eslint-disable-next-line
             isvalid = false;
         }
-
-        // eslint-disable-next-line
-        if (isvalid == true) {
+        if (isvalid === true) {
             // alert("valid")
             var Signup = document.getElementById('createdetail');
             Signup.style.display = "none";
@@ -51,11 +46,10 @@ export default function Signup(props) {
         console.log(s);
         axios.post('http://localhost:3001/create-user', s).then((res) => {
             alert(res.data.data);
-            if(res.data.status=="ok")
+            if(res.data.status==="ok")
             {
                 hidereg();
             }
-            
         })
     }
 
@@ -65,13 +59,12 @@ export default function Signup(props) {
         console.log(s);
         axios.post('http://localhost:3001/check-user-register-otp', s).then((res) => {
             alert(res.data.data);
-            if(res.data.status=="ok")
+            if(res.data.status==="ok")
             {
                 alert("registration Successfull");
             }
             props.history.push("/");
-        });
-       
+        });       
     }
 
     return (

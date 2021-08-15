@@ -8,8 +8,6 @@ var nodemailer = require('nodemailer');
 var app = express();
 app.use(cors());
 
-
-
 var client = new Mongoclient(process.env.MONGO_URI,{useNewUrlParser:true, useUnifiedTopology:true});
 var connection;
 client.connect((err,db)=>{
@@ -53,9 +51,8 @@ app.post('/create-user', bodyparser.json(),(req,res)=>{
     usercollection.insert({...(req.body), otp:otp,status:"pending" },(err,result)=>{
         if(!err){
             console.log(otp)
-            res.send({status:"ok",data:"user created successfully"})
-            
-            sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to tackinflow", `we hope you find our service cool   <h3>stackinflow</h3><br><h6>Your One Time Password is ${otp} </h6>`)
+            res.send({status:"ok",data:"user need to verify email"})
+            sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `Your One Time Password is - <h3>${otp}</h3><br><h6>We hope you find our service cool.</h6>`)
         }
         else{
             res.send({status:"failed",data:err})
@@ -63,11 +60,8 @@ app.post('/create-user', bodyparser.json(),(req,res)=>{
     })
 })
 
-
-
 app.post('/check-user-register-otp', bodyparser.json(),(req,res)=>{
-    var usercollection = connection.db('stackinflow').collection('user');
-    
+    var usercollection = connection.db('stackinflow').collection('user');    
     usercollection.find(req.body).toArray((err,result)=>{
         if(!err && result.length>0){
             console.log(otp)
@@ -75,18 +69,15 @@ app.post('/check-user-register-otp', bodyparser.json(),(req,res)=>{
                 if(!err)
                 {
                     res.send({status:"ok",data:"user created successfully"})
-                    sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to tackinflow", `we hope you find our service cool   <h3>stackinflow</h3><br><h6> Registration SuccessFull </h6>`)
+                    sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `We hope you find our service cool <h3>stackinflow</h3><br><h6> Registration SuccessFull </h6>`)
                 }
             })
-
-
         }
         else{
             res.send({status:"failed",data:err})
         }
     })
 })
-
 
 // app.post('/update-user',(req,res)=>{  })
 

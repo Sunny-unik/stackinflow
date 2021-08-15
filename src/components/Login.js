@@ -44,7 +44,7 @@ export default function Login(props) {
     
     function forgotpass(){
         console.log("forgot password attempted")
-        var forgotpass = document.getElementById('logindetial');
+        var forgotpass = document.getElementById('logindetail');
         forgotpass.style.display = "none";
         var forgotpass2 = document.getElementById('loginotp');
         forgotpass2.style.display = "block";
@@ -52,32 +52,32 @@ export default function Login(props) {
     
     function otppassword() {
         var check=user.some((s)=>{
+            alert(s)
             return s.email===email && s.otp===otp
         })
         console.log(check); 
         if(check===true){
             alert("you have successfully login")
             console.log(user)
-            props.history.push("/");            
+            var logotp = document.getElementById('loginotp');
+            logotp.style.display = "none";
+            var logotp2 = document.getElementById('loginpass');
+            logotp2.style.display = "block";
         }
         else{
             alert("! incorrect otp")
-        }
-        // var logotp = document.getElementById('loginotp');
-        // logotp.style.display = "none";
-        // var logotp2 = document.getElementById('loginpass');
-        // logotp2.style.display = "block";
+        }            
     }
 
-    // function otplogin(props) {
-    //     console.log("your password working ")
-    //     if(newpassword==confirmpassword){
-    //         props.history.push('/')
-    //     }
-    //     else{
-    //         alert("password should be same in both textbox")
-    //     }
-    // }
+    function otplogin(props) {
+        console.log("your password working ")
+        if(newpassword===confirmpassword){
+            props.history.push('/')
+        }
+        else{
+            alert("password should be same in both textbox")
+        }
+    }
     
     return (
         <div className="container logincon column">
@@ -93,7 +93,7 @@ export default function Login(props) {
                     <hr className="signuphr" />
                     <button type="button" class="loginbtn" onClick={() => { checkauth() }}> Log In </button>
                     <hr className="signuphr" />
-                    <p className="forgotpasslink"><span className="forgotpasslink" onClick={()=>{forgotpass()}}>Forgot Password</span>?</p>
+                    <p className="forgotpasslink"><span className="forgotpasslink" onClick={forgotpass}>Forgot Password</span>?</p>
                 </form>
             </div>
             <div class="col-md-5 col-lg-4" id="loginotp">
@@ -106,10 +106,10 @@ export default function Login(props) {
                     <label for="otplogin" className="otpemail"><b>Enter One Time Password</b></label>
                     <input type="text" value={otp} onChange={(e) => { setvalue(e); }} placeholder="6digit otp" name="otplogin" id="otplogin" required />
                     <hr className="signuphr" />
-                    <button type="button" class="loginbtn" onClick={otppassword()}> Submit </button>
+                    <button type="button" class="loginbtn" onClick={otppassword}> Submit </button>
                 </form>
             </div>
-            {/* <div class="col-md-5 col-lg-4" id="loginpass">
+            <div class="col-md-5 col-lg-4" id="loginpass">
                 <form className="d-inline-block ">
                     <h1>Recreate Password</h1>
                     <p>Please fill new password for login your account.</p>
@@ -119,9 +119,9 @@ export default function Login(props) {
                     <label for="confirmpassword" className="confirmpassword"><b>Confirm Entered Password</b></label>
                     <input type="password" value={confirmpassword} onChange={(e) => { setvalue(e); }} placeholder="confirm password" name="confirmpassword" id="confirmpassword" required />
                     <hr className="signuphr" />
-                    <button type="button" class="loginbtn" onClick={otplogin()}> Submit </button>
+                    <button type="button" class="loginbtn" onClick={otplogin}> Submit </button>
                 </form>
-            </div> */}
+            </div>
         </div>
     )
 }
