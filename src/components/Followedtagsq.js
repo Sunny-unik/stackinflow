@@ -1,7 +1,7 @@
 import React from 'react'
 import './css/followedtags.css'
 
-export default function Followedtags() {
+export default function Followedtagsq() {
     return (
         <div class="row">
             {/* Only visible after login  */}

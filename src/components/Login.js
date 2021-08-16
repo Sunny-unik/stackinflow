@@ -22,7 +22,6 @@ export default function Login(props) {
 
     useEffect(()=>{
      axios.get('http://localhost:3001/list-user').then((res)=>{
-         console.log(res.data.data)
          setUser(res.data.data)
      })   
     },[])
@@ -34,11 +33,12 @@ export default function Login(props) {
         console.log(check); 
         if(check===true){
             alert("you have successfully login")
-            console.log(user)
-            props.history.push("/");            
+            console.log(user.filter((x)=>{return x.email===email}))
+            setUser(user.filter((x)=>{return x.email===email}))
+            props.history.push("/");
         }
         else{
-            alert("!incorrect email or password, please check email and password")
+            alert("! incorrect email or password")
         }
     }
     

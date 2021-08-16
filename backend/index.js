@@ -47,7 +47,7 @@ app.get('/delete-user',(req,res)=>{
 app.post('/create-user', bodyparser.json(),(req,res)=>{
     var usercollection = connection.db('stackinflow').collection('user');
     var random = Math.floor((Math.random()*1000000)+1);
-    var otp = random;
+    var otp = random+"";
     usercollection.insert({...(req.body), otp:otp,status:"pending" },(err,result)=>{
         if(!err){
             console.log(otp)
@@ -61,15 +61,14 @@ app.post('/create-user', bodyparser.json(),(req,res)=>{
 })
 
 app.post('/check-user-register-otp', bodyparser.json(),(req,res)=>{
-    var usercollection = connection.db('stackinflow').collection('user');    
+    var usercollection = connection.db('stackinflow').collection('user');  
     usercollection.find(req.body).toArray((err,result)=>{
         if(!err && result.length>0){
-            console.log(otp)
-            usercollection.update(req.body,{$set:{status:"confirmed"}},(err,result)=>{
+            usercollection.update(req.body,{$set:{status:"verified"}},(err,result)=>{
                 if(!err)
                 {
                     res.send({status:"ok",data:"user created successfully"})
-                    sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `We hope you find our service cool <h3>stackinflow</h3><br><h6> Registration SuccessFull </h6>`)
+                    sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `<h2>stackinflow</h2><br><h4> Registration SuccessFull </h4><br>We hope you find our service cool.`)
                 }
             })
         }

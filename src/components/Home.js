@@ -4,10 +4,10 @@ import { Switch, Route, NavLink } from "react-router-dom"
 import Populartags from "./Populartags"
 import Popularusers from "./Popularusers"
 import Askaquestion from "./Askaquestion"
-import Followedtags from "./Followedtags"
+import Followedtagsq from "./Followedtagsq"
 import Allquestions from "./Allquestions"
 
-export default function Home() {
+export default function Home(props) {
     return (
         <React.Fragment>
             {/* <Router> */}
@@ -23,10 +23,11 @@ export default function Home() {
                             <p><NavLink activeClassName="active1" to="/popularusers">Popular Users</NavLink></p>
                             <p><NavLink activeClassName="active1" to="/askaquestion">Ask a Question</NavLink></p>
                         </div>
+                    <h5>{props.email}</h5>
                     </div>
                     <div className="col-sm-10">
                         <Switch>
-                            <Route path="/questions" component={Followedtags} />
+                            <Route path="/questions" component={Followedtagsq} />
                             <Route path="/populartags" component={Populartags} />
                             <Route path="/popularusers" component={Popularusers} />
                             <Route path="/askaquestion" component={Askaquestion} />

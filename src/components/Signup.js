@@ -38,6 +38,7 @@ export default function Signup(props) {
             Signup.style.display = "none";
             var Signup2 = document.getElementById('createotp');
             Signup2.style.display = "block";
+            create();
         }
     }
 
@@ -46,10 +47,6 @@ export default function Signup(props) {
         console.log(s);
         axios.post('http://localhost:3001/create-user', s).then((res) => {
             alert(res.data.data);
-            if(res.data.status==="ok")
-            {
-                hidereg();
-            }
         })
     }
 
@@ -61,9 +58,14 @@ export default function Signup(props) {
             alert(res.data.data);
             if(res.data.status==="ok")
             {
-                alert("registration Successfull");
+                s.status="verified";
+                alert("Registration Successfull");
+                props.history.push("/");
             }
-            props.history.push("/");
+            else{
+                alert("! incorrect otp ");
+                props.history.push("/Signup");
+            }
         });       
     }
 
@@ -83,7 +85,7 @@ export default function Signup(props) {
                     <label for="createpassword"><b>Password</b></label>
                     <input type="password" value={password} onChange={(e) => { setvalue(e); }} minlength="8" maxLength="16" placeholder="password should be strong" name="cpassword" id="createpassword" required />
                     <hr className="signuphr" />
-                    <button type="button" class="registerbtn" onClick={() => {create()}}> Sign Up </button>
+                    <button type="button" class="registerbtn" onClick={hidereg}> Sign Up </button>
                 </form>
             </div>
             <div class=" col-md-5 col-lg-4" id="createotp">
