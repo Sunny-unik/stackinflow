@@ -6,8 +6,16 @@ import Login from './components/Login';
 import Profile from './components/Profile';
 import Aboutus from './components/Aboutus';
 import Signup from './components/Signup'
+import {useDispatch, useSelector} from 'react-redux';
 
-function App() {
+function App(props) {
+
+  const user = useSelector(state => state.user);
+  const dispatch = useDispatch();
+  function logout(){
+    dispatch({type:"LOGOUT_USER"});
+    // props.history.push("/Login");
+  }
 
   return (
     <Router>
@@ -26,8 +34,8 @@ function App() {
               <li><NavLink activeClassName="active" to="/About"><span class="glyphicon glyphicon-info-sign"></span> About Us </NavLink></li>
               <li><NavLink activeClassName="active" to="/Login"><span class="glyphicon glyphicon-log-in"></span> Log In </NavLink></li>
               <li><NavLink activeClassName="active" to="/Signup"><span class="glyphicon glyphicon-registration-mark"></span> Sign Up </NavLink></li>
-            <li><NavLink activeClassName="active" to="/Profile"><span class="glyphicon glyphicon-user"></span> Profile </NavLink></li>
-              <li><NavLink activeClassName="active" to="/Login"><span class="glyphicon glyphicon-log-out"></span> Log Out </NavLink></li>
+              {user && <li><NavLink activeClassName="active" to="/Profile"><span class="glyphicon glyphicon-user"></span> Profile </NavLink></li>}
+              {user && <li><NavLink activeClassName="active" to="/Login" onClick={logout}><span class="glyphicon glyphicon-log-out"></span> Log Out </NavLink></li>}
             </ul>
           </div>
         </div>

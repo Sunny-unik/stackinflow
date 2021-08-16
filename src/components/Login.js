@@ -1,6 +1,9 @@
 import "./css/login.css"
 import axios from 'axios'
 import React, { useState,useEffect } from 'react'
+import { checkLogin } from '../action/useraction';
+import {useDispatch, useSelector} from 'react-redux';
+
 
 export default function Login(props) {
 
@@ -20,26 +23,46 @@ export default function Login(props) {
         e.target.name === "confirmpassword" && setconfirmpassword(e.target.value)
     }
 
+    // useEffect(()=>{
+    //  axios.get('http://localhost:3001/list-user').then((res)=>{
+    //      setUser(res.data.data)
+    //  })   
+    // },[])
+
+    const reduxUser = useSelector(state => state.user);
+
+    useEffect(() => {
+      if(reduxUser){
+        props.history.push("/");
+      }
+    }, [reduxUser]);
+  
     useEffect(()=>{
      axios.get('http://localhost:3001/list-user').then((res)=>{
+         console.log(res.data.data)
          setUser(res.data.data)
      })   
     },[])
-
+  
+    const dispatch = useDispatch();
+    
     function checkauth() {
-        var check=user.some((s)=>{
-            return s.email===email && s.password ===password
-        })
-        console.log(check); 
-        if(check===true){
-            alert("you have successfully login")
-            console.log(user.filter((x)=>{return x.email===email}))
-            setUser(user.filter((x)=>{return x.email===email}))
-            props.history.push("/");
-        }
-        else{
-            alert("! incorrect email or password")
-        }
+        // var check=user.some((s)=>{
+        //     return s.email===email && s.password ===password
+        // })
+        // console.log(check); 
+        // if(check===true){
+        //     alert("you have successfully login")
+        //     console.log(user.filter((x)=>{return x.email===email}))
+        //     setUser(user.filter((x)=>{return x.email===email}))
+        //     props.history.push("/");
+        // }
+        // else{
+        //     alert("! incorrect email or password")
+        // }
+        alert("hi"+reduxUser);
+        alert("hi2"+password);
+        dispatch(checkLogin({email,password}));
     }
     
     function forgotpass(){

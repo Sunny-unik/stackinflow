@@ -13,8 +13,8 @@ export default function Home(props) {
             {/* <Router> */}
 
             <div>
-                <div class="container text-md-center home">
-                    {/* text-md-center not working */}
+                <div class="container border border-dark home ">
+                    {/* text-md-center and border not working */}
                     <div class="column content">
                         <div class="col-sm-2 sidenav ">
                             <p><NavLink activeClassName="active1" exact to="/">Home</NavLink></p>

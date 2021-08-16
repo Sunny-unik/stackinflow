@@ -32,6 +32,18 @@ app.get('/list-user',(req,res)=>{
     })
 })
 
+app.post('/check-login', bodyparser.json() ,(req, res) => {
+    console.log(req.body);
+    var usercollection = connection.db('stackinflow').collection('user');
+    usercollection.find({email:req.body.email, password:req.body.password}).toArray((err, result) => {
+        if (!err && result.length>0) {
+            res.send({ status: 'ok', data: result[0] });
+        } else {
+            res.send({ status: 'error', data: err })
+        }
+    })
+})
+
 app.get('/delete-user',(req,res)=>{ 
     var usercollection = connection.db('stackinflow').collection('user')
     usercollection.remove({_id:ObjectId(req.query.id)},(err,result)=>{
