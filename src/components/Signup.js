@@ -18,6 +18,19 @@ export default function Signup(props) {
         e.target.name === "otp" && setotp(e.target.value)
     }
 
+    function unikemail() {
+        var em = { email }
+        axios.post('http://localhost:3001/valid-email', em).then((res) => {
+            var a = res.data.status
+            // console.log(a)
+            if (a === 'ok') {
+                hidereg()
+            } else {
+                alert(res.data.data);
+            }
+        })
+    }
+
     function hidereg() {
         var isvalid = true;
         // eslint-disable-next-line
@@ -52,21 +65,20 @@ export default function Signup(props) {
 
     function otpcheck() {
         console.log("checking otp")
-        var s = { email, otp, status:"pending" }
+        var s = { email, otp, status: "pending" }
         console.log(s);
         axios.post('http://localhost:3001/check-user-register-otp', s).then((res) => {
             alert(res.data.data);
-            if(res.data.status==="ok")
-            {
-                s.status="verified";
+            if (res.data.status === "ok") {
+                s.status = "verified";
                 alert("Registration Successfull");
-                props.history.push("/");
+                props.history.push("/Login");
             }
-            else{
+            else {
                 alert("! incorrect otp ");
                 props.history.push("/Signup");
             }
-        });       
+        });
     }
 
     return (
@@ -85,7 +97,7 @@ export default function Signup(props) {
                     <label for="createpassword"><b>Password</b></label>
                     <input type="password" value={password} onChange={(e) => { setvalue(e); }} minlength="8" maxLength="16" placeholder="password should be strong" name="cpassword" id="createpassword" required />
                     <hr className="signuphr" />
-                    <button type="button" class="registerbtn" onClick={hidereg}> Sign Up </button>
+                    <button type="button" class="registerbtn" onClick={unikemail}> Sign Up </button>
                 </form>
             </div>
             <div class=" col-md-5 col-lg-4" id="createotp">

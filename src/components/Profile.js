@@ -8,8 +8,8 @@ import {useDispatch, useSelector} from 'react-redux';
 
 export default function Profile(props) {
     
-//   const user = useSelector(state => state.user);
-//   console.log(user)
+  const user = useSelector(state => state.user);
+  console.log(user)
 //   const dispatch = useDispatch();
 
     return (

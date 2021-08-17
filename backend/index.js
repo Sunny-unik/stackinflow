@@ -44,6 +44,17 @@ app.post('/check-login', bodyparser.json() ,(req, res) => {
     })
 })
 
+app.post('/valid-email', bodyparser.json() ,(req, res) => {
+    var usercollection = connection.db('stackinflow').collection('user');
+    usercollection.find({email:req.body.email}).toArray((err, result) => {
+        if (!err && result.length>0) {
+            res.send({ status: 'error', data: "this email is already registered" });
+        } else {
+            res.send({ status: 'ok' })
+        }
+    })
+})
+
 app.get('/delete-user',(req,res)=>{ 
     var usercollection = connection.db('stackinflow').collection('user')
     usercollection.remove({_id:ObjectId(req.query.id)},(err,result)=>{
@@ -103,10 +114,8 @@ function sendMail(from, appPassword, to, subject,  htmlmsg)
             {
              //  user:"weforwomen01@gmail.com",
              //  pass:""
-             user:from,
-              pass:appPassword
-              
-    
+            user:from,
+            pass:appPassword
             }
         }
       );
