@@ -4,20 +4,22 @@ import Askedquestions from "./profile/Askedquestions"
 import Givenanswer from "./profile/Givenaswer"
 import Followedtags from "./profile/Followedtags"
 import './css/profile.css'
-
+import {useDispatch, useSelector} from 'react-redux';
 
 export default function Profile(props) {
     
+//   const user = useSelector(state => state.user);
+//   console.log(user)
+//   const dispatch = useDispatch();
+
     return (
         <React.Fragment>
             <div className="container ">
                 <div className="col-md-3 col-lg-4 col-sm-12">
-                <div>img</div>
-                {/* <input type="file" /> */}
+                    <div>img</div>
+                    {/* <input type="file" /> */}
                 </div>
                 <div className="col-md-9 col-lg-8 col-sm-12">
-                {/* <div>{user?user.name:"user name"}</div> */}
-                <div>dsbcjb</div>
                 
                 </div>
             </div>
@@ -32,8 +34,8 @@ export default function Profile(props) {
                     </div>
                     <div className="col-sm-8">
                         <Switch>
-                            <Route path="/Profile/answer" component={Givenanswer} />
                             <Route path="/Profilefollowedtags" component={Followedtags} />
+                            <Route path="/Profile/answer" component={Givenanswer} />
                             <Route path="/Profile/" exact component={Askedquestions} />
                         </Switch>
                     </div>

@@ -1,5 +1,5 @@
 import "./css/login.css"
-import axios from 'axios'
+// import axios from 'axios'
 import React, { useState,useEffect } from 'react'
 import { checkLogin } from '../action/useraction';
 import {useDispatch, useSelector} from 'react-redux';
@@ -13,7 +13,7 @@ export default function Login(props) {
     const [newpassword, setnewpassword] = useState("")
     const [confirmpassword, setconfirmpassword] = useState("")
 
-    const [user,setUser] = useState([])
+    // const [user,setUser] = useState([])
 
     function setvalue(e) {
         e.target.name === "email" && setemail(e.target.value)
@@ -35,33 +35,23 @@ export default function Login(props) {
       if(reduxUser){
         props.history.push("/");
       }
+      else{
+          props.history.push("/Login")
+      }
     }, [reduxUser]);
   
-    useEffect(()=>{
-     axios.get('http://localhost:3001/list-user').then((res)=>{
-         console.log(res.data.data)
-         setUser(res.data.data)
-     })   
-    },[])
+    // useEffect(()=>{
+    //  axios.get('http://localhost:3001/list-user').then((res)=>{
+    //      console.log(res.data.data)
+    //      setUser(res.data.data)
+    //  })   
+    // },[])
   
     const dispatch = useDispatch();
     
     function checkauth() {
-        // var check=user.some((s)=>{
-        //     return s.email===email && s.password ===password
-        // })
-        // console.log(check); 
-        // if(check===true){
-        //     alert("you have successfully login")
-        //     console.log(user.filter((x)=>{return x.email===email}))
-        //     setUser(user.filter((x)=>{return x.email===email}))
-        //     props.history.push("/");
-        // }
-        // else{
-        //     alert("! incorrect email or password")
-        // }
-        alert("hi"+reduxUser);
-        alert("hi2"+password);
+        alert("hi "+email);
+        alert("hi "+password);
         dispatch(checkLogin({email,password}));
     }
     
@@ -74,22 +64,23 @@ export default function Login(props) {
     }
     
     function otppassword() {
-        var check=user.some((s)=>{
-            alert(s)
-            return s.email===email && s.otp===otp
-        })
-        console.log(check); 
-        if(check===true){
-            alert("you have successfully login")
-            console.log(user)
-            var logotp = document.getElementById('loginotp');
-            logotp.style.display = "none";
-            var logotp2 = document.getElementById('loginpass');
-            logotp2.style.display = "block";
-        }
-        else{
-            alert("! incorrect otp")
-        }            
+        // var check=user.some((s)=>{
+        //     alert(s)
+        //     return s.email===email && s.otp===otp
+        // })
+        // console.log(check); 
+        // if(check===true){
+        //     alert("you have successfully login")
+        //     console.log(user)
+        //     var logotp = document.getElementById('loginotp');
+        //     logotp.style.display = "none";
+        //     var logotp2 = document.getElementById('loginpass');
+        //     logotp2.style.display = "block";
+        // }
+        // else{
+        //     alert("! incorrect otp")
+        // }            
+        alert("uncomment first")
     }
 
     function otplogin(props) {

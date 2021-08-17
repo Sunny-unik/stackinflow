@@ -32,8 +32,8 @@ function App(props) {
           <div className="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
               <li><NavLink activeClassName="active" to="/About"><span class="glyphicon glyphicon-info-sign"></span> About Us </NavLink></li>
-              <li><NavLink activeClassName="active" to="/Login"><span class="glyphicon glyphicon-log-in"></span> Log In </NavLink></li>
-              <li><NavLink activeClassName="active" to="/Signup"><span class="glyphicon glyphicon-registration-mark"></span> Sign Up </NavLink></li>
+              {!user &&<li><NavLink activeClassName="active" to="/Login"><span class="glyphicon glyphicon-log-in"></span> Log In </NavLink></li>}
+              {!user &&<li><NavLink activeClassName="active" to="/Signup"><span class="glyphicon glyphicon-registration-mark"></span> Sign Up </NavLink></li>}
               {user && <li><NavLink activeClassName="active" to="/Profile"><span class="glyphicon glyphicon-user"></span> Profile </NavLink></li>}
               {user && <li><NavLink activeClassName="active" to="/Login" onClick={logout}><span class="glyphicon glyphicon-log-out"></span> Log Out </NavLink></li>}
             </ul>

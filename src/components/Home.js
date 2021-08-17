@@ -6,19 +6,23 @@ import Popularusers from "./Popularusers"
 import Askaquestion from "./Askaquestion"
 import Followedtagsq from "./Followedtagsq"
 import Allquestions from "./Allquestions"
+import { useDispatch, useSelector } from "react-redux"
 
 export default function Home(props) {
+    
+            const user = useSelector(state => state.user);
+            // const dispatch = useDispatch();
+
     return (
         <React.Fragment>
             {/* <Router> */}
-
             <div>
                 <div class="container border border-dark home ">
                     {/* text-md-center and border not working */}
                     <div class="column content">
                         <div class="col-sm-2 sidenav ">
                             <p><NavLink activeClassName="active1" exact to="/">Home</NavLink></p>
-                            <p><NavLink activeClassName="active1" to="/questions">Questions</NavLink></p>
+                            {user && <p><NavLink activeClassName="active1" to="/questions">Questions</NavLink></p>}
                             <p><NavLink activeClassName="active1" to="/populartags">Popular Tags</NavLink></p>
                             <p><NavLink activeClassName="active1" to="/popularusers">Popular Users</NavLink></p>
                             <p><NavLink activeClassName="active1" to="/askaquestion">Ask a Question</NavLink></p>

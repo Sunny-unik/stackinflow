@@ -18,11 +18,11 @@ export default function Allquestions() {
                     <div class="flex--item ml-auto fl-shrink0 started mt0 d-block ">
                         <div class="user-info ">
                             <div class="user-gravatar32 ">
-                                <span onClick={console.log("not ready")}>
+                                {/* <span onClick={console.log("not ready")}> */}
                                     <div class="gravatar-wrapper-32">
                                         <img src="https://graph.facebook.com/2045105442409749/picture?type=large" alt="" width="32" height="32" class="bar-sm" />
                                     </div>
-                                </span>
+                                {/* </span> */}
                             </div>
                             <div class="user-details">
                                 <a href="/users/9456490/venkatesh-deo">Venkatesh Deo</a>
