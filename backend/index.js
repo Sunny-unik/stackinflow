@@ -4,6 +4,7 @@ var bodyparser = require('body-parser');
 var Mongoclient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var nodemailer = require('nodemailer');
+const bodyParser = require('body-parser');
 
 var app = express();
 app.use(cors());
@@ -69,37 +70,53 @@ app.get('/delete-user',(req,res)=>{
 
 app.post('/create-user', bodyparser.json(),(req,res)=>{
     var usercollection = connection.db('stackinflow').collection('user');
-    var random = Math.floor((Math.random()*1000000)+1);
-    var otp = random+"";
-    usercollection.insert({...(req.body), otp:otp,status:"pending" },(err,result)=>{
-        if(!err){
-            console.log(otp)
-            res.send({status:"ok",data:"user need to verify email"})
-            sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `Your One Time Password is - <h3>${otp}</h3><br><h6>We hope you find our service cool.</h6>`)
-        }
-        else{
-            res.send({status:"failed",data:err})
-        }
-    })
-})
+    // var random = Math.floor((Math.random()*1000000)+1);
+    // var otp = random+"";
+    // usercollection.insert({...(req.body), otp:otp,status:"pending" },(err,result)=>{
+    //     if(!err){
+    //         console.log(otp)
+    //         res.send({status:"ok",data:"user need to verify email"})
+    //         sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `Your One Time Password is - <h3>${otp}</h3><br><h6>We hope you find our service cool.</h6>`)
+    //     }
+    //     else{
+    //         res.send({status:"failed",data:err})
+    //     }
+    // })
+        usercollection.insert(req.body,(err,result)=>{
+            if(!err){
+                // console.log(otp)
+                res.send({status:"ok",data:"user created successfully"})
+                sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `<h2>stackinflow</h2><br><h4> Registration SuccessFull </h4><br>We hope you find our service cool.`)
+            }
+            else{
+                res.send({status:"failed",data:err})
+            }
+        })
 
-app.post('/check-user-register-otp', bodyparser.json(),(req,res)=>{
-    var usercollection = connection.db('stackinflow').collection('user');  
-    usercollection.find(req.body).toArray((err,result)=>{
-        if(!err && result.length>0){
-            usercollection.update(req.body,{$set:{status:"verified"}},(err,result)=>{
-                if(!err)
-                {
-                    res.send({status:"ok",data:"user created successfully"})
-                    sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `<h2>stackinflow</h2><br><h4> Registration SuccessFull </h4><br>We hope you find our service cool.`)
-                }
-            })
-        }
-        else{
-            res.send({status:"failed",data:err})
-        }
-    })
+
 })
+app.post("/send-otp-email",bodyParser.json(),(req,res)=>{
+    console.log(req.body);
+    sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `Your One Time Password is - <h3>${req.body.otp}</h3><br><h6>We hope you find our service cool.</h6>`)
+    res.send({status:"ok",data:"please verify your email"});
+})
+// app.post('/check-user-register-otp', bodyparser.json(),(req,res)=>{
+//     var usercollection = connection.db('stackinflow').collection('user');  
+//     usercollection.find(req.body).toArray((err,result)=>{
+//         if(!err && result.length>0){
+//             usercollection.update(req.body,{$set:{status:"verified"}},(err,result)=>{
+//                 if(!err)
+//                 {
+//                     res.send({status:"ok",data:"user created successfully"})
+//                     sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `<h2>stackinflow</h2><br><h4> Registration SuccessFull </h4><br>We hope you find our service cool.`)
+//                 }
+//             })
+//         }
+//         else{
+//             res.send({status:"failed",data:err})
+//         }
+//     })
+// })
 
 // app.post('/update-user',(req,res)=>{  })
 

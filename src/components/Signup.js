@@ -9,6 +9,8 @@ export default function Signup(props) {
     const [dname, setdname] = useState("")
     const [password, setpassword] = useState("")
     const [otp, setotp] = useState("")
+    const [randomotp, setrandomotp] = useState("")
+
 
     function setvalue(e) {
         e.target.name === "cemail" && setemail(e.target.value)
@@ -51,7 +53,21 @@ export default function Signup(props) {
             Signup.style.display = "none";
             var Signup2 = document.getElementById('createotp');
             Signup2.style.display = "block";
-            create();
+            // create();
+            var random = Math.floor((Math.random()*1000000)+1);
+            setrandomotp(random);
+            axios.post("http://localhost:3001/send-otp-email", {email,otp:random} ).then((res)=>{
+                if(res.data.status=="ok")
+                {
+                    alert("otp sent to your email");
+                }
+                else{
+                    alert("some server error occured");
+                }
+            })
+
+
+         
         }
     }
 
@@ -60,25 +76,41 @@ export default function Signup(props) {
         console.log(s);
         axios.post('http://localhost:3001/create-user', s).then((res) => {
             alert(res.data.data);
+
+            if (res.data.status === "ok") {
+                        
+                        alert("Registration Successfull");
+                        props.history.push("/Login");
+                    }
+                    else {
+                        alert("! some server error occured try again ");
+                        props.history.push("/Signup");
+                    }
+
         })
     }
 
     function otpcheck() {
         console.log("checking otp")
-        var s = { email, otp, status: "pending" }
+        var s = { email, otp }
         console.log(s);
-        axios.post('http://localhost:3001/check-user-register-otp', s).then((res) => {
-            alert(res.data.data);
-            if (res.data.status === "ok") {
-                s.status = "verified";
-                alert("Registration Successfull");
-                props.history.push("/Login");
-            }
-            else {
-                alert("! incorrect otp ");
-                props.history.push("/Signup");
-            }
-        });
+
+        if(otp==randomotp)
+        {
+            create();
+        }
+        // axios.post('http://localhost:3001/check-user-register-otp', s).then((res) => {
+        //     alert(res.data.data);
+        //     if (res.data.status === "ok") {
+        //         s.status = "verified";
+        //         alert("Registration Successfull");
+        //         props.history.push("/Login");
+        //     }
+        //     else {
+        //         alert("! incorrect otp ");
+        //         props.history.push("/Signup");
+        //     }
+        // });
     }
 
     return (
