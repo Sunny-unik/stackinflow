@@ -50,8 +50,8 @@ export default function Login(props) {
     const dispatch = useDispatch();
     
     function checkauth() {
-        alert("hi "+email);
-        alert("hi "+password);
+        // alert("hi "+email);
+        // alert("hi "+password);
         dispatch(checkLogin({email,password}));
     }
     
