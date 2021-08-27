@@ -1,5 +1,5 @@
 import "./css/home.css"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Switch, Route, NavLink } from "react-router-dom"
 import Populartags from "./Populartags"
 import Popularusers from "./Popularusers"
@@ -9,9 +9,22 @@ import Allquestions from "./Allquestions"
 import { useDispatch, useSelector } from "react-redux"
 
 export default function Home(props) {
+
+    // const dispatch = useDispatch();
     
-            const user = useSelector(state => state.user);
-            // const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
+    // // useEffect(() => {
+    // //     console.log("cjkdn")
+    // //     if(user){
+    //     const name = useSelector(state => state.user.name);
+    //     const username = useSelector(state => state.user.dname);
+    //     const email = useSelector(state => state.user.email);
+    //     console.log(name+ "he")    
+    // //     }
+    // //     else{
+    // //         console.log("else")
+    // //     }
+    // // }, [])
 
     return (
         <React.Fragment>
@@ -26,6 +39,7 @@ export default function Home(props) {
                             <p><NavLink activeClassName="active1" to="/populartags">Popular Tags</NavLink></p>
                             <p><NavLink activeClassName="active1" to="/popularusers">Popular Users</NavLink></p>
                             <p><NavLink activeClassName="active1" to="/askaquestion">Ask a Question</NavLink></p>
+                            {/* <p>{}</p> */}
                         </div>
                     <h5>{props.email}</h5>
                     </div>

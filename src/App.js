@@ -14,6 +14,7 @@ function App(props) {
   const dispatch = useDispatch();
   function logout(){
     dispatch({type:"LOGOUT_USER"});
+    alert("user successfully logout")
     // props.history.push("/Login");
   }
 

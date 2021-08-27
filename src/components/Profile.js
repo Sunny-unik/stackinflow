@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Switch, Route, NavLink } from "react-router-dom"
 import Askedquestions from "./profile/Askedquestions"
 import Givenanswer from "./profile/Givenaswer"
@@ -8,19 +8,30 @@ import {useDispatch, useSelector} from 'react-redux';
 
 export default function Profile(props) {
     
-  const user = useSelector(state => state.user);
-  console.log(user)
-//   const dispatch = useDispatch();
+    //   const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
+        useEffect(() => {
+            if(user==null){
+                alert("User need to login first")
+                props.history.push('/Login')
+            }
+        }, [])
+        console.log(user)
+            const uname = useSelector(state => state.user.name);
+            const dname = useSelector(state => state.user.dname);
+            const email = useSelector(state => state.user.email);
 
     return (
         <React.Fragment>
             <div className="container ">
-                <div className="col-md-3 col-lg-4 col-sm-12">
-                    <div>img</div>
+                <div className="col-md-3 col-lg-4 col-sm-12 proimgdiv">
+                    <div className="img">img</div>
                     {/* <input type="file" /> */}
                 </div>
-                <div className="col-md-9 col-lg-8 col-sm-12">
-                
+                <div className="col-md-9 col-lg-8 col-sm-12 procontent">
+                    <input type="text" value={uname} required className="udetails"/><br/>
+                    <input type="text" value={dname} required className="udetails"/><br/>
+                    <input type="email" value={email} required className="udetails"/><br/>
                 </div>
             </div>
             <div>

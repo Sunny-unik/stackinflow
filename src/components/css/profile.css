@@ -1,0 +1,10 @@
+.img{
+    width: 300px;
+    height: 164px;
+}
+.udetails{
+    outline: 0;
+    border: 0;
+    border-bottom: 1px solid black;
+    width: inherit;
+}

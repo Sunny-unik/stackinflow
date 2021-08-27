@@ -36,7 +36,7 @@ app.get('/list-user', (req, res) => {
 app.post('/check-login', bodyparser.json(), (req, res) => {
     console.log(req.body);
     var usercollection = connection.db('stackinflow').collection('user');
-    usercollection.find({ email: req.body.email, password: req.body.password }).toArray((err, result) => {
+    usercollection.find({ $or: [ { email:req.body.email }, { dname:req.body.email } ], password: req.body.password }).toArray((err, result) => {
         if (!err && result.length > 0) {
             res.send({ status: 'ok', data: result[0] });
         } else {
@@ -49,7 +49,17 @@ app.post('/valid-email', bodyparser.json(), (req, res) => {
     var usercollection = connection.db('stackinflow').collection('user');
     usercollection.find({ email: req.body.email }).toArray((err, result) => {
         if (!err && result.length > 0) {
-            res.send({ status: 'error', data: "this email is already registered" });
+            res.send({ status: 'error', data: "this email is already registered 🤔" });
+        } else {
+            res.send({ status: 'ok' })
+        }
+    })
+})
+app.post('/valid-dname', bodyparser.json(), (req, res) => {
+    var usercollection = connection.db('stackinflow').collection('user');
+    usercollection.find({ dname: req.body.dname }).toArray((err, result) => {
+        if (!err && result.length > 0) {
+            res.send({ status: 'error', data: "this username is already taken 🤔" });
         } else {
             res.send({ status: 'ok' })
         }
@@ -68,6 +78,34 @@ app.get('/delete-user', (req, res) => {
     })
 })
 
+app.post("/send-otp-email", bodyParser.json(), (req, res) => {
+    var usercollection = connection.db('stackinflow').collection('user');
+    usercollection.find({ $or: [ { email:req.body.email }, { dname:req.body.email } ] }).toArray((err, result) => {
+        if (!err && result.length > 0) {
+            console.log(req.body);
+            console.log(result[0].email);
+            // res.send({ status: 'ok', data: result.email });
+            sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", result[0].email, "Welcome to stackinflow", `Your One Time Password is - <h3>${req.body.otp}</h3><br><h6>We hope you find our service cool.</h6>`)
+            res.send({ status: "ok", data: "please enter correct otp" });
+        } 
+        else {
+            res.send({ status: 'error', data: err })
+        }
+    })
+})
+
+app.post("/update-password", bodyParser.json(),(req,res)=>{
+    var usercollection = connection.db('stackinflow').collection('user');
+    usercollection.update({ $or: [ { email:req.body.email }, { dname:req.body.email } ] }, {$set:{password:req.body.newpassword}}, (err,result)=>{
+    if(!err){
+        res.send({status:"ok", data:"user password updated successfully"})
+    }
+    else{
+        res.send({status:"failed", data:err})
+    }
+})
+})
+
 app.post('/create-user', bodyparser.json(), (req, res) => {
     var usercollection = connection.db('stackinflow').collection('user');
     usercollection.insert(req.body, (err, result) => {
@@ -80,12 +118,6 @@ app.post('/create-user', bodyparser.json(), (req, res) => {
             res.send({ status: "failed", data: err })
         }
     })
-})
-
-app.post("/send-otp-email", bodyParser.json(), (req, res) => {
-    console.log(req.body);
-    sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `Your One Time Password is - <h3>${req.body.otp}</h3><br><h6>We hope you find our service cool.</h6>`)
-    res.send({ status: "ok", data: "please verify your email" });
 })
 
 // app.post('/update-user',(req,res)=>{  })

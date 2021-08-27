@@ -25,13 +25,24 @@ export default function Signup(props) {
             var a = res.data.status
             // console.log(a)
             if (a === 'ok') {
+                unikdname()
+            } else {
+                alert(res.data.data);
+            }
+        })
+    }
+    function unikdname(){
+        var dn = { dname }
+        axios.post('http://localhost:3001/valid-dname', dn).then((res) => {
+            var a = res.data.status
+            // console.log(a)
+            if (a === 'ok') {
                 hidereg()
             } else {
                 alert(res.data.data);
             }
         })
     }
-
     function hidereg() {
         var isvalid = true;
         // eslint-disable-next-line
