@@ -59,15 +59,15 @@ export default function Signup(props) {
         }
         if (isvalid === true) {
             // alert("valid")
-            var Signup = document.getElementById('createdetail');
-            Signup.style.display = "none";
-            var Signup2 = document.getElementById('createotp');
-            Signup2.style.display = "block";
             var random = Math.floor((Math.random() * 1000000) + 1);
             setrandomotp(random);
-            axios.post("http://localhost:3001/send-otp-email", { email, otp: random }).then((res) => {
+            axios.post("http://localhost:3001/send-user-otp", { email, otp: random }).then((res) => {
                 if (res.data.status == "ok") {
                     alert("otp sent to your email");
+                    var Signup = document.getElementById('createdetail');
+                    Signup.style.display = "none";
+                    var Signup2 = document.getElementById('createotp');
+                    Signup2.style.display = "block";
                 }
                 else {
                     alert("some server error occured");

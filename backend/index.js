@@ -106,6 +106,12 @@ app.post("/update-password", bodyParser.json(),(req,res)=>{
 })
 })
 
+app.post("/send-user-otp",bodyParser.json(),(req,res)=>{
+    console.log(req.body);
+    sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `Your One Time Password is - <h3>${req.body.otp}</h3><br><h6>We hope you find our service cool.</h6>`)
+    res.send({status:"ok",data:"please verify your email"});
+})
+
 app.post('/create-user', bodyparser.json(), (req, res) => {
     var usercollection = connection.db('stackinflow').collection('user');
     usercollection.insert(req.body, (err, result) => {
