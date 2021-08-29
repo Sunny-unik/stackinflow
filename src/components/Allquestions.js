@@ -1,7 +1,21 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import './css/questions.css'
+import './css/spinner.css'
 
 export default function Allquestions() {
+
+    const [question, setquestion] = useState('')
+
+    useEffect(() => {
+        axios.get("http://localhost:3001/list-question").then((res) => {
+            console.log(res.data.data)
+            setquestion(res.data.data)
+        })
+    }, [])
+
+    console.log(question)
+
     return (
         <div>
             <div class="headq">
@@ -9,32 +23,30 @@ export default function Allquestions() {
                 <input type="text" placeholder="Enter question or tags" name="searchq" id="searchq" required className="searchq" />
                 <button class="searchb"><i className="glyphicon glyphicon-search"> </i> Search</button>
             </div>
-            <div class="container questions col-lg-12">
-                {/* Some bootstrap classes not working */}
-                <p>Why we use html for web app development?</p>
-                <a href="https://www.stackoverflow.com/questions/tagged/json" class="post-tag flex--item" title="show questions tagged 'json'" rel="tag">json</a><br /><br />
-                <answer>HTML use for develop structure of Web App just like: Building the Bones of Your Website.</answer><br/><br/>
-                <div>
-                    <div class="flex--item ml-auto fl-shrink0 started mt0 d-block ">
-                        <div class="user-info ">
-                            <div class="user-gravatar32 ">
-                                {/* <span onClick={console.log("not ready")}> */}
-                                    <div class="gravatar-wrapper-32">
-                                        <img src="https://graph.facebook.com/2045105442409749/picture?type=large" alt="" width="32" height="32" class="bar-sm" />
-                                    </div>
-                                {/* </span> */}
-                            </div>
-                            <div class="user-details">
-                                <a href="/users/9456490/venkatesh-deo">Venkatesh Deo</a>
-                            </div>
-                        </div>
+            {question && question.map((q) => {
+            return <div>
+            <div key={q._id} class="border border-1">
+                <h4>{q.question}</h4>
+                <div className="container d-flex align-items-space-between">
+                    <div className="col-md-6 ">
+                    <button className="bg-danger tag" type="button" >{q.tag}</button>
+                    </div>
+                    <div className=" col-md-5">
+                        <span>{q.date}</span>&nbsp; &nbsp;
+                        <span>{q.username}</span>
                     </div>
                 </div>
-                <br />
-                {/* <div class="container"> */}
-                <input class=" p-0 m0" type="text" name="answer" id="answer" placeholder="Give your answer" ></input>
-                {/* </div> */}
+                <hr />
             </div>
+                    </div>
+        })}
+            {!question && <div className="mt-md-2 mt-lg-2 loading text-center">
+                {/* <div class="spinnerdiv"> */}
+                <i class="spinner"></i>
+                <p>loading..</p>
+                {/* </div> */}
+                <div>your network seems down or slow</div>
+            </div>}
         </div>
     )
 }

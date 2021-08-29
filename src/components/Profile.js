@@ -15,8 +15,9 @@ export default function Profile(props) {
                 alert("User need to login first")
                 props.history.push('/Login')
             }
-        }, [])
+        })
         console.log(user)
+        
             const uname = useSelector(state => state.user.name);
             const dname = useSelector(state => state.user.dname);
             const email = useSelector(state => state.user.email);

@@ -21,11 +21,23 @@ client.connect((err, db) => {
     }
 })
 
-app.get('/list-user', (req, res) => {
-    var usercollection = connection.db('stackinflow').collection('user');
+app.get('/list-question', (req, res) => {
+    var usercollection = connection.db('stackinflow').collection('question');
     usercollection.find().toArray((err, docs) => {
         if (!err) {
             res.send({ status: "ok", data: docs })
+        }
+        else {
+            res.send({ status: "failed", data: err })
+        }
+    })
+})
+
+app.post('/create-question', bodyparser.json(), (req, res) => {
+    var usercollection = connection.db('stackinflow').collection('question');
+    usercollection.insert(req.body, (err, result) => {
+        if (!err) {
+            res.send({ status: "ok", data: "Question Created" })
         }
         else {
             res.send({ status: "failed", data: err })

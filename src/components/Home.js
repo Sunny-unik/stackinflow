@@ -7,11 +7,12 @@ import Askaquestion from "./Askaquestion"
 import Followedtagsq from "./Followedtagsq"
 import Allquestions from "./Allquestions"
 import { useDispatch, useSelector } from "react-redux"
+import axios from "axios"
 
 export default function Home(props) {
 
     // const dispatch = useDispatch();
-    
+
     const user = useSelector(state => state.user);
     // // useEffect(() => {
     // //     console.log("cjkdn")

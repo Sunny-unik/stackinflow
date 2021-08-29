@@ -6,7 +6,6 @@ import {useDispatch, useSelector} from 'react-redux';
 
 export default function Login(props) {
 
-    // const [otpemail, setotpemail] = useState("")
     const [otp, setotp] = useState("")
     const [email, setemail] = useState("")
     const [password, setpassword] = useState("")
@@ -15,7 +14,6 @@ export default function Login(props) {
     const [randomotp, setrandomotp] = useState("")
 
     function setvalue(e) {
-        // e.target.name === "otpemail" && setotpemail(e.target.value)
         e.target.name === "otplogin" && setotp(e.target.value)
         e.target.name === "email" && setemail(e.target.value)
         e.target.name === "password" && setpassword(e.target.value)
@@ -76,7 +74,6 @@ export default function Login(props) {
         }
         else {
             alert("! incorrect otp ");
-            props.history.push("/Login");
         }
     }
     function otplogin() {
@@ -117,8 +114,6 @@ export default function Login(props) {
                     <h1>Forgot Password</h1>
                     <p>Please fill registered email for recover your account.</p>
                     <hr className="signuphr" />
-                    {/* <label for="otpemail" className="otpemail"><b>Enter Registered Email</b></label>
-                    <input type="email" value={otpemail} onChange={(e) => { setvalue(e); }} placeholder="example@eg.com" name="otpemail" id="otpemail" required /> */}
                     <label for="otplogin" className="otpemail"><b>Enter One Time Password</b></label>
                     <input type="number" value={otp} onChange={(e) => { setvalue(e); }} placeholder="6 digit otp" name="otplogin" id="otplogin" required />
                     <hr className="signuphr" />
