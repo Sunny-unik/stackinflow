@@ -52,6 +52,16 @@ export default function Signup(props) {
             isvalid = false;
         }
         // eslint-disable-next-line
+        if(name=="" || name==null || name==" ") {
+        isvalid=false;
+        alert("please enter your name");
+        }
+        // eslint-disable-next-line
+        if(dname=="" || dname==null || dname==" ") {
+        isvalid=false;
+        alert("please enter username");
+        }
+        // eslint-disable-next-line
         var passregex = /(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/;
         if (!passregex.test(password)) {
             alert("Password should have 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character and be at least 8 characters long");
@@ -112,10 +122,10 @@ export default function Signup(props) {
                     <h1>Create an account</h1>
                     <p>Please fill this form and get verified for register.</p>
                     <hr className="signuphr" />
-                    <label for="createemail"><b>Email</b></label>
+                    <label for="createemail"><b>Your Email</b></label>
                     <input type="email" value={email} onChange={(e) => { setvalue(e); }} minlength="5" placeholder="example@eg.co" name="cemail" id="createemail" required />
                     <label for="createname"><b>Your Name</b></label>
-                    <input type="text" value={name} onChange={(e) => { setvalue(e); }} placeholder="name lastname" name="cname" id="createname" required />
+                    <input type="text" value={name} onChange={(e) => { setvalue(e); }} placeholder="firstname lastname" name="cname" id="createname" required />
                     <label for="createdname"><b>Display Name</b></label>
                     <input type="text" value={dname} onChange={(e) => { setvalue(e); }} placeholder="display_name" name="cdname" id="createdname" required />
                     <label for="createpassword"><b>Password</b></label>

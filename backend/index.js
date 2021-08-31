@@ -21,8 +21,32 @@ client.connect((err, db) => {
     }
 })
 
+app.get('/list-tag', (req, res) => {
+    var usercollection = connection.db('stackinflow').collection('question');
+    usercollection.find().toArray((err, docs) => {
+        if (!err) {
+            res.send({ status: "ok", data: docs })
+        }
+        else {
+            res.send({ status: "failed", data: err })
+        }
+    })
+})
+
 app.get('/list-question', (req, res) => {
     var usercollection = connection.db('stackinflow').collection('question');
+    usercollection.find().toArray((err, docs) => {
+        if (!err) {
+            res.send({ status: "ok", data: docs })
+        }
+        else {
+            res.send({ status: "failed", data: err })
+        }
+    })
+})
+
+app.get('/list-user', (req, res) => {
+    var usercollection = connection.db('stackinflow').collection('user');
     usercollection.find().toArray((err, docs) => {
         if (!err) {
             res.send({ status: "ok", data: docs })

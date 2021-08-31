@@ -4,8 +4,8 @@ import { Switch, Route, NavLink } from "react-router-dom"
 import Populartags from "./Populartags"
 import Popularusers from "./Popularusers"
 import Askaquestion from "./Askaquestion"
-import Followedtagsq from "./Followedtagsq"
 import Allquestions from "./Allquestions"
+import Topquestions from "./Topquestions"
 import { useDispatch, useSelector } from "react-redux"
 import axios from "axios"
 
@@ -36,21 +36,21 @@ export default function Home(props) {
                     <div class="column content">
                         <div class="col-sm-2 sidenav ">
                             <p><NavLink activeClassName="active1" exact to="/">Home</NavLink></p>
-                            {user && <p><NavLink activeClassName="active1" to="/questions">Questions</NavLink></p>}
+                            <p><NavLink activeClassName="active1" to="/questions">Questions</NavLink></p>
                             <p><NavLink activeClassName="active1" to="/populartags">Popular Tags</NavLink></p>
                             <p><NavLink activeClassName="active1" to="/popularusers">Popular Users</NavLink></p>
-                            <p><NavLink activeClassName="active1" to="/askaquestion">Ask a Question</NavLink></p>
+                            {user && <p><NavLink activeClassName="active1" to="/askaquestion">Ask a Question</NavLink></p>}
                             {/* <p>{}</p> */}
                         </div>
                     <h5>{props.email}</h5>
                     </div>
                     <div className="col-sm-10">
                         <Switch>
-                            <Route path="/questions" component={Followedtagsq} />
+                            <Route path="/questions" component={Allquestions} />
                             <Route path="/populartags" component={Populartags} />
                             <Route path="/popularusers" component={Popularusers} />
                             <Route path="/askaquestion" component={Askaquestion} />
-                            <Route path="/" exact component={Allquestions} />
+                            <Route path="/" exact component={Topquestions} />
                         </Switch>
                     </div>
                 </div>
