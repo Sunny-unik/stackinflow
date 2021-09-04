@@ -10,6 +10,12 @@ export default function Signup(props) {
     const [password, setpassword] = useState("")
     const [otp, setotp] = useState("")
     const [randomotp, setrandomotp] = useState("")
+    const [title, settitle] = useState('')
+    const [about, setabout] = useState('')
+    const [weblink, setweblink] = useState('')
+    const [gitlink, setgitlink] = useState('')
+    const [twitter, settwitter] = useState('')
+    const [address, setaddress] = useState('')
 
     function setvalue(e) {
         e.target.name === "cemail" && setemail(e.target.value)
@@ -87,7 +93,7 @@ export default function Signup(props) {
     }
 
     function create() {
-        var s = { email, name, dname, password }
+        var s = { email, name, dname, password, title, about, weblink, gitlink, twitter, address }
         console.log(s);
         axios.post('http://localhost:3001/create-user', s).then((res) => {
             alert(res.data.data);

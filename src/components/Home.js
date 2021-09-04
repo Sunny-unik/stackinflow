@@ -28,23 +28,15 @@ export default function Home(props) {
     // // }, [])
 
     return (
-        <React.Fragment>
-            {/* <Router> */}
-            <div>
-                <div class="container border border-dark home ">
-                    {/* text-md-center and border not working */}
-                    <div class="column content">
-                        <div class="col-sm-2 sidenav ">
+            <div className="home container-fluid">
+                        <div class="col-md-2 col-lg-2 m-0 p-0 sidenavbar text-right">
                             <p><NavLink activeClassName="active1" exact to="/">Home</NavLink></p>
                             <p><NavLink activeClassName="active1" to="/questions">Questions</NavLink></p>
                             <p><NavLink activeClassName="active1" to="/populartags">Popular Tags</NavLink></p>
                             <p><NavLink activeClassName="active1" to="/popularusers">Popular Users</NavLink></p>
                             {user && <p><NavLink activeClassName="active1" to="/askaquestion">Ask a Question</NavLink></p>}
-                            {/* <p>{}</p> */}
                         </div>
-                    <h5>{props.email}</h5>
-                    </div>
-                    <div className="col-sm-10">
+                    <div className="col-md-8 col-lg-9 m-0 p-0 topmain ">
                         <Switch>
                             <Route path="/questions" component={Allquestions} />
                             <Route path="/populartags" component={Populartags} />
@@ -53,11 +45,7 @@ export default function Home(props) {
                             <Route path="/" exact component={Topquestions} />
                         </Switch>
                     </div>
-                </div>
             </div>
-            {/* </Router> */}
-        </React.Fragment>
-
     )
 }
 

@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import './css/profile.css'
+import React, { useEffect, useState } from 'react'
 import { Switch, Route, NavLink } from "react-router-dom"
 import Askedquestions from "./profile/Askedquestions"
 import Givenanswer from "./profile/Givenaswer"
-import Followedtags from "./profile/Followedtags"
-import './css/profile.css'
+import Editprofile from "./profile/Editprofile"
+import Likedanswer from './profile/Likedanswer'
 import {useDispatch, useSelector} from 'react-redux';
 
 export default function Profile(props) {
@@ -19,8 +20,12 @@ export default function Profile(props) {
         console.log(user)
         
             const uname = useSelector(state => state.user.name);
-            const dname = useSelector(state => state.user.dname);
-            const email = useSelector(state => state.user.email);
+            const udname = useSelector(state => state.user.dname);
+            const uemail = useSelector(state => state.user.email);
+
+        const [name, setname] = useState(uname)
+        const [dname, setdname] = useState(udname)
+        const [email, setemail] = useState(uemail)
 
     return (
         <React.Fragment>
@@ -30,7 +35,7 @@ export default function Profile(props) {
                     {/* <input type="file" /> */}
                 </div>
                 <div className="col-md-9 col-lg-8 col-sm-12 procontent">
-                    <input type="text" value={uname} required className="udetails"/><br/>
+                    <input type="text" value={name} required className="udetails"/><br/>
                     <input type="text" value={dname} required className="udetails"/><br/>
                     <input type="email" value={email} required className="udetails"/><br/>
                 </div>
@@ -39,16 +44,18 @@ export default function Profile(props) {
                 <div class="container " id="profile">
                     <div class="column content">
                         <div class="col-sm-4 sidenav border-1">
-                            <p><NavLink activeClassName="active1" to="/Profile/">Asked Questions</NavLink></p>
-                            <p><NavLink activeClassName="active1" to="/Profile/answer">Given Answers</NavLink></p>
-                            <p><NavLink activeClassName="active1" to="/Profile/followedtags">Followed Tags</NavLink></p>
+                            <p><NavLink activeClassName="active" to="/Profile">Liked Answers</NavLink></p>
+                            <p><NavLink activeClassName="active" to="/Profile/editprofile">Edit Profile</NavLink></p>
+                            <p><NavLink activeClassName="active" to="/Profile/selfquestion">Asked Questions</NavLink></p>
+                            <p><NavLink activeClassName="active" to="/Profile/selfanswer">Given Answers</NavLink></p>
                         </div>
                     </div>
                     <div className="col-sm-8">
                         <Switch>
-                            <Route path="/Profilefollowedtags" component={Followedtags} />
-                            <Route path="/Profile/answer" component={Givenanswer} />
-                            <Route path="/Profile/" exact component={Askedquestions} />
+                            <Route path="/Profile" exact component={Likedanswer} />
+                            <Route path="/Profile/editprofile" component={Editprofile} />
+                            <Route path="/Profile/selfquestion" component={Askedquestions} />
+                            <Route path="/Profile/selfanswer" component={Givenanswer} />
                         </Switch>
                     </div>
                 </div>

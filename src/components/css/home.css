@@ -1,7 +1,44 @@
-.forshow{
-    background-color:blue ;
-}
 .home{
-    border: 1px solid grey;
-    
+border: 1px dashed red;
+}
+/* .sidenavbar{
+
+}
+.topmain{
+
+} */
+  /* /* @media only screen and (max-width: 1600px) {
+    .home {
+      background-color: lightblue;
+      display: flex;
+      flex-direction: column;
+    }
+  } */
+  /* @media only screen and (min-width: 1200px) {
+    .home {
+      background-color: lightblue;
+      width: 80vw;
+    }
+  } */
+  /* @media only screen and (min-width: 992px) {
+    .home {
+      background-color:aquamarine;
+    }
   }
+  @media only screen and (min-width: 768px) {
+    .home {
+      background-color: blue;
+    }
+  }
+  @media only screen and (min-width: 500px) {
+    .home {
+      width:300px;
+      display: inline-block;
+    }
+  }
+  @media only screen and (min-width: 300px) {
+    .home {
+      width:800px;
+      display: inline-block;
+    }
+  } */

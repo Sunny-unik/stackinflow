@@ -130,11 +130,25 @@ app.post("/send-otp-email", bodyParser.json(), (req, res) => {
     })
 })
 
+app.post("/update-user", bodyParser.json(),(req,res)=>{
+    var usercollection = connection.db('stackinflow').collection('user');
+    usercollection.update({_id:ObjectId(req.body.obid)},{$set:{name:req.body.name,dname:req.body.dname,title:req.body.title,
+    about:req.body.about,weblink:req.body.weblink,gitlink:req.body.gitlink,twitter:req.body.twitter,address:req.body.address}},(err,result)=>{
+    if(!err){
+        res.send({status:"ok", data:"user updated successfully"})
+    }
+    else{
+        res.send({status:"failed", data:err})
+    }
+})
+});
+
 app.post("/update-password", bodyParser.json(),(req,res)=>{
     var usercollection = connection.db('stackinflow').collection('user');
     usercollection.update({ $or: [ { email:req.body.email }, { dname:req.body.email } ] }, {$set:{password:req.body.newpassword}}, (err,result)=>{
     if(!err){
         res.send({status:"ok", data:"user password updated successfully"})
+        console.log("user updated")
     }
     else{
         res.send({status:"failed", data:err})
@@ -161,8 +175,6 @@ app.post('/create-user', bodyparser.json(), (req, res) => {
         }
     })
 })
-
-// app.post('/update-user',(req,res)=>{  })
 
 function sendMail(from, appPassword, to, subject, htmlmsg) {
     let transporter = nodemailer.createTransport(

@@ -17,9 +17,9 @@ export default function Topquestions() {
     console.log(question)
 
     return (
-        <div>
+        <div className='container d-flex row'>
             <div class="headq">
-                <h1 className="allq"> Top Questions </h1><br />
+                <h1 className="tqhead "> Top Questions </h1><br />
                 <input type="text" placeholder="Find Question " name="searchq" id="searchq" required className="searchq" />
                 <button class="searchb"><i className="glyphicon glyphicon-search"> </i> Search</button><br/>
                 <div>
@@ -28,14 +28,13 @@ export default function Topquestions() {
                     <button className=' bg-info' type='button'> Most Answered </button>
                 </div><br/>
             </div>
+            <div class="tqbody bg-warning">
             {question && question.map((q) => {
-            return <div className="bg-warning"> 
-            <div >
-            <div key={q._id} class="border border-1">
+            return  <div key={q._id} >
                 <h4>{q.question}</h4>
                 <div className="container d-flex align-items-space-between">
                     <div className="col-md-6 ">
-                    <button className="bg-danger tag" type="button" >{q.tag}</button>
+                    <button className="bg-primary tag" type="button" >{q.tag}</button>
                     </div>
                     <div className=" col-md-5">
                         <span>{q.date}</span>&nbsp; &nbsp;
@@ -44,7 +43,6 @@ export default function Topquestions() {
                 </div>
                 <hr />
             </div>
-            </div></div>
         })}
             {!question && <div className="mt-md-2 mt-lg-2 loading text-center">
                 {/* <div class="spinnerdiv"> */}
@@ -53,6 +51,7 @@ export default function Topquestions() {
                 {/* </div> */}
                 <div>your network seems down or slow</div>
             </div>}
+            </div>
         </div>
     )
 }

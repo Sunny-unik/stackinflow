@@ -27,9 +27,7 @@ export default function Login(props) {
       if(reduxUser){
         props.history.push("/");
       }
-      else{
-          props.history.push("/Login")
-      }
+      
     }, [reduxUser]);
   
     const dispatch = useDispatch();
