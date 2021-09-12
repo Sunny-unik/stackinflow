@@ -22,6 +22,7 @@ export default function Editprofile(props) {
         const ugitlink = useSelector(state => state.user.gitlink);
         const utwitter = useSelector(state => state.user.twitter);
         const uaddress = useSelector(state => state.user.address);
+        const uprofile = useSelector(state => state.user.profile);
 
         const [obid, setobid] = useState(objid)
         const [dname, setdname] = useState(udname)
@@ -32,25 +33,8 @@ export default function Editprofile(props) {
         const [gitlink, setgitlink] = useState(ugitlink)
         const [twitter, settwitter] = useState(utwitter)
         const [address, setaddress] = useState(uaddress)
-        
-        // if(utitle===undefined){
-        // const [title, settitle] = useState("")
-        // }
-        // if(uabout===undefined){
-        // const [about, setabout] = useState("")
-        // }
-        // if(uweblink===undefined){
-        //     const [weblink, setweblink] = useState("")
-        // }
-        // if(ugitlink===undefined){
-        // const [gitlink, setgitlink] = useState("")
-        // }
-        // if(utwitter===undefined){
-        // const [twitter, settwitter] = useState("")
-        // }
-        // if(uaddress===undefined){
-        // const [address, setaddress] = useState("")
-        // }
+        var profile;
+        const [uploadPercentage, setuploadPercentage] = useState('')
 
         function setValue(e){
             e.target.name==="edname" && setdname(e.target.value);
@@ -61,35 +45,56 @@ export default function Editprofile(props) {
             e.target.name==="egitlink" && setgitlink(e.target.value);
             e.target.name==="etwitter" && settwitter(e.target.value);
             e.target.name==="eaddress" && setaddress(e.target.value);
+            
         }
 
-        function sendvalues(){
-            // alert(dname)
-            // alert(name)
-            // alert(title)
-            // alert(about)
-            // alert(weblink)
-            // alert(gitlink)
-            // alert(twitter)
-            // alert(address)
-            alert(obid)
-            var s = {
-                obid,dname,name,title,about,weblink,gitlink,twitter,address
-            }
-            axios.post("http://localhost:3001/update-user",s).then((res) => {
-            alert(res.data.data)
-            // setquestion(res.data.data)
-        })
+        function setProfile(e){
+            profile= e.target.files[0];
+            console.log(profile);
         }
+        
+        function sendvalues(){
+            var formData = new FormData();
+            formData.append("profile", profile);
+            formData.append("obid", obid );
+            formData.append("name", name)
+            formData.append("dname",dname)
+            formData.append("title",title)
+            formData.append("about", about);
+            formData.append("weblink", weblink);
+            formData.append("gitlink", gitlink);
+            formData.append("twitter", twitter);
+            formData.append("address", address);
+            console.log(formData)
+        axios.post("http://localhost:3001/update-user",formData,{
+        headers: {'Content-Type': 'multipart/form-data'},
+        onUploadProgress: function( progressEvent ) {
+            console.log("file Uploading Progresss.......");
+            console.log(progressEvent);
+        setuploadPercentage( parseInt( Math.round( ( progressEvent.loaded / progressEvent.total ) * 100 )));
+        //setfileInProgress(progressEvent.fileName)
+        }
+        }).then((res)=>{
+            alert(res);
+        }).catch(res=>{
+          alert("sorry you are not authorised to do this action");
+      });
+    }
     
     return (
         <React.Fragment>
             <div><h1><b> Edit Your Profile </b></h1></div>
             <div className="container m-0 row ">
                 {/* <div className=""> */}
-                <div className="col-md-3">
-                    <div><img className="uimge" src="" /></div>
-                    <button type="button" className="editupbtn"> Edit Display Picture </button>
+                <div className="col-md-3 ">
+                        <span className="font-dark">Upload avatar</span>
+                    <div >
+                        <img className="col-sm-12" src={uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/crea15.jpg"} alt="user profile" />
+                    </div>
+                    <div className="bg-light ">
+                        <input type="file" onChange={(e)=>{setProfile(e)}} /> 
+                        {uploadPercentage } {uploadPercentage && '% uploaded'}
+                    </div>
                 </div>
                 <div className="col-md-9">
                     {/* <div className="col-md-12"> */}
@@ -103,26 +108,26 @@ export default function Editprofile(props) {
                 </div>
                 {/* </div> */}
                 <div className="col-md-12">
-                    About Me<br />
+                <label>About Me</label><br />
                     <textarea type="text" name="eabout" value={about} onChange={(e)=>{setValue(e)}} id="eabout" placeholder="explain about yourself" className="col-md-12" required />  
                 </div>
                 <div className="col-md-12">
-                    Web Preference<br />
+                <label>Web Preference</label><br />
                     <div className="col-md-4">
-                        website link<br />
+                    <b>website link</b><br />
                         <input type="text" name="eweblink" value={weblink} onChange={(e)=>{setValue(e)}} id="eweblink" placeholder="Website Link" required /><br />
                     </div>
                     <div className="col-md-4">
-                        Github Link<br />
+                    <b>Github Link</b><br />
                         <input type="text" name="egitlink" value={gitlink} onChange={(e)=>{setValue(e)}} id="egitlink" placeholder="Github Link" required /><br />
                     </div>
                     <div className="col-md-4">
-                        Twitter link<br />
+                    <b>Twitter link</b><br />
                         <input type="text" name="etwitter" value={twitter} onChange={(e)=>{setValue(e)}} id="etwitter" placeholder="Twitter Link" required /><br />
                     </div>
                 </div>
                 <div className="col-md-12">
-                    Address<br />
+                <label>Address</label><br />
                     <input type="text" name="eaddress" value={address} onChange={(e)=>{setValue(e)}} id="eaddress" placeholder="Address" className="col-md-12" required /><br /><br/>
                 </div>
                 <div className="col-md-12 text-right">

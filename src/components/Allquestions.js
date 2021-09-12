@@ -5,7 +5,7 @@ import './css/followedtags.css'
 
 export default function Allquestions(props) {
 
-    const [question, setquestion] = useState('')
+    const [question, setquestion] = useState([])
 
     useEffect(() => {
         axios.get("http://localhost:3001/list-question").then((res) => {

@@ -5,7 +5,7 @@ import './css/spinner.css'
 
 export default function Topquestions() {
 
-    const [question, setquestion] = useState('')
+    const [question, setquestion] = useState([])
 
     useEffect(() => {
         axios.get("http://localhost:3001/list-question").then((res) => {

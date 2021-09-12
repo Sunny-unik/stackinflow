@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from "react-redux"
+import {  useSelector } from "react-redux"
 import axios from "axios"
 
 export default function Askaquestion(props) {
@@ -7,21 +7,24 @@ export default function Askaquestion(props) {
     const [question, setaskq] = useState('')
     const [tag, setasktag] = useState([])
     const [date, setdate] = useState(Date)
+    const [tags, settags] = useState([])
 
     function setquestion(e) {
         e.target.name === "askq" && setaskq(e.target.value)
-        e.target.name === "asktag" && setasktag(e.target.value)
+        e.target.name === "asktag" && setasktag(e.target.value.split(' '))
     }
+    
+    // var tags = tag.split(" ")
 
     const user = useSelector(state => state.user);
-    const username = useSelector(state => state.user.dname);
+    const userdname = useSelector(state => state.user.dname);
     
     useEffect(() => {
         if(user==null){
             alert("User not found need to login first")
             props.history.push('/Login')
         }
-        else if(username==null){
+        else if(userdname==null){
             alert("user need to login first because username not found")
             props.history.push('/Login')
         }
@@ -40,7 +43,8 @@ export default function Askaquestion(props) {
 
     function submitq(){
         setdate(Date)
-        var createq = { question,tag,username,date }
+        // settags(tag.split(' '))
+        var createq = { question,tag,userdname,date }
         console.log(createq)
         axios.post("http://localhost:3001/create-question",createq).then((res) => {
             alert(res.data.data);

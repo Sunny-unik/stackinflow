@@ -5,9 +5,13 @@ var Mongoclient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
+var upload = require('./multerConfig');
+var path = require('path')
 
 var app = express();
 app.use(cors());
+
+app.use(express.static(path.join(__dirname,"uploads")));
 
 var client = new Mongoclient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 var connection;
@@ -21,20 +25,8 @@ client.connect((err, db) => {
     }
 })
 
-app.get('/list-tag', (req, res) => {
-    var usercollection = connection.db('stackinflow').collection('question');
-    usercollection.find().toArray((err, docs) => {
-        if (!err) {
-            res.send({ status: "ok", data: docs })
-        }
-        else {
-            res.send({ status: "failed", data: err })
-        }
-    })
-})
-
 app.get('/list-question', (req, res) => {
-    var usercollection = connection.db('stackinflow').collection('question');
+    var usercollection = connection.db('stackinflow').collection('q&a');
     usercollection.find().toArray((err, docs) => {
         if (!err) {
             res.send({ status: "ok", data: docs })
@@ -58,10 +50,10 @@ app.get('/list-user', (req, res) => {
 })
 
 app.post('/create-question', bodyparser.json(), (req, res) => {
-    var usercollection = connection.db('stackinflow').collection('question');
+    var usercollection = connection.db('stackinflow').collection('q&a');
     usercollection.insert(req.body, (err, result) => {
         if (!err) {
-            res.send({ status: "ok", data: "Question Created" })
+            res.send({ status: "ok", data: "Your Question Listed" })
         }
         else {
             res.send({ status: "failed", data: err })
@@ -104,6 +96,7 @@ app.post('/valid-dname', bodyparser.json(), (req, res) => {
 
 app.get('/delete-user', (req, res) => {
     var usercollection = connection.db('stackinflow').collection('user')
+    // usercollection.filter(()=>{ var a = {_id=== ObjectId(req.query.id)}; a.profile.remove() }, (err, result) => {
     usercollection.remove({ _id: ObjectId(req.query.id) }, (err, result) => {
         if (!err) {
             res.send({ status: "ok", data: "user deleted successfully" })
@@ -120,7 +113,6 @@ app.post("/send-otp-email", bodyParser.json(), (req, res) => {
         if (!err && result.length > 0) {
             console.log(req.body);
             console.log(result[0].email);
-            // res.send({ status: 'ok', data: result.email });
             sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", result[0].email, "Welcome to stackinflow", `Your One Time Password is - <h3>${req.body.otp}</h3><br><h6>We hope you find our service cool.</h6>`)
             res.send({ status: "ok", data: "please enter correct otp" });
         } 
@@ -131,17 +123,29 @@ app.post("/send-otp-email", bodyParser.json(), (req, res) => {
 })
 
 app.post("/update-user", bodyParser.json(),(req,res)=>{
-    var usercollection = connection.db('stackinflow').collection('user');
-    usercollection.update({_id:ObjectId(req.body.obid)},{$set:{name:req.body.name,dname:req.body.dname,title:req.body.title,
-    about:req.body.about,weblink:req.body.weblink,gitlink:req.body.gitlink,twitter:req.body.twitter,address:req.body.address}},(err,result)=>{
-    if(!err){
-        res.send({status:"ok", data:"user updated successfully"})
-    }
-    else{
-        res.send({status:"failed", data:err})
-    }
+    console.log("149--------------");
+    upload(req,res,(err)=>{
+        if (!err) {
+            console.log("files",req.files);
+            console.log(req.body);
+            console.log("158");
+            var usercollection = connection.db('stackinflow').collection('user');
+            usercollection.update({_id:ObjectId(req.body.obid)},{$set:{profile:req.files.profile[0].filename,name:req.body.name,dname:req.body.dname,title:req.body.title,about:req.body.about,weblink:req.body.weblink,gitlink:req.body.gitlink,twitter:req.body.twitter,address:req.body.address}},(err,result)=>{
+                if(!err){
+                    res.send({status:"ok", data:"user details updated successfully"})
+                }
+                else{
+                    res.send({status:"failed", data:err})
+                }
+            })
+        }
+        else {
+            console.log("Error Occured during upload ");
+            console.log(err);
+            res.send({status:"failed", data:err});
+        }
+    });
 })
-});
 
 app.post("/update-password", bodyParser.json(),(req,res)=>{
     var usercollection = connection.db('stackinflow').collection('user');
@@ -184,8 +188,6 @@ function sendMail(from, appPassword, to, subject, htmlmsg) {
             secure: false,
             auth:
             {
-                //  user:"weforwomen01@gmail.com",
-                //  pass:""
                 user: from,
                 pass: appPassword
             }

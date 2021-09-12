@@ -19,9 +19,10 @@ export default function Popularusers() {
     // console.log(liked)
     if (users != '') {
         var userlist = users.map((u) => {
-            return <div key={u._id}>
+            return <div key={u._id} className="col-md-3">
                 <div>{u.dname}</div>
                 <div>{u.liked}</div>
+                <hr className="bg-primary"/>
             </div>
         })
     }

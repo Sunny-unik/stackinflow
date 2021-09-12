@@ -63,7 +63,6 @@ export default function Login(props) {
         var s = { otp }
         console.log(s);
         if (otp == randomotp) {
-            
             alert("you have to create new password")
             var logotp = document.getElementById('loginotp');
             logotp.style.display = "none";
@@ -85,9 +84,7 @@ export default function Login(props) {
             login.style.display = "block"
             props.history.push("/Login");
         }
-        else{
-            alert("password should be same in both textbox")
-        }
+        else{ alert("password should be same in both textbox") }
     }
     
     return (
