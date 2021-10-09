@@ -47,12 +47,12 @@ export default function Profile(props) {
             <div className="container ">
                 <div className="col-md-3 col-lg-3 proimgdiv">
                     <div>
-                        <img className="col-sm-12" src={ uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/crea15.jpg"} alt="user profile" />
+                        <img className="col-sm-12" height="225px" width="75px" src={ uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/crea15.jpg"} alt="user profile" />
                     </div>
                 </div>
-                <div className="col-md-9 col-lg-8 col-sm-12 procontent">
-                    <div className="udetails"><input type="text" value={name} required className="udetails"/><br/></div>
-                    <div className="udetails"><input type="text" value={dname} required className="udetails"/><br/></div>
+                <div className="col-md-9 col-lg-8 col-sm-12 procontent"><br/>
+                    <div className="udetails"><input type="text" value={name} required class="udetails display-1"/><br/></div>
+                    <div className="udetails"><input type="text" value={dname} required className="udetails "/><br/></div>
                     {/* <div className="udetails"><input type="email" value={email} required className="udetails"/><br/></div> */}
                     {title && <div className="udetails"><input type="text" value={title} required className="udetails"/><br/></div>}
                     {about && <div className="udetails"><input type="text" value={about} required className="udetails"/><br/></div>}

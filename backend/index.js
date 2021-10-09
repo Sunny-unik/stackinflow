@@ -4,14 +4,13 @@ var bodyparser = require('body-parser');
 var Mongoclient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var nodemailer = require('nodemailer');
-const bodyParser = require('body-parser');
 var upload = require('./multerConfig');
 var path = require('path')
 
 var app = express();
 app.use(cors());
 
-app.use(express.static(path.join(__dirname,"uploads")));
+app.use(express.static(path.join(__dirname,"uploads/userprofiles")));
 
 var client = new Mongoclient(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 var connection;
@@ -107,7 +106,7 @@ app.get('/delete-user', (req, res) => {
     })
 })
 
-app.post("/send-otp-email", bodyParser.json(), (req, res) => {
+app.post("/send-otp-email", bodyparser.json(), (req, res) => {
     var usercollection = connection.db('stackinflow').collection('user');
     usercollection.find({ $or: [ { email:req.body.email }, { dname:req.body.email } ] }).toArray((err, result) => {
         if (!err && result.length > 0) {
@@ -122,7 +121,7 @@ app.post("/send-otp-email", bodyParser.json(), (req, res) => {
     })
 })
 
-app.post("/update-user", bodyParser.json(),(req,res)=>{
+app.post("/update-user", bodyparser.json(),(req,res)=>{
     console.log("149--------------");
     upload(req,res,(err)=>{
         if (!err) {
@@ -147,7 +146,7 @@ app.post("/update-user", bodyParser.json(),(req,res)=>{
     });
 })
 
-app.post("/update-password", bodyParser.json(),(req,res)=>{
+app.post("/update-password", bodyparser.json(),(req,res)=>{
     var usercollection = connection.db('stackinflow').collection('user');
     usercollection.update({ $or: [ { email:req.body.email }, { dname:req.body.email } ] }, {$set:{password:req.body.newpassword}}, (err,result)=>{
     if(!err){
@@ -160,7 +159,7 @@ app.post("/update-password", bodyParser.json(),(req,res)=>{
 })
 })
 
-app.post("/send-user-otp",bodyParser.json(),(req,res)=>{
+app.post("/send-user-otp",bodyparser.json(),(req,res)=>{
     console.log(req.body);
     sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `Your One Time Password is - <h3>${req.body.otp}</h3><br><h6>We hope you find our service cool.</h6>`)
     res.send({status:"ok",data:"please verify your email"});

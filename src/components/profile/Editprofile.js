@@ -45,7 +45,6 @@ export default function Editprofile(props) {
             e.target.name==="egitlink" && setgitlink(e.target.value);
             e.target.name==="etwitter" && settwitter(e.target.value);
             e.target.name==="eaddress" && setaddress(e.target.value);
-            
         }
 
         function setProfile(e){
@@ -89,7 +88,7 @@ export default function Editprofile(props) {
                 <div className="col-md-3 ">
                         <span className="font-dark">Upload avatar</span>
                     <div >
-                        <img className="col-sm-12" src={uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/crea15.jpg"} alt="user profile" />
+                        <img className="col-sm-12" height="225px" width="75px" src={ uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/crea15.jpg"} alt="user profile" />
                     </div>
                     <div className="bg-light ">
                         <input type="file" onChange={(e)=>{setProfile(e)}} /> 
@@ -134,6 +133,7 @@ export default function Editprofile(props) {
                     <button type="button" className="updateprofile" onClick={sendvalues}> Update Profile </button>
                 </div>
             </div>
+            <br/>
         </React.Fragment>
     )
 }
