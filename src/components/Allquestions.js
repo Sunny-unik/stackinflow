@@ -1,7 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { NavLink } from "react-router-dom"
 import { useSelector } from 'react-redux';
-import './css/followedtags.css'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+import Spinner from './spinner';
 
 export default function Allquestions(props) {
 
@@ -19,50 +22,35 @@ export default function Allquestions(props) {
     const user = useSelector(state => state.user);
 
     function goonask() {
-        alert('User need to login first')
+        alert(`User need to login first <button onclick={}> goto login <button>`)
         props.history.push('/Login')
     }
 
-    return (
-        // pagination require per page 15 questions
-        <div class="row">
-            {/* Only visible after login  */}
-            <div className='container'>
-                <div className='col-md-8 '><h2>All Questions</h2></div>
-                {!user && <div ><button className='col-md-2 bg-primary' type='button' onClick={goonask}> Ask a Question </button></div>}
-            </div>
-            <div className='container'>
-                <div className='col-md-6 '><h4>48435484 Questions</h4></div>
-                <div className='col-md-4 '>
-                <button className=' bg-info' type='button'> Oldest First </button>
-                <button className=' bg-info' type='button'> Not Answered </button>
+    return (<div class="row">
+                <h2 style={{width:'64%',display:'inline-block',padding:'0px 1%',fontFamily:'Fantasy'}}> All Questions </h2>
+                <div style={{width:'28%',display:'inline-block',textAlign:'center'}}><button className='bg-primary' type='button' style={{padding:'1% 2%',margin:'0% 1%',borderRadius:'6%'}} onClick={goonask}> Ask a Question </button></div>
+                <div className='container'>
+                <div className='col-md-7' style={{padding:'0px 1%',fontFamily:'sans-serif'}}><h4>48435484 Questions</h4></div>
+                <div className='col-md-4'>
+                    <button className=' bg-info' type='button' style={{padding:'1% 2%',margin:'0% 1%',borderRadius:'6%'}}> Oldest First </button>
+                    <button className=' bg-info' type='button' style={{padding:'1% 2%',margin:'0% 1%',borderRadius:'6%'}}> Not Answered </button>
                 </div>
             </div>
             {question && question.map((q) => {
-                return <div className="bg-warning">
-                    <div >
-                        <div key={q._id} class="border border-1">
-                            <h4>{q.question}</h4>
-                            <div className="container d-flex align-items-space-between">
-                                <div className="col-md-6 ">
-                                    <button className="bg-danger tag" type="button" >{q.tag}</button>
-                                </div>
-                                <div className=" col-md-5">
-                                    <span>{q.date}</span>&nbsp; &nbsp;
-                                    <span>{q.username}</span>
-                                </div>
-                            </div>
-                            <hr />
+                return  <React.Fragment>
+                        <div data-aos="fade-left" data-aos-once='true' data-aos-duration="500" className="bg-warning" key={q._id}>
+                            <h4 style={{margin:'8px',boxSizing:"border-box",width:'64%',display:'inline-block',textDecoration:'none'}}><NavLink to={`/question/${q._id}`} style={{color:'CaptionText'}}>{q.question}</NavLink></h4>
+                            &nbsp; &nbsp;<div style={{width:'14%',display:'inline-block',margin:'8px',fontFamily:'serif',fontWeight:'600'}} > Likes: 6665466 </div>
+                            &nbsp; &nbsp;<div style={{width:'14%',display:'inline-block',margin:'8px',fontFamily:'serif',fontWeight:'600'}} > Answer: 6665466 </div>
+                            <div style={{width:'46%',display:'inline-block',margin:'8px'}}><NavLink style={{color:'navy',fontFamily:'monospace'}} className="bg-warning" to={`/tag/${q.tag}`}>{q.tag}</NavLink></div>
+                            &nbsp; &nbsp;<div style={{width:'36%',display:'inline-block',margin:'8px',fontFamily:'Times'}}>{q.date}</div>
+                            <div style={{width:'10%',display:'inline-block',margin:'8px'}} className="text-info"><NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/tag/${q.tag}`}>{q.userdname}</NavLink></div>
                         </div>
-                    </div></div>
+                            <hr style={{margin:'0',padding:'0'}} class='qhr'/>
+                        </React.Fragment>
             })}
-            {!question && <div className="mt-md-2 mt-lg-2 loading text-center">
-                {/* <div class="spinnerdiv"> */}
-                <i class="spinner"></i>
-                <p>loading..</p>
-                {/* </div> */}
-                <div>your network seems down or slow</div>
-            </div>}
+            {!question && <Spinner/>}
         </div >
     )
 }
+AOS.init();

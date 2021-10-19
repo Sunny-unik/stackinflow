@@ -5,71 +5,84 @@ import Askedquestions from "./profile/Askedquestions"
 import Givenanswer from "./profile/Givenaswer"
 import Editprofile from "./profile/Editprofile"
 import Likedanswer from './profile/Likedanswer'
-import { useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { FaGithub, FaTwitter } from 'react-icons/fa';
-import { IoLocationSharp} from 'react-icons/io5';
+import { IoLocationSharp } from 'react-icons/io5';
 import { FcCollaboration } from 'react-icons/fc';
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 export default function Profile(props) {
-    
-    const user = useSelector(state => state.user);
-        useEffect(() => {
-            if(user==null){
-                alert("User need to login first")
-                props.history.push('/Login')
-            }
-        })
-        console.log(user)
-        
-            const uname = useSelector(state => state.user.name);
-            const udname = useSelector(state => state.user.dname);
-            const uemail = useSelector(state => state.user.email);
-            const utitle = useSelector(state => state.user.title);
-            const uabout = useSelector(state => state.user.about);
-            const weblink = useSelector(state => state.user.weblink);
-            const gitlink = useSelector(state => state.user.gitlink);
-            const twitter = useSelector(state => state.user.twitter);
-            const uaddress = useSelector(state => state.user.address);
-            const uprofile = useSelector(state => state.user.profile);
 
-        const [name, setname] = useState(uname)
-        const [dname, setdname] = useState(udname)
-        const [email, setemail] = useState(uemail)
-        const [title, settitle] = useState(utitle)
-        const [about, setabout] = useState(uabout)
-        const [website, setwebsite] = useState(weblink)
-        const [githublink, setgithublink] = useState(gitlink)
-        const [twitterlink, settwitterlink] = useState(twitter)
-        const [address, setaddress] = useState(uaddress)
+    const user = useSelector(state => state.user);
+    useEffect(() => {
+        if (user == null) {
+            alert("User need to login first")
+            props.history.push('/Login')
+        }
+    })
+    console.log(user)
+
+    const uname = useSelector(state => state.user.name);
+    const udname = useSelector(state => state.user.dname);
+    const uemail = useSelector(state => state.user.email);
+    const utitle = useSelector(state => state.user.title);
+    const uabout = useSelector(state => state.user.about);
+    const weblink = useSelector(state => state.user.weblink);
+    const gitlink = useSelector(state => state.user.gitlink);
+    const twitter = useSelector(state => state.user.twitter);
+    const uaddress = useSelector(state => state.user.address);
+    const uprofile = useSelector(state => state.user.profile);
+
+    const [name, setname] = useState(uname)
+    const [dname, setdname] = useState(udname)
+    const [email, setemail] = useState(uemail)
+    const [title, settitle] = useState(utitle)
+    const [about, setabout] = useState(uabout)
+    const [website, setwebsite] = useState(weblink)
+    const [githublink, setgithublink] = useState(gitlink)
+    const [twitterlink, settwitterlink] = useState(twitter)
+    const [address, setaddress] = useState(uaddress)
+    const [questionu, setdbquestionu] = useState(0)
+    const [answeru, setanswerbyudnu] = useState(0)
+    const [likesu, setlikesbyudnu] = useState(0)
 
     return (
         <React.Fragment>
             <div className="container ">
-                <div className="col-md-3 col-lg-3 proimgdiv">
-                    <div>
-                        <img className="col-sm-12" height="225px" width="75px" src={ uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/crea15.jpg"} alt="user profile" />
+                <div className="col-md-3 col-lg-3 col-sm-3 proimgdiv"><br />
+                    <div className="profilepic" data-aos="flip-up" data-aos-once='true' data-aos-duration="600" >
+                        <img className="col-sm-12" height="225px" width="75px" src={uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/crea15.jpg"} alt="user profile" />
                     </div>
                 </div>
-                <div className="col-md-9 col-lg-8 col-sm-12 procontent"><br/>
-                    <div className="udetails"><input type="text" value={name} required class="udetails display-1"/><br/></div>
-                    <div className="udetails"><input type="text" value={dname} required className="udetails "/><br/></div>
-                    {/* <div className="udetails"><input type="email" value={email} required className="udetails"/><br/></div> */}
-                    {title && <div className="udetails"><input type="text" value={title} required className="udetails"/><br/></div>}
-                    {about && <div className="udetails"><input type="text" value={about} required className="udetails"/><br/></div>}
-                    {address && <div className="udetails"><IoLocationSharp/><input type="text" value={address} required className="udetails"/><br/></div>}
-                    {website && <a target="_blank" href={website}><FcCollaboration/></a>}&nbsp;&middot;&nbsp;
-                    {githublink && <a target="_blank" href={githublink}><FaGithub/></a>}&nbsp;&middot;&nbsp;
-                    {twitterlink && <a target="_blank" href={twitterlink}><FaTwitter/></a>}&nbsp;
+                <div data-aos="fade-left" data-aos-duration="600" className="col-md-9 col-lg-8 col-sm-9 procontent"><br />
+                    <label>User's Name</label><div><h2 className="my-0">{name}</h2></div>
+                    <label>Display Name</label><div><h3 >{dname}</h3></div>
+                    {title && <div><label>Work Title</label><h3>{title}</h3></div>}
+                    <label>User Email</label><h3>{email}</h3>
+                    {address && <div><h4><IoLocationSharp />&nbsp;{address}</h4> </div>}
+                    <h4>{website && <a target="_blank" href={website}><abbr title={website}><FcCollaboration /></abbr></a>}&nbsp;&middot;&nbsp;
+                        {githublink && <a target="_blank" href={githublink}><abbr title={githublink}><FaGithub /></abbr></a>}&nbsp;&middot;&nbsp;
+                        {twitterlink && <a target="_blank" href={twitterlink}><abbr title={twitterlink}><FaTwitter /></abbr></a>}&nbsp;</h4>
                 </div>
-            </div>
+                <div className="col-sm-9">
+                    <p style={{ fontSize: 'large', fontFamily: 'sans-serif' }}>Total Likes : {likesu} </p ><br />
+                    <p style={{ fontSize: 'large', fontFamily: 'sans-serif' }}>Total Answers : {answeru} </p ><br />
+                    <p style={{ fontSize: 'large', fontFamily: 'sans-serif' }}>Total Questions : {questionu} </p ><br />
+                </div>
+                <div className="col-sm-12">
+                    {about && <div><label><h1>About </h1></label>
+                    <h3>{about}</h3> </div>}
+                </div>
+            </div><br />
             <div>
                 <div class="container " id="profile">
                     <div class="column content">
-                        <div class="col-sm-4 sidenav border-1">
-                            <p><NavLink activeClassName="active" to="/Profile">Liked Answers</NavLink></p>
-                            <p><NavLink activeClassName="active" to="/Profile/editprofile">Edit Profile</NavLink></p>
-                            <p><NavLink activeClassName="active" to="/Profile/selfquestion">Asked Questions</NavLink></p>
-                            <p><NavLink activeClassName="active" to="/Profile/selfanswer">Given Answers</NavLink></p>
+                        <div data-aos="zoom-out" data-aos-once='true' data-aos-duration="600" class="col-sm-4 sidenav border-1">
+                            <p><NavLink activeClassName="active" to="/Profile" style={{ fontSize: 'large' }}>Liked Answers</NavLink></p>
+                            <p><NavLink activeClassName="active" to="/Profile/editprofile" style={{ fontSize: 'large' }}>Edit Profile</NavLink></p>
+                            <p><NavLink activeClassName="active" to="/Profile/selfquestion" style={{ fontSize: 'large' }}>Asked Questions</NavLink></p>
+                            <p><NavLink activeClassName="active" to="/Profile/selfanswer" style={{ fontSize: 'large' }}>Given Answers</NavLink></p>
                         </div>
                     </div>
                     <div className="col-sm-8">
@@ -85,3 +98,4 @@ export default function Profile(props) {
         </React.Fragment>
     )
 }
+AOS.init();

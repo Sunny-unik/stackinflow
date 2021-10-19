@@ -1,44 +1,60 @@
 .home{
 border: 1px dashed red;
 }
-/* .sidenavbar{
-
+.sidenavbar{
+position: sticky;
+top: 70px;
 }
-.topmain{
-
+.ok:hover, .ok:focus{
+background-color:rgba(120, 219, 164, 0.925);
+text-align: center;
+color:aliceblue;
+font-size:x-large;
+text-transform: uppercase;
+font-weight: 800;
+}
+.ok{
+font-size:large;
+padding-top: 5px;
+font-style: italic;
+padding-bottom: 5px;
+}
+.active1{
+background-image: linear-gradient(to right, rgba(255,40,20,0), rgba(245,0,20,5));
+font-weight: 600;
+}
+/* /* @media only screen and (max-width: 1600px) {
+  .home {
+    background-color: lightblue;
+    display: flex;
+    flex-direction: column;
+  }
 } */
-  /* /* @media only screen and (max-width: 1600px) {
-    .home {
-      background-color: lightblue;
-      display: flex;
-      flex-direction: column;
-    }
-  } */
-  /* @media only screen and (min-width: 1200px) {
-    .home {
-      background-color: lightblue;
-      width: 80vw;
-    }
-  } */
-  /* @media only screen and (min-width: 992px) {
-    .home {
-      background-color:aquamarine;
-    }
+/* @media only screen and (min-width: 1200px) {
+  .home {
+    background-color: lightblue;
+    width: 80vw;
   }
-  @media only screen and (min-width: 768px) {
-    .home {
-      background-color: blue;
-    }
+} */
+/* @media only screen and (min-width: 992px) {
+  .home {
+    background-color:aquamarine;
   }
-  @media only screen and (min-width: 500px) {
-    .home {
-      width:300px;
-      display: inline-block;
-    }
+}
+@media only screen and (min-width: 768px) {
+  .home {
+    background-color: blue;
   }
-  @media only screen and (min-width: 300px) {
-    .home {
-      width:800px;
-      display: inline-block;
-    }
-  } */
+}
+@media only screen and (min-width: 500px) {
+  .home {
+    width:300px;
+    display: inline-block;
+  }
+}
+@media only screen and (min-width: 300px) {
+  .home {
+    width:800px;
+    display: inline-block;
+  }
+} */

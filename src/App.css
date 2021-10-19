@@ -1,3 +1,33 @@
 .mainnavbar{
-    margin-bottom: 0% !important;
+    margin-bottom: 0%;
+    position: sticky;
+    top: 0%;
+    z-index: 1;
+}
+.searchq{
+    margin: 10px 0px 0 0 ;
+    padding: 0%;
+    height: 45px;
+    width: 88% ;
+    border-radius: 20px ;
+}
+.searchb{
+    margin: 0%;
+    margin-left: 0.5%;
+    padding: 0.5% 1% ;
+    height: 45px;
+    border-radius: 10px ;
+}
+.searchb:hover{
+    background-color: aliceblue;
+    box-shadow: 1px 1px 1px 2px dodgerblue;
+}
+.mainnavitem:hover{
+    background-color: aliceblue;
+}
+.mainnavitem:focus-within{
+    background-color: aliceblue;
+}
+.cnavbrand:hover{
+    color: aliceblue;
 }

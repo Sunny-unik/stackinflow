@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import './css/signup.css'
 import axios from 'axios'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 export default function Signup(props) {
 
@@ -80,10 +81,15 @@ export default function Signup(props) {
             axios.post("http://localhost:3001/send-user-otp", { email, otp: random }).then((res) => {
                 if (res.data.status == "ok") {
                     alert("otp sent to your email");
-                    var Signup = document.getElementById('createdetail');
+                    let Signup = document.getElementById('createdetail');
                     Signup.style.display = "none";
-                    var Signup2 = document.getElementById('createotp');
+                    let Signup2 = document.getElementById('createotp');
                     Signup2.style.display = "block";
+                    // // 2min timer
+                    // setTimeout(() => {
+                    //     Signup.style.display = "block";
+                    //     Signup2.style.display = "none";
+                    // }, 120000);
                 }
                 else {
                     alert("some server error occured");
@@ -121,32 +127,41 @@ export default function Signup(props) {
         }
     }
 
+    function goreg(){
+        let Signup2 = document.getElementById('createotp');
+        Signup2.style.display = "none";
+        let Signup1 = document.getElementById('createdetail');
+        Signup1.style.display = "block";
+    }
+
     return (
-        <div className="container signupcon column">
-            <div className="col-md-5 col-lg-4 " id="createdetail" >
-                <form >
+        <div className="container signupcon">
+            <div data-aos="flip-right" data-aos-once='true' data-aos-duration="500" className="col-md-5 col-lg-4 " id="createdetail" >
+                <form style={{padding:'3%',margin:'4px 0',borderRadius:'2%',boxShadow:'3px 4px 3px 3px #888888'}} >
                     <h1>Create an account</h1>
                     <p>Please fill this form and get verified for register.</p>
                     <hr className="signuphr" />
                     <label for="createemail"><b>Your Email</b></label>
-                    <input type="email" value={email} onChange={(e) => { setvalue(e); }} minlength="5" placeholder="example@eg.co" name="cemail" id="createemail" required />
+                    <input type="email" style={{fontFamily:'sans-serif'}} value={email} onChange={(e) => { setvalue(e); }} minlength="5" placeholder="example@eg.co" name="cemail" id="createemail" required />
                     <label for="createname"><b>Your Name</b></label>
-                    <input type="text" value={name} onChange={(e) => { setvalue(e); }} placeholder="firstname lastname" name="cname" id="createname" required />
+                    <input type="text" style={{fontFamily:'sans-serif'}} value={name} onChange={(e) => { setvalue(e); }} placeholder="firstname lastname" name="cname" id="createname" required />
                     <label for="createdname"><b>Display Name</b></label>
-                    <input type="text" value={dname} onChange={(e) => { setvalue(e); }} placeholder="display_name" name="cdname" id="createdname" required />
+                    <input type="text" style={{fontFamily:'sans-serif'}} value={dname} onChange={(e) => { setvalue(e); }} placeholder="display_name" name="cdname" id="createdname" required />
                     <label for="createpassword"><b>Password</b></label>
-                    <input type="password" value={password} onChange={(e) => { setvalue(e); }} minlength="8" maxLength="16" placeholder="password should be strong" name="cpassword" id="createpassword" required />
+                    <input type="password" style={{fontFamily:'sans-serif'}} value={password} onChange={(e) => { setvalue(e); }} minlength="8" maxLength="16" placeholder="password should be strong" name="cpassword" id="createpassword" required />
                     <hr className="signuphr" />
                     <button type="button" class="registerbtn" onClick={unikemail}> Sign Up </button>
                 </form>
             </div>
-            <div class=" col-md-5 col-lg-4" id="createotp">
-                <form className="d-inline-block " >
-                    <h1>Confirm Email</h1>
+            <div data-aos="flip-right" data-aos-once='true' data-aos-duration="1000" class="col-md-5 col-lg-4" id="createotp">
+                <form className="d-inline-block" style={{padding:'3%',margin:'4px 0',borderRadius:'2%',boxShadow:'3px 4px 3px 2px #888888'}}>
+                    {/* 2 min. timer implementation pending */}
+                    <h1 style={{display:'inline-block',width:'82%'}}>Confirm Email</h1>
+                    <button type='button' onClick={goreg} className='bg-warning' style={{fontWeight:'600',fontFamily:'sans-serif',padding:'2% 1%',margin:'0',borderRadius:'10%',boxShadow:'2px 3px 2px 3px #888888'}}> Go Back </button>
                     <p>Please fill 6alphanumeric code for create your account.</p>
                     <hr className="signuphr" />
                     <label for="otp" className="inputotp"><b>Otp sent on gievn email-address</b></label>
-                    <input type="text" value={otp} onChange={(e) => { setvalue(e); }} placeholder="Enter Verfication Code" name="otp" id="otp" required />
+                    <input style={{fontFamily:'sans-serif'}} type="text" value={otp} onChange={(e) => { setvalue(e); }} placeholder="Enter Verfication Code" name="otp" id="otp" required />
                     <hr className="signuphr" />
                     <button type="button" class="registerbtn" onClick={otpcheck}> Submit </button>
                 </form>
@@ -154,3 +169,4 @@ export default function Signup(props) {
         </div>
     )
 }
+AOS.init();

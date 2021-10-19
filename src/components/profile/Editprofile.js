@@ -23,6 +23,7 @@ export default function Editprofile(props) {
         const utwitter = useSelector(state => state.user.twitter);
         const uaddress = useSelector(state => state.user.address);
         const uprofile = useSelector(state => state.user.profile);
+        const uemail = useSelector(state => state.user.email);
 
         const [obid, setobid] = useState(objid)
         const [dname, setdname] = useState(udname)
@@ -33,6 +34,7 @@ export default function Editprofile(props) {
         const [gitlink, setgitlink] = useState(ugitlink)
         const [twitter, settwitter] = useState(utwitter)
         const [address, setaddress] = useState(uaddress)
+        // const [y, sety] = useState([])
         var profile;
         const [uploadPercentage, setuploadPercentage] = useState('')
 
@@ -53,6 +55,18 @@ export default function Editprofile(props) {
         }
         
         function sendvalues(){
+        // axios.get("http://localhost:3001/list-user").then((res)=>{
+        //     console.log(res.data.data)
+        //     sety(res.data.data)
+        // })
+        // if(y!=dname){
+            // if(dname!=udname){
+            //     axios.post("http://localhost:3001/username-in-question",udname).then((res)=>{
+            //         console.log(res.data.data)
+            //         var qures = res.status
+            //     })
+            // }
+// if(qures==="ok"){
             var formData = new FormData();
             formData.append("profile", profile);
             formData.append("obid", obid );
@@ -63,8 +77,9 @@ export default function Editprofile(props) {
             formData.append("weblink", weblink);
             formData.append("gitlink", gitlink);
             formData.append("twitter", twitter);
-            formData.append("address", address);
-            console.log(formData)
+            formData.append("address", address);    
+        // }
+        console.log(formData)
         axios.post("http://localhost:3001/update-user",formData,{
         headers: {'Content-Type': 'multipart/form-data'},
         onUploadProgress: function( progressEvent ) {
@@ -74,10 +89,14 @@ export default function Editprofile(props) {
         //setfileInProgress(progressEvent.fileName)
         }
         }).then((res)=>{
-            alert(res);
+            alert(res.data);
         }).catch(res=>{
           alert("sorry you are not authorised to do this action");
       });
+// }
+// else{
+//     alert("some server side error")
+// }
     }
     
     return (

@@ -36,6 +36,48 @@ app.get('/list-question', (req, res) => {
     })
 })
 
+app.get("/question-by-id", (req,res)=>{
+    var usercollection = connection.db('stackinflow').collection('q&a');
+    console.log(req.query.id)
+    usercollection.find({_id:ObjectId(req.query.id)}).toArray((err,docs)=>{
+        if(!err){
+            console.log(docs)
+            res.send({status:"ok", data:docs})
+        }
+        else{
+            res.send({status:"failed", data:err})
+        }
+    })
+});
+
+app.get("/question-by-tag", (req,res)=>{
+    var usercollection = connection.db('stackinflow').collection('q&a');
+    console.log(req.query.id)
+    usercollection.find({tag:req.query.tag}).toArray((err,docs)=>{
+        if(!err){
+            console.log(docs)
+            res.send({status:"ok", data:docs})
+        }
+        else{
+            res.send({status:"failed", data:err})
+        }
+    })
+});
+
+app.get("/user-by-userdname", (req,res)=>{
+    var usercollection = connection.db('stackinflow').collection('user');
+    console.log(req.query.id)
+    usercollection.find({dname:req.query.userdname}).toArray((err,docs)=>{
+        if(!err){
+            console.log(docs)
+            res.send({status:"ok", data:docs})
+        }
+        else{
+            res.send({status:"failed", data:err})
+        }
+    })
+});
+
 app.get('/list-user', (req, res) => {
     var usercollection = connection.db('stackinflow').collection('user');
     usercollection.find().toArray((err, docs) => {
@@ -146,12 +188,23 @@ app.post("/update-user", bodyparser.json(),(req,res)=>{
     });
 })
 
+app.post("/username-in-question", bodyparser.json(),(req,res)=>{
+    var usercollection = connection.db('stackinflow').collection('q&a');
+    usercollection.update({userdname:req.body.udname}, {$set:{userdname:req.body.dname}}, (err,result)=>{
+    if(!err){
+        res.send({status:"ok", data:"username updated in questions successfully"})
+    }
+    else{
+        res.send({status:"failed", data:err})
+    }
+})
+})
+
 app.post("/update-password", bodyparser.json(),(req,res)=>{
     var usercollection = connection.db('stackinflow').collection('user');
     usercollection.update({ $or: [ { email:req.body.email }, { dname:req.body.email } ] }, {$set:{password:req.body.newpassword}}, (err,result)=>{
     if(!err){
         res.send({status:"ok", data:"user password updated successfully"})
-        console.log("user updated")
     }
     else{
         res.send({status:"failed", data:err})
