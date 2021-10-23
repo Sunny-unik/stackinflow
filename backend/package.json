@@ -15,6 +15,7 @@
     "install": "^0.13.0",
     "mongodb": "^4.1.0",
     "multer": "^1.4.3",
-    "nodemailer": "^6.6.3"
+    "nodemailer": "^6.6.3",
+    "nodemon": "^2.0.14"
   }
 }

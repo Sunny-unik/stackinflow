@@ -18,14 +18,14 @@ export default function Home(props) {
     const user = useSelector(state => state.user);
     
     return ( <React.Fragment>
-            <div className="home container-fluid">
+            <div className="home container-fluid" style={{marginBottom:'0px'}}>
                         <div class="col-md-2 col-lg-2 m-0 p-0 sidenavbar text-right">
                         <br/><NavLink style={{color:'blue',fontFamily:'sans-serif'}} activeClassName="active1" className="ok" exact to="/">Home </NavLink><br/><br/>
                             <NavLink style={{color:'blue',fontFamily:'sans-serif'}} activeClassName="active1" className="ok" to="/questions"> Questions </NavLink><br/><br/>
                             <NavLink style={{color:'blue',fontFamily:'sans-serif'}} activeClassName="active1" className="ok" to="/populartags"> Popular Tags </NavLink><br/><br/>
                             <NavLink style={{color:'blue',fontFamily:'sans-serif'}} activeClassName="active1" className="ok" to="/popularusers"> Popular Users </NavLink><br/><br/>
                             {/* {user && <NavLink style={{color:'blue'}} activeClassName="active1" className="ok" to="/notification"> Notifications </NavLink>}<br/><br/> */}
-                            {/* {user && <NavLink style={{color:'blue'}} activeClassName="active1" className="ok" to="/askaquestion"> Ask Question </NavLink>}<br/> */}
+                            {user && <NavLink style={{color:'blue'}} activeClassName="active1" className="ok" to="/askaquestion"> Ask Question </NavLink>}<br/>
                         </div>
                     <div className="col-md-8 col-lg-9 m-0 p-0 topmain ">
                         <Switch>

@@ -4,6 +4,7 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { FcSearch } from 'react-icons/fc';
 import Spinner from './spinner';
+import { NavLink } from 'react-router-dom';
 
 export default function Popularusers() {
 
@@ -18,11 +19,13 @@ export default function Popularusers() {
     
     if (users != '') {
         var userlist = users.map((u) => {
-            return <div data-aos="flip-up" data-aos-once='true' data-aos-duration="500" key={u._id} className="col-md-3 ">
-                <div>{u.dname}</div>
-                <div>{u.liked}5464</div>
-                <hr className="bg-primary" />
-            </div>
+            return <React.Fragment>
+                <div data-aos="flip-up" data-aos-once='true' data-aos-duration="500" key={u._id} className="col-md-3 ">
+                    <NavLink style={{color:'indigo',fontFamily:'cursive'}} to={`./user/${u.dname}`}>{u.dname}</NavLink>
+                    <div>{u.liked}5464</div>
+                    <hr className="bg-primary" />
+                </div><br/>
+            </React.Fragment>
         })
     }
 

@@ -22,13 +22,15 @@ export default function Allquestions(props) {
     const user = useSelector(state => state.user);
 
     function goonask() {
-        alert(`User need to login first <button onclick={}> goto login <button>`)
-        props.history.push('/Login')
+        if(!user){
+            alert(`User need to login first <button onclick={}> goto login <button>`)
+        }
+        props.history.push('/Askaquestion')
     }
 
     return (<div class="row">
                 <h2 style={{width:'64%',display:'inline-block',padding:'0px 1%',fontFamily:'Fantasy'}}> All Questions </h2>
-                <div style={{width:'28%',display:'inline-block',textAlign:'center'}}><button className='bg-primary' type='button' style={{padding:'1% 2%',margin:'0% 1%',borderRadius:'6%'}} onClick={goonask}> Ask a Question </button></div>
+                {user && <div style={{width:'28%',display:'inline-block',textAlign:'center'}}><button className='bg-primary' type='button' style={{padding:'1% 2%',margin:'0% 1%',borderRadius:'6%'}} onClick={goonask}> Ask a Question </button></div>}
                 <div className='container'>
                 <div className='col-md-7' style={{padding:'0px 1%',fontFamily:'sans-serif'}}><h4>48435484 Questions</h4></div>
                 <div className='col-md-4'>

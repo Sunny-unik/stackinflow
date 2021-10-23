@@ -52,7 +52,6 @@ app.get("/question-by-id", (req,res)=>{
 
 app.get("/question-by-tag", (req,res)=>{
     var usercollection = connection.db('stackinflow').collection('q&a');
-    console.log(req.query.id)
     usercollection.find({tag:req.query.tag}).toArray((err,docs)=>{
         if(!err){
             console.log(docs)

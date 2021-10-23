@@ -18,14 +18,14 @@ export default function Askaquestion(props) {
     // var tags = tag.split(" ")
 
     const user = useSelector(state => state.user);
-    const useremail = useSelector(state => state.user.email);
+    const userdname = useSelector(state => state.user.dname);
     
     useEffect(() => {
         if(user==null){
             alert("User not found need to login first")
             props.history.push('/Login')
         }
-        else if(useremail==null){
+        else if(userdname==null){
             alert("user need to login first because useremail not found")
             props.history.push('/Login')
         }
@@ -45,7 +45,7 @@ export default function Askaquestion(props) {
     function submitq(){
         setdate(Date)
         // settags(tag.split(' '))
-        var createq = { qlikes,question,tag,useremail,date,answers }
+        var createq = { qlikes,question,tag,userdname,date,answers }
         console.log(createq)
         axios.post("http://localhost:3001/create-question",createq).then((res) => {
             alert(res.data.data);
