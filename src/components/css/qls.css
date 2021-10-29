@@ -279,3 +279,25 @@ a {
     background-position-x: 0px;
   }
 }
+.likebtn:hover {
+  border-radius: 10% 10% 10% 10%;
+  box-shadow: 1px 1px 1px 1px #0e73d8;
+}
+.likebtn:focus {
+  border-radius: 10% 10% 10% 10%;
+  box-shadow: 1px 1px 1px 1px #0e73d8;
+}
+.likebtn{
+  border-radius: 15% 15% 15% 15%;
+}
+.postans:focus{
+  box-shadow: 1px 1px 1px 1px #0e73d8;
+}
+.postans:hover{
+  box-shadow: 1px 1px 1px 1px #0e73d8;
+}
+.answersec{
+  border-radius: 0.5rem;
+  padding: 1rem 0rem 1.5rem 0rem;
+  background-color: #d3e3f3;
+}

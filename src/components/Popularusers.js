@@ -24,7 +24,7 @@ export default function Popularusers() {
                     <NavLink style={{color:'indigo',fontFamily:'cursive'}} to={`./user/${u.dname}`}>{u.dname}</NavLink>
                     <div>{u.liked}5464</div>
                     <hr className="bg-primary" />
-                </div><br/>
+                </div>
             </React.Fragment>
         })
     }
@@ -36,6 +36,10 @@ export default function Popularusers() {
             <button class="searchb" type='button' style={{fontFamily:'Fantasy'}} ><FcSearch/> Search </button><br />
         </div><br/>
         <div>
+            {userlist}
+            {userlist}
+            {userlist}
+            {userlist}
             {userlist}
             {!userlist && <Spinner/>}
         </div>

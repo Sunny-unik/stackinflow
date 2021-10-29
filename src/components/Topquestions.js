@@ -35,7 +35,7 @@ export default function Topquestions(props) {
             <div style={{border:'1px solid grey'}} >
             {question && question.map((q) => {
             return  <div key={q._id}>
-                <div data-aos="fade-in" data-aos-once='true' data-aos-duration="400" data-aos-offset='max-height'  style={{backgroundColor:'ButtonHighlight'}}>
+                <div data-aos="fade-in" data-aos-once='true' data-aos-duration="400" data-aos-offset='max-height'  style={{backgroundColor:'beige',borderBottom:'1px solid grey'}}>
                     <h4 style={{margin:'6px',boxSizing:"border-box",width:'64%',display:'inline-block',textDecoration:'none'}}><NavLink style={{color:'CaptionText'}} to={`/question/${q._id}`}>{q.question}</NavLink></h4>
                     {/* <h4 onClick={selectq(q._id)} style={{margin:'6px',padding:'0',boxSizing:"border-box",width:'64%',display:'inline-block',textDecoration:'none'}}>{q.question}</h4> */}
                     &nbsp; &nbsp;<div style={{width:'14%',display:'inline-block',margin:'6px',fontFamily:'serif',fontWeight:'600'}} > Likes: {q.qlikes.length}  </div>

@@ -22,11 +22,11 @@ export default function Askaquestion(props) {
     
     useEffect(() => {
         if(user==null){
-            alert("User not found need to login first")
+            alert("User not found, for ask question you have to login first")
             props.history.push('/Login')
         }
         else if(userdname==null){
-            alert("user need to login first because useremail not found")
+            alert("User not found, for ask question you have to login first")
             props.history.push('/Login')
         }
     })

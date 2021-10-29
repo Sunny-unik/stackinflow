@@ -40,7 +40,7 @@ export default function Allquestions(props) {
             </div>
             {question && question.map((q) => {
                 return  <React.Fragment>
-                        <div data-aos="fade-left" data-aos-once='true' data-aos-duration="500" className="bg-warning" key={q._id}>
+                        <div data-aos="fade-left" data-aos-once='true' data-aos-duration="500" className="bg-warning" style={{borderBottom:'1px solid grey'}} key={q._id}>
                             <h4 style={{margin:'8px',boxSizing:"border-box",width:'64%',display:'inline-block',textDecoration:'none'}}><NavLink to={`/question/${q._id}`} style={{color:'CaptionText'}}>{q.question}</NavLink></h4>
                             &nbsp; &nbsp;<div style={{width:'14%',display:'inline-block',margin:'8px',fontFamily:'serif',fontWeight:'600'}} > Likes: 6665466 </div>
                             &nbsp; &nbsp;<div style={{width:'14%',display:'inline-block',margin:'8px',fontFamily:'serif',fontWeight:'600'}} > Answer: 6665466 </div>
@@ -48,7 +48,7 @@ export default function Allquestions(props) {
                             &nbsp; &nbsp;<div style={{width:'36%',display:'inline-block',margin:'8px',fontFamily:'Times'}}>{q.date}</div>
                             <div style={{width:'10%',display:'inline-block',margin:'8px'}} className="text-info"><NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/tag/${q.tag}`}>{q.userdname}</NavLink></div>
                         </div>
-                            <hr style={{margin:'0',padding:'0'}} class='qhr'/>
+                            {/* <hr style={{margin:'0',padding:'0'}} class='qhr'/> */}
                         </React.Fragment>
             })}
             {!question && <Spinner/>}
