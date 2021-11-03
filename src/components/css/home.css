@@ -1,27 +1,16 @@
 .home{
 border: 1px dashed red;
 }
-.sidenavbar{
-position: sticky;
-top: 70px;
-}
-.ok:hover, .ok:focus{
-background-color:rgba(120, 219, 164, 0.925);
-text-align: center;
-color:aliceblue;
-font-size:x-large;
-text-transform: uppercase;
-font-weight: 800;
-}
-.ok{
-font-size:large;
-padding-top: 5px;
-font-style: italic;
-padding-bottom: 5px;
+#sidenavbar{
+position: sticky !important;
+top: 3.5rem;
+text-align: right;
+height: min-content;
 }
 .active1{
-background-image: linear-gradient(to right, rgba(255,40,20,0), rgba(245,0,20,5));
+background-image: linear-gradient(to right, rgba(50, 300, 200, 0), rgba(50,400,150,5));
 font-weight: 600;
+font-size: x-large;
 }
 /* /* @media only screen and (max-width: 1600px) {
   .home {
@@ -30,31 +19,76 @@ font-weight: 600;
     flex-direction: column;
   }
 } */
-/* @media only screen and (min-width: 1200px) {
-  .home {
-    background-color: lightblue;
-    width: 80vw;
-  }
+/* .side-nave {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  opacity: 0.9;
+  overflow-x: hidden;
+  margin-top: 60px;
+  transition: 0.5s;
+}
+.side-nave .btn-close {
+  position: absolute;
+  top: 0;
+  right: 22px;
+  font-size: 36px;
+  display: inline;
 } */
-/* @media only screen and (min-width: 992px) {
-  .home {
-    background-color:aquamarine;
+#sidemenuclose {
+  display: none;
+  width: min-content;
+}
+#sidemenuopen {
+  display: none;
+  width: min-content;
+}
+@media(max-width: 576px) {
+  .topmain {
+    width: 100%;
+    margin-left: 5%;
+  }
+  #sidemenuopen{
+    display: block;
+  }
+  #sidenavbar {
+    display: none;
+  }
+  #hiddennav{
+    height: 100%;
+    width: 46%;
+    position: fixed;
+    z-index: 20000 !important;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    opacity: 0.9;
+    overflow-x: hidden;
+    margin-top: 40px;
+    transition: 0.5s;  
   }
 }
-@media only screen and (min-width: 768px) {
-  .home {
-    background-color: blue;
+@media(min-width: 577px) {
+  #sidemenuopen{
+    display: none;
+  }
+  #sidemenuclose{
+    display: none;
+  }
+  #hiddennav{
+    display: none;
   }
 }
-@media only screen and (min-width: 500px) {
-  .home {
-    width:300px;
-    display: inline-block;
-  }
+.extralink{
+  text-decoration:underline;
+  color:dodgerblue;
 }
-@media only screen and (min-width: 300px) {
-  .home {
-    width:800px;
-    display: inline-block;
-  }
-} */
+.extralink:hover{
+  cursor: pointer;
+  color: #0054d2;
+  /* #FFC0CB */
+}

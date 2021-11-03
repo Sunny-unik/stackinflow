@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
+import { NavLink } from 'react-router-dom';
 import axios from 'axios'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import { FaHome, FaQuestionCircle, FaRegistered, FaSignInAlt, FaTags, FaUsers, FaWindowClose } from 'react-icons/fa'
+import { FcMenu } from 'react-icons/fc'
+import { useEffect } from 'react';
 
 export default function Signup(props) {
 
@@ -17,6 +21,10 @@ export default function Signup(props) {
     const [gitlink, setgitlink] = useState('')
     const [twitter, settwitter] = useState('')
     const [address, setaddress] = useState('')
+
+    useEffect(() => {
+        closeSlideMenu();
+    }, [])
 
     function setvalue(e) {
         e.target.name === "cemail" && setemail(e.target.value)
@@ -133,8 +141,31 @@ export default function Signup(props) {
         let Signup1 = document.getElementById('createdetail');
         Signup1.style.display = "block";
     }
+    
+    function openSlideMenu() {
+        document.getElementById('sidemenuopen').style.display = 'none';
+        document.getElementById('sidemenuclose').style.display = 'block';
+        document.getElementById('hiddennav').style.display = 'block';
+    }
+    function closeSlideMenu() {
+        document.getElementById('sidemenuclose').style.display = 'none';
+        document.getElementById('sidemenuopen').style.display = 'block';
+        document.getElementById('hiddennav').style.display = 'none';
+    }
 
-    return (
+    return ( <React.Fragment>
+
+    <button type="button" id='sidemenuopen' className="m-1 fixed-top btn" onClick={openSlideMenu}><FcMenu/></button>
+    <button type="button" id='sidemenuclose' className="m-1 fixed-top btn-primary" onClick={closeSlideMenu}><FaWindowClose/></button>
+    <div id="hiddennav" className="py-2 px-2">
+        <NavLink activeClassName="active1" exact to="/" onClick={closeSlideMenu}><FaHome/> Home </NavLink><br /><br />
+        <NavLink activeClassName="active1" to="/questions" onClick={closeSlideMenu}><FaQuestionCircle/> Questions </NavLink><br /><br />
+        <NavLink activeClassName="active1" to="/populartags" onClick={closeSlideMenu}><FaTags/> Popular Tags </NavLink><br /><br />
+        <NavLink activeClassName="active1" to="/popularusers" onClick={closeSlideMenu}><FaUsers/> Popular Users </NavLink><br /><br />
+        <NavLink  activeClassName="active1" to="/Login" onClick={closeSlideMenu}><FaSignInAlt/>LogIn</NavLink><br /><br />
+        <NavLink  activeClassName="active1" to="/Signup" onClick={closeSlideMenu}><FaRegistered/>SignIn</NavLink><br /><br />
+    </div>
+
         <div className="container signupcon">
             <div data-aos="flip-right" data-aos-once='true' data-aos-duration="500" className="col-md-5 col-lg-4 " id="createdetail" >
                 <form style={{padding:'3%',margin:'4px 0',borderRadius:'2%',boxShadow:'3px 4px 3px 3px #888888'}} >
@@ -167,6 +198,7 @@ export default function Signup(props) {
                 </form>
             </div>
         </div>
+    </React.Fragment>
     )
 }
 AOS.init();

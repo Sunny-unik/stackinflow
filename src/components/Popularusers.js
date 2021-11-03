@@ -17,32 +17,21 @@ export default function Popularusers() {
         })
     }, [])
     
-    if (users != '') {
-        var userlist = users.map((u) => {
-            return <React.Fragment>
-                <div data-aos="flip-up" data-aos-once='true' data-aos-duration="500" key={u._id} className="col-md-3 ">
-                    <NavLink style={{color:'indigo',fontFamily:'cursive'}} to={`./user/${u.dname}`}>{u.dname}</NavLink>
-                    <div>{u.liked}5464</div>
-                    <hr className="bg-primary" />
-                </div>
-            </React.Fragment>
-        })
-    }
-
-    return (<React.Fragment>
-        <div>
-            <h1 style={{fontFamily:'Fantasy'}}> Popular Users </h1>
-            <input type="text" placeholder=" Search User " style={{paddingLeft:'1%',fontFamily:'monospace',fontWeight:'bold'}} name="searchq" id="searchq" required className="searchq" />
-            <button class="searchb" type='button' style={{fontFamily:'Fantasy'}} ><FcSearch/> Search </button><br />
-        </div><br/>
-        <div>
-            {userlist}
-            {userlist}
-            {userlist}
-            {userlist}
-            {userlist}
-            {!userlist && <Spinner/>}
+    return (<div style={{borderLeft:'2px solid lightgrey'}}>
+        <div className="container" style={{borderBottom:'.1rem solid lightgrey',paddingBottom:'.6rem'}}>
+            <h1 style={{fontFamily:'sans-serif',marginTop:'.4rem'}}> Popular Users </h1>
+            <h4 style={{fontFamily:'Times',width:'95%'}}>These users are arranged in sequence as higher points to lowest.</h4>
+            <input type="text" placeholder=" Search User" style={{paddingLeft:'1%',fontFamily:'monospace',fontWeight:'bold'}} name="searchp" id="searchp" required className="searchtp"/>
+            <button class="searchb" style={{fontFamily:'Fantasy'}}><FcSearch/> Search</button>
         </div>
-    </React.Fragment>)
+        {!users && <Spinner />}
+        {users && users.map((p) => {
+            return <div className="mr-5 text-center " style={{padding:'1rem',display:'inline-block',width:'23%'}}>
+                <div className="border border-1 border-secondary rounded-top m-0 p-0 card-header"> {p.dname} </div>
+                <div className="border border-1 border-secondary rounded-bottom m-0 p-0 card-body"> Points: {p.userlikes} </div>
+            </div>
+        })}
+    </div>
+    )
 }
 AOS.init();

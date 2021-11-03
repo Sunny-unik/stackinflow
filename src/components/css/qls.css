@@ -301,3 +301,30 @@ a {
   padding: 1rem 0rem 1.5rem 0rem;
   background-color: #d3e3f3;
 }
+.qla{
+  padding: .1rem .4rem;
+  display: inline-block;
+  margin: 6px;
+  font-family:cursive;
+  font-weight:'600';
+  /* background-color: rgb(167, 241, 217); */
+  color: #f1f1f1;
+  border-radius: 2rem;
+  text-align: center;
+  border: .1rem solid skyblue;
+}
+.mainqdiv{
+  margin: .4rem;
+  width: 73%;
+  display: inline-block;
+}
+.maintagdiv{
+  margin: .1rem;
+  width: 41%;
+  display: inline-block;
+}
+.maindnamediv{
+  margin: .1rem;
+  width: 18%;
+  display: inline-block;
+}

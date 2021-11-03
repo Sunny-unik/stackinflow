@@ -25,12 +25,12 @@ export default function Question(props) {
             settag(res.data.data[0].tag)
             setqdate(res.data.data[0].date)
             setqlikes(res.data.data[0].qlikes)
-            setanswer(res.data.data[0].answer)
+            setanswer(res.data.data[0].answers)
         })
     }, [])
     console.log(answer);
     
-    return <React.Fragment style={{backgroundColor:'blue'}}>
+    return <div style={{borderLeft:'.1rem solid lightgrey'}}>
         <div style={{display:'flex',justifyContent:'space-between' ,alignItems:'center'}}>
         <h1>Q.</h1><h2 className="col-sm-8 text-left" style={{fontFamily:'fantasy'}}>{question}</h2>
         <button className='col-sm-1 likebtn' style={{backgroundColor:'white',height:'min-content',width:'min-content'}}><FcLike/>{qlikes? qlikes.length : '0' }</button>
@@ -43,7 +43,7 @@ export default function Question(props) {
         return  <div style={{margin:'1rem 1rem 1rem 1rem'}} key={a.answer}>
         <div className="answersec container-fluid">
         <h4 className='col-sm-8'>{a.answer}</h4>
-        <button className='col-sm-1 likebtn' style={{backgroundColor:'white',height:'min-content',width:'min-content'}}><FcLikePlaceholder/>{a.alikes ? a.alikes.length : '0' } </button>
+        <button className='col-sm-1 likebtn' style={{backgroundColor:'white',height:'min-content',width:'min-content'}}><FcLikePlaceholder/>{a.alikes ? a.alikes.length : 0} </button>
         <div className="col-sm-3">Asked By <NavLink style={{fontFamily:'cursive'}} to={`/user/${a.username}`}>{a.username}</NavLink> on <br/>{a.date}.</div>
         </div>
         </div> }) }
@@ -61,5 +61,5 @@ export default function Question(props) {
         : <span>or <NavLink className='bg-warning' to={'/login'}>login </NavLink>first for ask your own questions.</span>}
         </h3>
         
-    </React.Fragment>
+    </div>
 }

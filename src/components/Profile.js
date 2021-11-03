@@ -5,10 +5,10 @@ import Askedquestions from "./profile/Askedquestions"
 import Givenanswer from "./profile/Givenaswer"
 import Editprofile from "./profile/Editprofile"
 import Likedanswer from './profile/Likedanswer'
-import { useSelector } from 'react-redux';
-import { FaGithub, FaTwitter } from 'react-icons/fa';
-import { IoLocationSharp } from 'react-icons/io5';
-import { FcCollaboration } from 'react-icons/fc';
+import { useDispatch, useSelector } from 'react-redux';
+import { FaFonticonsFi, FaGithub, FaHome, FaQuestion, FaQuestionCircle, FaSignOutAlt, FaTags, FaTwitter, FaUsers, FaUserTie, FaWindowClose } from 'react-icons/fa';
+import { IoLocationSharp, IoNotifications, IoNotificationsCircleOutline } from 'react-icons/io5';
+import { FcCollaboration, FcMenu } from 'react-icons/fc';
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
@@ -16,9 +16,9 @@ export default function Profile(props) {
 
     const user = useSelector(state => state.user);
     useEffect(() => {
+        closeSlideMenu();
         if (user == null) {
             alert("User need to login first")
-            props.history.push('/Login')
         }
     })
     console.log(user)
@@ -47,9 +47,51 @@ export default function Profile(props) {
     const [answeru, setanswerbyudnu] = useState(0)
     const [likesu, setlikesbyudnu] = useState(0)
 
+    
+    function openSlideMenu() {
+        document.getElementById('sidemenuopen').style.display = 'none';
+        document.getElementById('sidemenuclose').style.display = 'block';
+        document.getElementById('hiddennav').style.display = 'block';
+    }
+    function closeSlideMenu() {
+        document.getElementById('sidemenuclose').style.display = 'none';
+        document.getElementById('sidemenuopen').style.display = 'block';
+        document.getElementById('hiddennav').style.display = 'none';
+    }
+    
+    const dispatch = useDispatch();
+    function logout(){
+        dispatch({type:"LOGOUT_USER"});
+        alert("User successfully logout")
+    }
+
+    function sidelink(){
+        if(user){
+            props.history.push("/askaquestion")
+            closeSlideMenu()
+        }
+        else{
+            alert('User need to login first')
+        }
+    }
+
     return (
         <React.Fragment>
-            <div className="container ">
+
+    <button type="button" id='sidemenuopen' className="m-1 fixed-top btn" onClick={openSlideMenu}><FcMenu/></button>
+    <button type="button" id='sidemenuclose' className="m-1 fixed-top btn-primary" onClick={closeSlideMenu}><FaWindowClose/></button>
+    <div id="hiddennav" className="py-2 px-2">
+        <NavLink activeClassName="active1" exact to="/" onClick={closeSlideMenu}><FaHome/> Home </NavLink><br /><br />
+        <NavLink activeClassName="active1" to="/questions" onClick={closeSlideMenu}><FaQuestionCircle/> Questions </NavLink><br /><br />
+        <NavLink activeClassName="active1" to="/populartags" onClick={closeSlideMenu}><FaTags/> Popular Tags </NavLink><br /><br />
+        <span activeClassName="active1" class="extralink" style={{fontSize:'inherit',fontFamily:'sans-serif'}} onClick={sidelink}><FaQuestion/> Ask Question </span><br/><br/>
+        <NavLink activeClassName="active1" to="/popularusers" onClick={closeSlideMenu}><FaUsers/> Popular Users </NavLink><br /><br />
+        <NavLink  activeClassName="active1" to="/Profile" onClick={closeSlideMenu}><FaUserTie/> Profile </NavLink><br /><br />
+        <NavLink activeClassName="active1" to="/notification" onClick={closeSlideMenu}><IoNotificationsCircleOutline/> Notifications </NavLink><br /><br />
+        <NavLink  activeClassName="active1" onClick={logout} to="/Login" onClick={closeSlideMenu}><FaSignOutAlt/> LogOut </NavLink><br /><br />
+    </div>
+
+            <div className="container">
                 <div className="col-md-3 col-lg-3 col-sm-3 proimgdiv"><br />
                     <div className="profilepic" data-aos="flip-up" data-aos-once='true' data-aos-duration="600" >
                         <img className="col-sm-12" height="225px" width="75px" src={uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/crea15.jpg"} alt="user profile" />

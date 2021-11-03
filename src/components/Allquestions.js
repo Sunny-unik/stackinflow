@@ -1,58 +1,51 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink } from "react-router-dom"
 import { useSelector } from 'react-redux';
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import Spinner from './spinner';
 
-export default function Allquestions(props) {
+export default function Allquestions() {
 
     const [question, setquestion] = useState([])
 
     useEffect(() => {
         axios.get("http://localhost:3001/list-question").then((res) => {
-            console.log(res.data.data)
+            console.log(res.data)
             setquestion(res.data.data)
         })
     }, [])
-
     console.log(question)
 
     const user = useSelector(state => state.user);
 
-    function goonask() {
-        if(!user){
-            alert(`User need to login first <button onclick={}> goto login <button>`)
-        }
-        props.history.push('/Askaquestion')
-    }
-
-    return (<div class="row">
-                <h2 style={{width:'64%',display:'inline-block',padding:'0px 1%',fontFamily:'Fantasy'}}> All Questions </h2>
-                {user && <div style={{width:'28%',display:'inline-block',textAlign:'center'}}><button className='bg-primary' type='button' style={{padding:'1% 2%',margin:'0% 1%',borderRadius:'6%'}} onClick={goonask}> Ask a Question </button></div>}
-                <div className='container'>
-                <div className='col-md-7' style={{padding:'0px 1%',fontFamily:'sans-serif'}}><h4>48435484 Questions</h4></div>
-                <div className='col-md-4'>
-                    <button className=' bg-info' type='button' style={{padding:'1% 2%',margin:'0% 1%',borderRadius:'6%'}}> Oldest First </button>
-                    <button className=' bg-info' type='button' style={{padding:'1% 2%',margin:'0% 1%',borderRadius:'6%'}}> Not Answered </button>
-                </div>
-            </div>
-            {question && question.map((q) => {
-                return  <React.Fragment>
-                        <div data-aos="fade-left" data-aos-once='true' data-aos-duration="500" className="bg-warning" style={{borderBottom:'1px solid grey'}} key={q._id}>
-                            <h4 style={{margin:'8px',boxSizing:"border-box",width:'64%',display:'inline-block',textDecoration:'none'}}><NavLink to={`/question/${q._id}`} style={{color:'CaptionText'}}>{q.question}</NavLink></h4>
-                            &nbsp; &nbsp;<div style={{width:'14%',display:'inline-block',margin:'8px',fontFamily:'serif',fontWeight:'600'}} > Likes: 6665466 </div>
-                            &nbsp; &nbsp;<div style={{width:'14%',display:'inline-block',margin:'8px',fontFamily:'serif',fontWeight:'600'}} > Answer: 6665466 </div>
-                            <div style={{width:'46%',display:'inline-block',margin:'8px'}}><NavLink style={{color:'navy',fontFamily:'monospace'}} className="bg-warning" to={`/tag/${q.tag}`}>{q.tag}</NavLink></div>
-                            &nbsp; &nbsp;<div style={{width:'36%',display:'inline-block',margin:'8px',fontFamily:'Times'}}>{q.date}</div>
-                            <div style={{width:'10%',display:'inline-block',margin:'8px'}} className="text-info"><NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/tag/${q.tag}`}>{q.userdname}</NavLink></div>
-                        </div>
-                            {/* <hr style={{margin:'0',padding:'0'}} class='qhr'/> */}
-                        </React.Fragment>
-            })}
-            {!question && <Spinner/>}
-        </div >
+    return (
+<div class="row" style={{borderLeft:'2px solid lightgrey'}}>
+    <div>
+    <h1 style={{padding:'0px 1%',margin:'.4rem 0 .4rem 0',fontFamily:'sans-serif'}}> All {question.length>0 ? <p className="d-inline">{question.length} Question</p> : <p className="d-inline">Questions</p> }</h1>
+    <div class="btn-group" style={{margin:'0px .3rem 0px .8rem',borderBottom:'.1rem solid lightgrey'}}>
+        <span class="btn btn-primary active" type='button' aria-current="page"> Oldest </span><vr/>
+        <span class="btn btn-primary" type='button'> Not Answered </span>
+    </div><hr style={{marginBottom:'0'}}/>
+    </div>
+    <div style={{background:'beige'}}>
+    {question && question.map((q) => {
+    return (
+    <div key={q._id}>
+<div style={{borderBottom:'.1rem solid lightgrey'}}>
+    <h4 data-aos="fade-left" data-aos-offset='max-height' data-aos-once='true' data-aos-duration="400" className='mainqdiv'><NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}>{q.question}</NavLink></h4>
+    <div class="qla bg-secondary"> Likes: {q.qlikes.length}  </div>
+    <div class="qla bg-secondary"><NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}> Answer: {q.answers.length} </NavLink></div>
+    <div class="maintagdiv mx-2"><NavLink style={{color:'white',fontFamily:'monospace',padding:'.2rem'}} className="rounded-2 bg-dark" to={`/tag/${q.tag}`}>{q.tag}</NavLink></div>
+    <div style={{width:'37%',display:'inline-block',margin:'6px',fontFamily:'Times'}}>asked at {q.date}</div>
+    <div class="maindnamediv" style={{fontSize:'.9rem',fontFamily:'cursive'}}>asked by <NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/user/${q.userdname}`}>{q.userdname}</NavLink></div>
+</div>
+    </div>)
+    })}
+    </div>
+    {!question && <Spinner />}
+</div >
     )
 }
 AOS.init();

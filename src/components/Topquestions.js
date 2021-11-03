@@ -7,10 +7,9 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import Spinner from './spinner'
 
-export default function Topquestions(props) {
+export default function Topquestions() {
 
     const [question, setquestion] = useState([])
-
     
     useEffect(() => {
         axios.get("http://localhost:3001/list-question").then((res) => {
@@ -20,36 +19,30 @@ export default function Topquestions(props) {
     }, [])
     console.log(question)
 
-    // function selectq(id){
-    //         props.history.push("/question/"+id)
-    // }
-
-    return (
-        <div className='container row'>
-            <div style={{border: '1px solid grey',padding: '0 0 1% 0'}}>
-                <h1 style={{fontFamily:'fantasy',fontWeight:'normal',margin:'1% 0 1% 1%',width:'30%',display:'inline-block'}}> Top Questions </h1><br />
-                <button style={{margin:'0px 5px 0px 5px'}} className=' bg-info' type='button'> Newest </button>
-                <button style={{margin:'0px 5px 0px 5px'}} className=' bg-info' type='button'> Most Liked </button>
-                <button style={{margin:'0px 5px 0px 5px'}} className=' bg-info' type='button'> Most Answered </button>
-            </div>
-            <div style={{border:'1px solid grey'}} >
-            {question && question.map((q) => {
-            return  <div key={q._id}>
-                <div data-aos="fade-in" data-aos-once='true' data-aos-duration="400" data-aos-offset='max-height'  style={{backgroundColor:'beige',borderBottom:'1px solid grey'}}>
-                    <h4 style={{margin:'6px',boxSizing:"border-box",width:'64%',display:'inline-block',textDecoration:'none'}}><NavLink style={{color:'CaptionText'}} to={`/question/${q._id}`}>{q.question}</NavLink></h4>
-                    {/* <h4 onClick={selectq(q._id)} style={{margin:'6px',padding:'0',boxSizing:"border-box",width:'64%',display:'inline-block',textDecoration:'none'}}>{q.question}</h4> */}
-                    &nbsp; &nbsp;<div style={{width:'14%',display:'inline-block',margin:'6px',fontFamily:'serif',fontWeight:'600'}} > Likes: {q.qlikes.length}  </div>
-                    &nbsp; &nbsp;<div style={{width:'14%',display:'inline-block',margin:'6px',fontFamily:'serif',fontWeight:'600'}} > Answer: {/* {q.answer.length} */} </div>
-                    <div style={{width:'46%',display:'inline-block',margin:'6px'}}><NavLink style={{color:'navy',fontFamily:'monospace'}} className="bg-warning" to={`/tag/${q.tag}`}>{q.tag}</NavLink></div>
-                    &nbsp; &nbsp;<div style={{width:'36%',display:'inline-block',margin:'6px',fontFamily:'Times'}}>{q.date}</div>
-                    <div style={{width:'10%',display:'inline-block',margin:'6px'}} className="text-info"><NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/user/${q.userdname}`}>{q.userdname}</NavLink></div>
-                    <hr style={{margin:'0',padding:'0',color:'black'}} />
-                </div>
-            </div>
-            })}
-            {!question && <Spinner/>}
+    return <div className='row p-0' style={{borderLeft:'.1rem solid lightgrey',paddingLeft:'.2rem'}}>
+        <div style={{padding: '0 0 1% 0',borderBottom:'.1rem solid lightgrey'}}>
+            <h1 style={{margin:'1% 0 1% 2%',display:'inline-block'}}> Top Questions </h1><br />
+            <div class="btn-group" style={{margin:'0px .3rem 0px .8rem'}}>
+                <span class="btn btn-primary active" type='button' aria-current="page"> Newest </span><vr/>
+                <span class="btn btn-primary" type='button'> Most Liked</span>
+                <span class="btn btn-primary" type='button'> Most Answered </span>
             </div>
         </div>
-    )
+        <div style={{padding:'0 0 0 0'}}>
+        {question && question.map((q) => {
+        return  <div key={q._id}>
+                <div data-aos="fade-in" data-aos-once='true' data-aos-duration="400" data-aos-offset='max-height' style={{backgroundColor:'beige',borderBottom:'.1rem solid grey'}}>
+                    <h4 className='mainqdiv'><NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}>{q.question}</NavLink></h4>
+                    <div class="qla bg-secondary"> Likes: {q.qlikes.length}  </div>
+                    <div class="qla bg-secondary"><NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}> Answer: {q.answers.length} </NavLink></div>
+                    <div class="maintagdiv mx-2"><NavLink style={{color:'white',fontFamily:'monospace',padding:'.2rem'}} className="rounded-2 bg-dark" to={`/tag/${q.tag}`}>{q.tag}</NavLink></div>
+                    <div style={{width:'37%',display:'inline-block',margin:'6px',fontFamily:'Times'}}>asked at {q.date}</div>
+                    <div class="maindnamediv"><NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/user/${q.userdname}`}>asked by {q.userdname}</NavLink></div>
+                </div>
+        </div>
+        })}
+        {!question && <Spinner/>}
+        </div>
+    </div>
 }
 AOS.init();

@@ -4,12 +4,15 @@
     top: 0%;
     z-index: 1;
 }
-.searchq{
-    margin: 10px 0px 0 0 ;
+.searchtp{
+    /* margin-left: 10px auto ; */
     padding: 0%;
-    height: 45px;
-    width: 88% ;
+    height: 3rem;
+    width: 28%;
     border-radius: 20px ;
+}
+.searchquestion{
+    width: 60% !important;
 }
 .searchb{
     margin: 0%;
@@ -30,4 +33,9 @@
 }
 .cnavbrand:hover{
     color: aliceblue;
+}
+@media(max-width:576px) {
+    .navshrink{
+        display:none;
+    }
 }

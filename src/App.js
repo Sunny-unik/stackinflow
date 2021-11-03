@@ -6,53 +6,56 @@ import Login from './components/Login';
 import Profile from './components/Profile';
 import Signup from './components/Signup';
 import {useDispatch, useSelector} from 'react-redux';
-import { FaSearch } from 'react-icons/fa';
-import { FcSearch } from 'react-icons/fc';
+import { FaRegistered, FaSearch, FaSignInAlt, FaSignOutAlt, FaUserTie } from 'react-icons/fa';
 
-function App(props) {
+function App() {
 
   const user = useSelector(state => state.user);
   const dispatch = useDispatch();
   function logout(){
     dispatch({type:"LOGOUT_USER"});
-    alert("user successfully logout")
-    // props.history.push("/Login");
+    alert("User successfully logout")
   }
 
   return (
-    <Router>
-      <nav class="navbar navbar-inverse mainnavbar">
-        <div class="container ">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <span ><NavLink activeClassName="active" exact to="/"><h2 className='cnavbrand' style={{fontFamily:'sans-serif'}}>Stack<b>inflow</b></h2></NavLink></span>
-          </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <div className="col-sm-8">
-              <input type="text" placeholder="Search Question" name="searchq" id="searchq" required className="bg-seconday searchq" style={{paddingLeft:'2%',fontSize:'medium',fontFamily:'serif'}} />
-              <button class=" bg-warning searchb" type="button" style={{fontFamily:'fantasy'}}><FcSearch/> Search </button>
-          </div>
-          <div className="col-sm-4 collapse navbar-collapse" id="myNavbar" >
-            <ul class="nav navbar-nav navbar-right">
-              {!user &&<li className="mainnavitem"><NavLink activeClassName="active" to="/Login" style={{color:'dodgerblue',fontFamily:'fantasy',marginTop:'14%'}}><span class="glyphicon glyphicon-log-in"></span> Log In </NavLink></li>}
-              {!user &&<li className="mainnavitem"><NavLink activeClassName="active" to="/Signup" style={{color:'dodgerblue',fontFamily:'fantasy',marginTop:'14%'}}><span class="glyphicon glyphicon-registration-mark"></span> Sign Up </NavLink></li>}
-              {user && <li className="mainnavitem"><NavLink activeClassName="active" to="/Profile" style={{color:'dodgerblue',fontFamily:'fantasy',marginTop:'14%'}}><span class="glyphicon glyphicon-user"></span> Profile </NavLink></li>}
-              {user && <li className="mainnavitem"><NavLink activeClassName="active" to="/Login" onClick={logout} style={{color:'dodgerblue',fontFamily:'fantasy',marginTop:'14%'}}><span class="glyphicon glyphicon-log-out"></span> Log Out </NavLink></li>}
-            </ul>
+<Router>
+  <nav class="navbar navbar-expand-sm bg-dark sticky-top">
+    <div class="container">
+      <ul class="navbar-nav w-100 m-auto">
+        <li class="navbar-header col-md-2 text-center">
+          <NavLink className="nabar-brand" style={{textDecoration:'none',fontSize:'1.4rem',fontFamily:'fantasy'}} activeClassName="active" exact to="/"><i>Stackinflow</i></NavLink>
+        </li>
+        <li class="nav-item col-md-8 text-center">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search Question" name="search"/>
+          <div class="input-group-btn">
+            <button class="btn btn-default bg-primary" type="button"><FaSearch/></button>
           </div>
         </div>
-      </nav>
-      <Switch>
-        <Route path="/Login" component={Login} />
-        <Route path="/Signup" component={Signup} />
-        <Route path="/Profile" component={Profile} />
-        <Route path="/Login" component={Login} />
-        <Route path="/" component={Home} />
-      </Switch>
-    </Router>
+        </li>
+        {!user &&<li class="navshrink nav-item col-sm-1 text-center">
+          <NavLink class="nav-link" activeClassName="active" to="/Login" style={{fontFamily:'fantasy'}}><FaSignInAlt/>LogIn</NavLink>
+        </li>}
+        {!user &&<li class="nav-item navshrink col-sm-1 text-center">
+          <NavLink class="nav-link" activeClassName="active" to="/Signup" style={{fontFamily:'fantasy'}}><FaRegistered/>SignIn</NavLink>
+        </li>}
+        {user &&<li class="nav-item col-sm-1 navshrink text-center">
+          <NavLink class="nav-link" activeClassName="active" to="/Profile" style={{fontFamily:'fantasy'}}><FaUserTie/>Profile</NavLink>
+        </li>}
+        {user &&<li class="nav-item col-sm-1 text-center navshrink">
+          <NavLink class="nav-link" activeClassName="active" to="/Login" onClick={logout} style={{fontFamily:'fantasy'}}><FaSignOutAlt/>LogOut</NavLink>
+        </li>}
+      </ul>
+    </div>
+  </nav>
+  <Switch>
+    <Route path="/Login" component={Login} />
+    <Route path="/Signup" component={Signup} />
+    <Route path="/Profile" component={Profile} />
+    <Route path="/Login" component={Login} />
+    <Route path="/" component={Home} />
+  </Switch>
+</Router>
   );
 }
 

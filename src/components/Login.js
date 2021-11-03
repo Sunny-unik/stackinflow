@@ -4,6 +4,9 @@ import { checkLogin } from '../action/useraction';
 import {useDispatch, useSelector} from 'react-redux';
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import { FaHome, FaQuestionCircle, FaRegistered, FaSignInAlt, FaTags, FaUsers, FaWindowClose } from 'react-icons/fa';
+import { NavLink } from 'react-router-dom';
+import { FcMenu } from 'react-icons/fc';
 
 export default function Login(props) {
 
@@ -25,6 +28,7 @@ export default function Login(props) {
     const reduxUser = useSelector(state => state.user);
 
     useEffect(() => {
+        closeSlideMenu();
       if(reduxUser){
         props.history.push("/");
       }
@@ -111,7 +115,30 @@ export default function Login(props) {
     //     }
     // }
     
-    return (
+    function openSlideMenu() {
+        document.getElementById('sidemenuopen').style.display = 'none';
+        document.getElementById('sidemenuclose').style.display = 'block';
+        document.getElementById('hiddennav').style.display = 'block';
+    }
+    function closeSlideMenu() {
+        document.getElementById('sidemenuclose').style.display = 'none';
+        document.getElementById('sidemenuopen').style.display = 'block';
+        document.getElementById('hiddennav').style.display = 'none';
+    }
+
+    return (<React.Fragment>
+
+    <button type="button" id='sidemenuopen' className="m-1 fixed-top btn" onClick={openSlideMenu}><FcMenu/></button>
+    <button type="button" id='sidemenuclose' className="m-1 fixed-top btn-primary" onClick={closeSlideMenu}><FaWindowClose/></button>
+    <div id="hiddennav" className="py-2 px-2">
+        <NavLink activeClassName="active1" exact to="/" onClick={closeSlideMenu}><FaHome/> Home </NavLink><br /><br />
+        <NavLink activeClassName="active1" to="/questions" onClick={closeSlideMenu}><FaQuestionCircle/> Questions </NavLink><br /><br />
+        <NavLink activeClassName="active1" to="/populartags" onClick={closeSlideMenu}><FaTags/> Popular Tags </NavLink><br /><br />
+        <NavLink activeClassName="active1" to="/popularusers" onClick={closeSlideMenu}><FaUsers/> Popular Users </NavLink><br /><br />
+        <NavLink  activeClassName="active1" to="/Login" onClick={closeSlideMenu}><FaSignInAlt/>LogIn</NavLink><br /><br />
+        <NavLink  activeClassName="active1" to="/Signup" onClick={closeSlideMenu}><FaRegistered/>SignIn</NavLink><br /><br />
+    </div>
+
         <div className="container logincon">
             <div data-aos="flip-left" data-aos-once='true' data-aos-duration="500" className="col-md-5 col-lg-4 " id="logindetail" >
                 <form className="d-inline-block" style={{padding:'3%',margin:'4px 0',borderRadius:'2%',boxShadow:'4px 4px 3px 3px #888888'}}>
@@ -157,6 +184,6 @@ export default function Login(props) {
                 </form>
             </div>
         </div>
-    )
+    </React.Fragment>)
 }
 AOS.init();
