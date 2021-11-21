@@ -50,6 +50,7 @@ export default function Populartags() {
             <input type="text" placeholder=" Search Tag" style={{ paddingLeft: '1%', fontFamily: 'monospace', fontWeight: 'bold' }} name="searcht" id="searcht" required className="searchtp" />
             <button class="searchb" style={{ fontFamily: 'Fantasy' }}><FcSearch /> Search</button>
         </div>
+        <div style={{minHeight:'80vh'}}>
         {!question && <Spinner />}
         {question && question.map((p) => {
             return <div className="text-center" style={{padding:'1rem',display:'inline-block',width:'23%'}}>
@@ -57,6 +58,7 @@ export default function Populartags() {
                 <div className="border border-3 border-secondary rounded-3 m-0 p-0 card-body"> {p.tag} </div>
             </div>
         })}
+        </div>
         </div>
 }
 AOS.init();

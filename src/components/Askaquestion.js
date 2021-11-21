@@ -53,7 +53,7 @@ export default function Askaquestion(props) {
     }
 
     return (
-        <div>
+        <div style={{minHeight:'80vh'}}>
             {user && <div class="ask mb-1">
             <b><h1> Ask any Question </h1></b><br/>
             <form>

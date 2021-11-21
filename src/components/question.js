@@ -30,7 +30,7 @@ export default function Question(props) {
     }, [])
     console.log(answer);
     
-    return <div style={{borderLeft:'.1rem solid lightgrey'}}>
+    return <div style={{borderLeft:'.1rem solid lightgrey',minHeight:'80vh'}}>
         <div style={{display:'flex',justifyContent:'space-between' ,alignItems:'center'}}>
         <h1>Q.</h1><h2 className="col-sm-8 text-left" style={{fontFamily:'fantasy'}}>{question}</h2>
         <button className='col-sm-1 likebtn' style={{backgroundColor:'white',height:'min-content',width:'min-content'}}><FcLike/>{qlikes? qlikes.length : '0' }</button>

@@ -19,7 +19,7 @@ export default function Topquestions() {
     }, [])
     console.log(question)
 
-    return <div className='row p-0' style={{borderLeft:'.1rem solid lightgrey',paddingLeft:'.2rem'}}>
+    return <div className='row p-0' style={{borderLeft:'.1rem solid lightgrey',paddingLeft:'.2rem',minHeight:'80vh'}}>
         <div style={{padding: '0 0 1% 0',borderBottom:'.1rem solid lightgrey'}}>
             <h1 style={{margin:'1% 0 1% 2%',display:'inline-block'}}> Top Questions </h1><br />
             <div class="btn-group" style={{margin:'0px .3rem 0px .8rem'}}>

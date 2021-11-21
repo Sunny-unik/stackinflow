@@ -12,52 +12,12 @@ background-image: linear-gradient(to right, rgba(50, 300, 200, 0), rgba(50,400,1
 font-weight: 600;
 font-size: x-large;
 }
-/* /* @media only screen and (max-width: 1600px) {
-  .home {
-    background-color: lightblue;
-    display: flex;
-    flex-direction: column;
-  }
-} */
-/* .side-nave {
-  height: 100%;
-  width: 0;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #111;
-  opacity: 0.9;
-  overflow-x: hidden;
-  margin-top: 60px;
-  transition: 0.5s;
-}
-.side-nave .btn-close {
-  position: absolute;
-  top: 0;
-  right: 22px;
-  font-size: 36px;
-  display: inline;
-} */
 #sidemenuclose {
   display: none;
-  width: min-content;
 }
 #sidemenuopen {
-  display: none;
-  width: min-content;
+  display: none !important;
 }
-@media(max-width: 576px) {
-  .topmain {
-    width: 100%;
-    margin-left: 5%;
-  }
-  #sidemenuopen{
-    display: block;
-  }
-  #sidenavbar {
-    display: none;
-  }
   #hiddennav{
     height: 100%;
     width: 46%;
@@ -69,20 +29,21 @@ font-size: x-large;
     opacity: 0.9;
     overflow-x: hidden;
     margin-top: 40px;
-    transition: 0.5s;  
+    transition: 0.5s; 
+    display: none; 
   }
-}
-@media(min-width: 577px) {
+  @media only screen and (max-width: 576px) {
+  .topmain {
+    width: 100%;
+    margin-left: 5%;
+  }
   #sidemenuopen{
+    display: block !important;
+  }
+  #sidenavbar {
     display: none;
   }
-  #sidemenuclose{
-    display: none;
   }
-  #hiddennav{
-    display: none;
-  }
-}
 .extralink{
   text-decoration:underline;
   color:dodgerblue;
@@ -90,5 +51,5 @@ font-size: x-large;
 .extralink:hover{
   cursor: pointer;
   color: #0054d2;
-  /* #FFC0CB */
+  /* #FFC0CB stackpinkish */
 }

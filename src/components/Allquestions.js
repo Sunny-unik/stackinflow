@@ -21,7 +21,7 @@ export default function Allquestions() {
     const user = useSelector(state => state.user);
 
     return (
-<div class="row" style={{borderLeft:'2px solid lightgrey'}}>
+<div class="row" style={{borderLeft:'2px solid lightgrey',minHeight:'80vh'}}>
     <div>
     <h1 style={{padding:'0px 1%',margin:'.4rem 0 .4rem 0',fontFamily:'sans-serif'}}> All {question.length>0 ? <p className="d-inline">{question.length} Question</p> : <p className="d-inline">Questions</p> }</h1>
     <div class="btn-group" style={{margin:'0px .3rem 0px .8rem',borderBottom:'.1rem solid lightgrey'}}>

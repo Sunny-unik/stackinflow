@@ -24,6 +24,7 @@ export default function Popularusers() {
             <input type="text" placeholder=" Search User" style={{paddingLeft:'1%',fontFamily:'monospace',fontWeight:'bold'}} name="searchp" id="searchp" required className="searchtp"/>
             <button class="searchb" style={{fontFamily:'Fantasy'}}><FcSearch/> Search</button>
         </div>
+        <div style={{minHeight:'80vh'}}>
         {!users && <Spinner />}
         {users && users.map((p) => {
             return <div className="mr-5 text-center " style={{padding:'1rem',display:'inline-block',width:'23%'}}>
@@ -31,6 +32,7 @@ export default function Popularusers() {
                 <div className="border border-1 border-secondary rounded-bottom m-0 p-0 card-body"> Points: {p.userlikes} </div>
             </div>
         })}
+        </div>
     </div>
     )
 }

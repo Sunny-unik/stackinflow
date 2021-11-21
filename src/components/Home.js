@@ -12,8 +12,8 @@ import Tag from "./tag"
 import React from "react"
 import Footer from "./Footer"
 import User from "./user"
-import {  FaHome, FaQuestion, FaQuestionCircle, FaRegistered, FaSignInAlt, FaSignOutAlt, FaTags, FaUsers, FaUserTag, FaUserTie, FaWindowClose } from "react-icons/fa"
-import { FcHome, FcMenu } from "react-icons/fc"
+import {  FaHome, FaQuestion, FaQuestionCircle, FaRegistered, FaSignInAlt, FaSignOutAlt, FaTags, FaUsers, FaUserTie, FaWindowClose } from "react-icons/fa"
+import { FcMenu } from "react-icons/fc"
 import { IoNotificationsCircleOutline } from "react-icons/io5"
 import { useEffect } from "react"
 
@@ -53,8 +53,8 @@ export default function Home(props) {
 
     return (
 <React.Fragment>
-    <button type="button" id='sidemenuopen' className="m-1 fixed-top btn" onClick={openSlideMenu}><FcMenu/></button>
-    <button type="button" id='sidemenuclose' className="m-1 fixed-top btn-primary" onClick={closeSlideMenu}><FaWindowClose/></button>
+    <button type="button" id='sidemenuopen' className="m-2 fixed-top btn-dark" onClick={openSlideMenu}><FcMenu/> </button>
+    <button type="button" id='sidemenuclose' className="m-2 fixed-top btn-primary" onClick={closeSlideMenu}><FaWindowClose/> </button>
     <div id="hiddennav" className="py-2 px-2">
         <NavLink activeClassName="active1" exact to="/" onClick={closeSlideMenu}><FaHome/> Home </NavLink><br /><br />
         <NavLink activeClassName="active1" to="/questions" onClick={closeSlideMenu}><FaQuestionCircle/> Questions </NavLink><br /><br />
