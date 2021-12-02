@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, NavLink } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
@@ -7,8 +7,11 @@ import Profile from './components/Profile';
 import Signup from './components/Signup';
 import {useDispatch, useSelector} from 'react-redux';
 import { FaRegistered, FaSearch, FaSignInAlt, FaSignOutAlt, FaUserTie } from 'react-icons/fa';
+import axios from 'axios';
 
 function App() {
+
+  const [questions, setquestions] = useState()
 
   const user = useSelector(state => state.user);
   const dispatch = useDispatch();
@@ -17,6 +20,14 @@ function App() {
     alert("User successfully logout")
   }
 
+  // useEffect(() => {
+  //   axios.get("http://localhost:3001/list-question").then((res) => {
+  //       console.log(res.data.data)
+  //       setquestions(res.data.data)
+  //   })
+  // }, [])
+  // console.log(questions)
+  
   return (
 <Router>
   <nav class="navbar navbar-expand-sm bg-dark sticky-top">
@@ -27,7 +38,16 @@ function App() {
         </li>
         <li class="nav-item col-md-8 text-center">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search Question" name="search"/>
+          <input type="text" class="form-control" placeholder="Search Question" name="questionsearch" id="questionsearch" list="qsearch"/>
+          {/* {questions && questions.map((q)=>{ */}
+          {/* return */}
+            <datalist id="qsearch">
+                    <option value='_id'>{questions}</option>
+                    {/* <option key={q._id}>{q.question}</option>
+                    <option key={q._id}>{q.question}</option>
+                    <option key={q._id}>{q.question}</option> */}
+                  </datalist>
+          {/* })}  */}
           <div class="input-group-btn">
             <button class="btn btn-default bg-primary" type="button"><FaSearch/></button>
           </div>

@@ -9,14 +9,18 @@ export default function Askaquestion(props) {
     const [date, setdate] = useState(Date)
     const [qlikes, setqlikes] = useState([])
     const [answers, setanswers] = useState([])
-
     function setquestion(e) {
         e.target.name === "askq" && setaskq(e.target.value)
-        e.target.name === "asktag" && setasktag(e.target.value.split(' '))
+        e.target.name === "askt" && setasktag(e.target.value.split(','))
     }
-    
-    // var tags = tag.split(" ")
-
+    console.log(tag)
+    // var str = "1,2,3,4,5,6"
+    // var temp = new Array()
+    // This will return an array with strings "1", "2", etc.
+    // temp = str.split(",");
+// for (a in temp ) {
+    //     temp[a] = parseInt(temp[a], 10); // Explicitly include base as per Álvaro's comment
+    // }
     const user = useSelector(state => state.user);
     const userdname = useSelector(state => state.user.dname);
     
@@ -33,7 +37,7 @@ export default function Askaquestion(props) {
     console.log(user)
     
     function validateq(){ 
-    // eslint-disable-next-line
+        // eslint-disable-next-line
         if(question=="" || question==null || question==" "){
             alert("please enter meaningfull question");
         }
@@ -43,6 +47,10 @@ export default function Askaquestion(props) {
     }
 
     function submitq(){
+        // console.log(asktag)
+        // var tag = new Array()
+        // tag = asktag.split(',');
+        // console.log(tag)
         setdate(Date)
         // settags(tag.split(' '))
         var createq = { qlikes,question,tag,userdname,date,answers }
@@ -60,7 +68,7 @@ export default function Askaquestion(props) {
             <label for="askq"><b>Enter your Question</b></label><br/>
             <input type="text" value={question} onChange={(e)=>{setquestion(e)}} placeholder="Enter your question" name="askq" id="askq" required /><br/>
             <label for="asktag"><b>Enter tags related to questions</b></label><br/>
-            <input type="text" value={tag} onChange={(e)=>{setquestion(e)}} placeholder="Enter tags related to question" name="asktag" id="asktag" required /><br/> <br/>
+            <input type="text" value={tag} onChange={(e)=>{setquestion(e)}} placeholder="Enter tags related to question" name="askt" id="asktag" required /><br/> <br/>
             <button type="button" onClick={validateq} class="submitquestion">Publish Question</button>
             </form>
             </div>}

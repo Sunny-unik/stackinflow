@@ -35,7 +35,13 @@ export default function Topquestions() {
                     <h4 className='mainqdiv'><NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}>{q.question}</NavLink></h4>
                     <div class="qla bg-secondary"> Likes: {q.qlikes.length}  </div>
                     <div class="qla bg-secondary"><NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}> Answer: {q.answers.length} </NavLink></div>
-                    <div class="maintagdiv mx-2"><NavLink style={{color:'white',fontFamily:'monospace',padding:'.2rem'}} className="rounded-2 bg-dark" to={`/tag/${q.tag}`}>{q.tag}</NavLink></div>
+                    <div class="maintagdiv mx-2">
+                    {q.tags.map((o)=>{
+                    return <NavLink style={{ color: 'white', fontFamily: 'monospace', padding: '.2rem' }} className="rounded-2 bg-dark" to={`/questionsby/${o}`}>
+                            {o}
+                        </NavLink>
+                    })}
+                    </div>
                     <div style={{width:'37%',display:'inline-block',margin:'6px',fontFamily:'Times'}}>asked at {q.date}</div>
                     <div class="maindnamediv"><NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/user/${q.userdname}`}>asked by {q.userdname}</NavLink></div>
                 </div>

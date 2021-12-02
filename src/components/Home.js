@@ -16,6 +16,7 @@ import {  FaHome, FaQuestion, FaQuestionCircle, FaRegistered, FaSignInAlt, FaSig
 import { FcMenu } from "react-icons/fc"
 import { IoNotificationsCircleOutline } from "react-icons/io5"
 import { useEffect } from "react"
+import Questionsbytags from "./questionsbytags"
 
 export default function Home(props) {
 
@@ -88,6 +89,7 @@ export default function Home(props) {
                 <Route path="/user/:userdname" component={User} />
                 <Route path="/tag/:tag" component={Tag} />
                 <Route path="/notification" component={Notification} />
+                <Route path="/questionsby/:t" component={Questionsbytags} />
                 <Route path="/askaquestion" component={Askaquestion} />
                 <Route path="/" exact component={Topquestions} />
             </Switch>

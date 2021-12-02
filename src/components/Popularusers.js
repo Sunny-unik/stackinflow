@@ -20,17 +20,23 @@ export default function Popularusers() {
     return (<div style={{borderLeft:'2px solid lightgrey'}}>
         <div className="container" style={{borderBottom:'.1rem solid lightgrey',paddingBottom:'.6rem'}}>
             <h1 style={{fontFamily:'sans-serif',marginTop:'.4rem'}}> Popular Users </h1>
-            <h4 style={{fontFamily:'Times',width:'95%'}}>These users are arranged in sequence as higher points to lowest.</h4>
-            <input type="text" placeholder=" Search User" style={{paddingLeft:'1%',fontFamily:'monospace',fontWeight:'bold'}} name="searchp" id="searchp" required className="searchtp"/>
+            <h4 style={{fontFamily:'Times',width:'95%'}}>These all users are arranged in sequence as higher points to lowest.</h4>
+            <input type="text" placeholder=" Search User" name="searchp" id="searchp" required className="searchtp"
+             style={{paddingLeft:'1%',fontFamily:'monospace',fontWeight:'bold'}} />
             <button class="searchb" style={{fontFamily:'Fantasy'}}><FcSearch/> Search</button>
         </div>
         <div style={{minHeight:'80vh'}}>
         {!users && <Spinner />}
         {users && users.map((p) => {
-            return <div className="mr-5 text-center " style={{padding:'1rem',display:'inline-block',width:'23%'}}>
-                <div className="border border-1 border-secondary rounded-top m-0 p-0 card-header"> {p.dname} </div>
-                <div className="border border-1 border-secondary rounded-bottom m-0 p-0 card-body"> Points: {p.userlikes} </div>
-            </div>
+            return  <div className="mr-5 text-center" data-aos="flip-up" data-aos-once='true' data-aos-duration="500" key={p._id} 
+                    style={{padding:'1rem',display:'inline-block',width:'23%'}}>
+                        <div className="border border-1 border-secondary rounded-top m-0 p-0 card-header"> 
+                            <NavLink style={{fontFamily:'cursive'}} to={`/user/${p.dname}`}>{p.dname}</NavLink>
+                        </div>
+                        <div className="border border-1 border-secondary rounded-bottom m-0 p-0 card-body">
+                            Points: {p.userlikes} 
+                        </div>
+                    </div>
         })}
         </div>
     </div>

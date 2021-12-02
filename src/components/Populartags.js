@@ -5,44 +5,44 @@ import 'aos/dist/aos.css'
 import { FcSearch } from 'react-icons/fc'
 import Spinner from './spinner'
 
-export default function Populartags() {
+export default function Populartags(props) {
 
-    const [question, setquestion] = useState('')
-    // const [alltag, setalltag] = useState([])
+    const [question, setquestion] = useState([])
 
     useEffect(() => {
         axios.get("http://localhost:3001/list-question").then((res) => {
             console.log(res.data.data)
             setquestion(res.data.data)
-            // setalltag(res.data.data.tag)
         })
     }, [])
+    console.log(question)
 
-    // console.log(alltag)
-    // console.log(question.tag)
+    var alltags = question.map((d)=>{
+        return d.tags
+    })
+    console.log(alltags)
+    
+    var uniquetags;
+    uniquetags = new Set([].concat(...alltags))
+    console.log(uniquetags);
+    
+    var printedtags = new Array;
 
-    // var z = question.map((w)=>{return w.tag})
-    // console.log(z);
-    // var z = [question.tag]
-    // console.log(z)
-    // const Boom = new Set([].concat(...z));
-    // console.log(Boom)
-    // var tags = [ question.map((t)=>{ return t.tags }) ]
-
-    // function fun(){ 
-    //     var Boom = new Set([].concat(...z))
-        // let dStr = '';
-        // console.log(Boom);
-        // Boom.forEach(e=>{
-        // dStr += e + ' ';
-        // })
-        // console.log(dStr)
-        // document.write(dStr);
+    // var b = new Array;
+    // var a;
+    // function checkintags(k,l){
+    //     console.log(k)
+        // console.log(l)
+    //     k.filter((j)=>{if(j==l){ console.log("hi");a='true'}else{a='false'}})
     // }
-    // useEffect(() => {
-    //     fun()
-    // }, [])
 
+    function questionsbytag(n){
+        // console.log(n)
+        // question.filter((v)=>{checkintags(v.tag,n);if(a=='true'){b.push(v._id)}})
+        // console.log(b)  
+        props.history.push('questionsby/'+n)
+    }
+    
     return <div style={{borderLeft:'2px solid lightgrey'}}>
         <div className="container" style={{ borderBottom: '2px solid lightgrey',paddingBottom:'.6rem' }}>
             <h1 style={{fontFamily:'sans-serif',marginTop:'.4rem'}}> Popular Tags </h1>
@@ -52,11 +52,13 @@ export default function Populartags() {
         </div>
         <div style={{minHeight:'80vh'}}>
         {!question && <Spinner />}
-        {question && question.map((p) => {
-            return <div className="text-center" style={{padding:'1rem',display:'inline-block',width:'23%'}}>
-                <div className="border border-3 border-secondary rounded-3 m-0 p-0 card-header"> {p.tag} </div>
-                <div className="border border-3 border-secondary rounded-3 m-0 p-0 card-body"> {p.tag} </div>
-            </div>
+        {question && uniquetags.forEach((y)=>{
+            printedtags.push(y)
+        })}
+        {question && printedtags.map((t)=>{
+            return <div data-aos="zoom-in" data-aos-offset='max-height' data-aos-once='true' data-aos-duration="200" style={{cursor:"pointer"}}
+            className="col-md-2 d-inline-block text-center m-2 p-2 border border-3 border-secondary rounded-3 card-footer"
+            onClick={()=>{questionsbytag(t)}}>{t}</div>
         })}
         </div>
         </div>

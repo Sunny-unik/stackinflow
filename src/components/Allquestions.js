@@ -34,12 +34,22 @@ export default function Allquestions() {
     return (
     <div key={q._id}>
 <div style={{borderBottom:'.1rem solid lightgrey'}}>
-    <h4 data-aos="fade-left" data-aos-offset='max-height' data-aos-once='true' data-aos-duration="400" className='mainqdiv'><NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}>{q.question}</NavLink></h4>
+    <h4 data-aos="fade-left" data-aos-offset='max-height' data-aos-once='true' data-aos-duration="400" className='mainqdiv'>
+        <NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}>{q.question}</NavLink>
+    </h4>
     <div class="qla bg-secondary"> Likes: {q.qlikes.length}  </div>
-    <div class="qla bg-secondary"><NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}> Answer: {q.answers.length} </NavLink></div>
-    <div class="maintagdiv mx-2"><NavLink style={{color:'white',fontFamily:'monospace',padding:'.2rem'}} className="rounded-2 bg-dark" to={`/tag/${q.tag}`}>{q.tag}</NavLink></div>
+    <div class="qla bg-secondary">
+        <NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}> Answer: {q.answers.length} </NavLink>
+    </div><br/>
+    {q.tags.map((o)=>{
+    return <NavLink style={{ color: 'white', fontFamily: 'monospace', padding: '.2rem' }} className="rounded-2 bg-dark" to={`/questionsby/${o}`}>
+            {o}
+        </NavLink>
+    })}
     <div style={{width:'37%',display:'inline-block',margin:'6px',fontFamily:'Times'}}>asked at {q.date}</div>
-    <div class="maindnamediv" style={{fontSize:'.9rem',fontFamily:'cursive'}}>asked by <NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/user/${q.userdname}`}>{q.userdname}</NavLink></div>
+    <div class="maindnamediv" style={{fontSize:'.9rem',fontFamily:'cursive'}}>asked by 
+        <NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/user/${q.userdname}`}>{q.userdname}</NavLink>
+    </div>
 </div>
     </div>)
     })}

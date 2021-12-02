@@ -1,6 +1,9 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import {  useSelector } from "react-redux"
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+import { NavLink } from 'react-router-dom'
 
 export default function Askedquestions() {
 
@@ -12,7 +15,6 @@ export default function Askedquestions() {
             setquestion(res.data.data)
         })
     }, [])
-
     console.log(question)
 
     const userdname = useSelector(state => state.user.dname);
@@ -27,42 +29,44 @@ export default function Askedquestions() {
         </div>
         <div>
             {askedquestion && askedquestion.map((q) => {
-            return  <div key={q._id} >
-                <h4>{q.question}</h4>
-                <div className="container d-flex align-items-space-between">
-                    <div className="col-md-6 ">
-                    <button className="bg-primary tag" type="button" >{q.tag}</button>
-                    </div>
-                    <div className=" col-md-5">
-                        <span>{q.date}</span>&nbsp; &nbsp;
-                        <span>{q.username}</span>
-                    </div>
+            return  <div key={q._id}>
+            <div style={{borderBottom:'.1rem solid lightgrey'}}>
+                <h4 data-aos="fade-left" data-aos-offset='max-height' data-aos-once='true' data-aos-duration="400" className='mainqdiv'>
+                    <NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}>{q.question}</NavLink>
+                </h4>
+                <div class="qla bg-secondary"> Likes: {q.qlikes.length}  </div>
+                <div class="qla bg-secondary">
+                    <NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}> Answer: {q.answers.length} </NavLink>
                 </div>
-                <hr />
+                {q.tags.map((o)=>{
+                return <NavLink style={{ color: 'white', fontFamily: 'monospace', padding: '.2rem' }} className="rounded-2 bg-dark" to={`/questionsby/${o}`}>
+                        {o}
+                    </NavLink>
+                })}
+                <div style={{width:'37%',display:'inline-block',margin:'6px',fontFamily:'Times'}}>asked at {q.date}</div>
+                <div class="maindnamediv" style={{fontSize:'.9rem',fontFamily:'cursive'}}>asked by 
+                    <NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/user/${q.userdname}`}>{q.userdname}</NavLink>
+                </div>
             </div>
+                </div>
             })}
             {!askedquestion && <div className="mt-md-2 mt-lg-2 loading text-center">
-                {/* <div class="spinnerdiv"> */}
                 <i class="spinner"></i>
                 <p>loading..</p>
-                {/* </div> */}
                 <div>your network seems down or slow</div>
             </div>}
             {!question && <div className="mt-md-2 mt-lg-2 loading text-center">
-                {/* <div class="spinnerdiv"> */}
                 <i class="spinner"></i>
                 <p>loading..</p>
-                {/* </div> */}
                 <div>your network seems down or slow</div>
             </div>}
             {!userdname && <div className="mt-md-2 mt-lg-2 loading text-center">
-                {/* <div class="spinnerdiv"> */}
                 <i class="spinner"></i>
                 <p>loading..</p>
-                {/* </div> */}
                 <div>your network seems down or slow</div>
             </div>}
         </div>
         </React.Fragment>
     )
 }
+AOS.init();

@@ -12,9 +12,12 @@ export default function Question(props) {
     const [qdate, setqdate] = useState()
     const [qlikes, setqlikes] = useState([])
     const [answer, setanswer] = useState([])
+    const [postanswer, setpostanswer] = useState()
+    const [alikes, setalikes] = useState([])
+    const [date, setdate] = useState(Date)
 
     const user = useSelector(state => state.user);
-    
+
     var qid = props.match.params.id;
     console.log(qid)
     useEffect(() => {
@@ -22,13 +25,35 @@ export default function Question(props) {
         console.log(res.data.data)
             setquestion(res.data.data[0].question)
             setqusername(res.data.data[0].userdname)
-            settag(res.data.data[0].tag)
+            settag(res.data.data[0].tags)
             setqdate(res.data.data[0].date)
             setqlikes(res.data.data[0].qlikes)
             setanswer(res.data.data[0].answers)
         })
     }, [])
     console.log(answer);
+    
+    function setposta(e) {
+        e.target.name === "seta" && setpostanswer(e.target.value)
+    }
+
+    function listanswer(){    
+        // const userdname = useSelector(state => state.user.dname)
+        if(user==null){
+            alert('For submit your answer you need to login first')
+        }
+        else{
+            // var question_id = qid
+            var userdname = user.dname
+            let answer = postanswer
+            setdate(Date)
+            var lista = { userdname,date,answer,alikes,qid }
+            console.log(lista)
+            axios.post("http://localhost:3001/create-answer",lista).then((res) => {
+                alert(res.data.data);
+            })
+        }
+    }
     
     return <div style={{borderLeft:'.1rem solid lightgrey',minHeight:'80vh'}}>
         <div style={{display:'flex',justifyContent:'space-between' ,alignItems:'center'}}>
@@ -43,20 +68,28 @@ export default function Question(props) {
         return  <div style={{margin:'1rem 1rem 1rem 1rem'}} key={a.answer}>
         <div className="answersec container-fluid">
         <h4 className='col-sm-8'>{a.answer}</h4>
-        <button className='col-sm-1 likebtn' style={{backgroundColor:'white',height:'min-content',width:'min-content'}}><FcLikePlaceholder/>{a.alikes ? a.alikes.length : 0} </button>
-        <div className="col-sm-3">Asked By <NavLink style={{fontFamily:'cursive'}} to={`/user/${a.username}`}>{a.username}</NavLink> on <br/>{a.date}.</div>
+        <button className='col-sm-1 likebtn' style={{backgroundColor:'white',height:'min-content',width:'min-content'}}>
+            <FcLikePlaceholder/>{a.alikes ? a.alikes.length : 0} 
+        </button>
+        <div className="col-sm-3">Asked By 
+            <NavLink style={{fontFamily:'cursive'}} to={`/user/${a.userdname}`}>{a.userdname}</NavLink> on <br/>{a.date}.
+        </div>
         </div>
         </div> }) }
         {answer=='' && <h3><b>No answer given</b></h3>}
 
         <h2>Your Answer</h2>
-        <textarea className="col-sm-12" style={{height:'30vh',marginBottom:'.8rem',fontSize:'2.2rem'}}></textarea>
-        <button type='button' className='bg-primary postans' style={{marginBottom:'1.5rem',borderRadius:'1rem 1rem 1rem 1rem',fontSize:'large',padding:'.8rem 1.2rem .8rem 1.2rem'}}> Post Answer </button>
+        <textarea className="col-sm-12" onChange={(e)=>{setposta(e)}} name="seta" id="seta" style={{height:'30vh',marginBottom:'.8rem',fontSize:'2.2rem'}}></textarea>
+        <button type='button' onClick={listanswer} className='bg-primary postans' style={{marginBottom:'1.5rem',borderRadius:'1rem 1rem 1rem 1rem',fontSize:'large',padding:'.8rem 1.2rem .8rem 1.2rem'}}> Post Answer </button>
         <div className="col-sm-12 bg-warning">Thanks for contributing an answer to Stackinflow!<br/>Please be sure to answer the question. Provide details and share your research!<br/>But avoid …<br/><br/>Asking for help, clarification, or responding to other answers.<br/>Making statements based on opinion; back them up with references or personal experience.
         </div>
         <br/>
         <h3 style={{display:'inline-block',margin:'1rem 1rem 1rem 0rem'}}>Browse other questions tagged &nbsp;
-        <NavLink style={{fontFamily:'monospace'}} className="bg-warning" to={`/tag/${tag}`}>{tag}</NavLink>&nbsp; 
+        {tag.map((o)=>{
+            return <NavLink style={{fontFamily:'monospace'}} className="bg-warning" to={`/questionsby/${o}`}>
+                    {o+", "}
+                </NavLink>
+        })}&nbsp; 
         {user ? <span> or <NavLink style={{fontFamily:'monospace'}} className="bg-warning" to={`/Askaquestion`}>ask you own question.</NavLink></span> 
         : <span>or <NavLink className='bg-warning' to={'/login'}>login </NavLink>first for ask your own questions.</span>}
         </h3>

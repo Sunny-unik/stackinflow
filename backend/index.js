@@ -25,8 +25,8 @@ client.connect((err, db) => {
 })
 
 app.get('/list-question', (req, res) => {
-    var usercollection = connection.db('stackinflow').collection('q&a');
-    usercollection.find().toArray((err, docs) => {
+    var questioncollection = connection.db('stackinflow').collection('q&a');
+    questioncollection.find().toArray((err, docs) => {
         if (!err) {
             res.send({ status: "ok", data: docs })
         }
@@ -37,11 +37,10 @@ app.get('/list-question', (req, res) => {
 })
 
 app.get("/question-by-id", (req,res)=>{
-    var usercollection = connection.db('stackinflow').collection('q&a');
+    var questioncollection = connection.db('stackinflow').collection('q&a');
     console.log(req.query.id)
-    usercollection.find({_id:ObjectId(req.query.id)}).toArray((err,docs)=>{
+    questioncollection.find({_id:ObjectId(req.query.id)}).toArray((err,docs)=>{
         if(!err){
-            console.log(docs)
             res.send({status:"ok", data:docs})
         }
         else{
@@ -51,8 +50,8 @@ app.get("/question-by-id", (req,res)=>{
 });
 
 app.get("/question-by-tag", (req,res)=>{
-    var usercollection = connection.db('stackinflow').collection('q&a');
-    usercollection.find({tag:req.query.tag}).toArray((err,docs)=>{
+    var questioncollection = connection.db('stackinflow').collection('q&a');
+    questioncollection.find({tag:req.query.tag}).toArray((err,docs)=>{
         if(!err){
             console.log(docs)
             res.send({status:"ok", data:docs})
@@ -90,10 +89,25 @@ app.get('/list-user', (req, res) => {
 })
 
 app.post('/create-question', bodyparser.json(), (req, res) => {
-    var usercollection = connection.db('stackinflow').collection('q&a');
-    usercollection.insert(req.body, (err, result) => {
+    var questioncollection = connection.db('stackinflow').collection('q&a');
+    questioncollection.insert(req.body, (err, result) => {
         if (!err) {
             res.send({ status: "ok", data: "Your Question Listed" })
+        }
+        else {
+            res.send({ status: "failed", data: err })
+        }
+    })
+})
+
+app.post('/create-answer', bodyparser.json(), (req, res) => {
+    var questioncollection = connection.db('stackinflow').collection('q&a');
+    console.log('106')
+    console.log(req.body);
+    questioncollection.updateOne({_id:ObjectId(req.body.qid)},{$push: {answers:req.body}}, (err, docs) => {
+    console.log(req.body);
+        if (!err) {
+            res.send({ status: "ok", data: "Your Answer is Submitted" })
         }
         else {
             res.send({ status: "failed", data: err })
@@ -188,8 +202,8 @@ app.post("/update-user", bodyparser.json(),(req,res)=>{
 })
 
 app.post("/username-in-question", bodyparser.json(),(req,res)=>{
-    var usercollection = connection.db('stackinflow').collection('q&a');
-    usercollection.update({userdname:req.body.udname}, {$set:{userdname:req.body.dname}}, (err,result)=>{
+    var questioncollection = connection.db('stackinflow').collection('q&a');
+    questioncollection.update({userdname:req.body.udname}, {$set:{userdname:req.body.dname}}, (err,result)=>{
     if(!err){
         res.send({status:"ok", data:"username updated in questions successfully"})
     }
