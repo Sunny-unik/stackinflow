@@ -10,14 +10,22 @@ import Spinner from './spinner'
 export default function Topquestions() {
 
     const [question, setquestion] = useState([])
+    const [alluser, setalluser] = useState([])
     
     useEffect(() => {
         axios.get("http://localhost:3001/list-question").then((res) => {
             console.log(res.data.data)
             setquestion(res.data.data)
         })
+        axios.get("http://localhost:3001/list-user").then((res) => {
+            console.log(res.data)
+            setalluser(res.data.data)
+        })
     }, [])
     console.log(question)
+    console.log(alluser)
+
+
 
     return <div className='row p-0' style={{borderLeft:'.1rem solid lightgrey',paddingLeft:'.2rem',minHeight:'80vh'}}>
         <div style={{padding: '0 0 1% 0',borderBottom:'.1rem solid lightgrey'}}>
@@ -42,8 +50,12 @@ export default function Topquestions() {
                         </NavLink>
                     })}
                     </div>
-                    <div style={{width:'37%',display:'inline-block',margin:'6px',fontFamily:'Times'}}>asked at {q.date}</div>
-                    <div class="maindnamediv"><NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/user/${q.userdname}`}>asked by {q.userdname}</NavLink></div>
+                    <div class="maindnamediv">asked by &nbsp;
+                        <NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/user/${q.userdname}`}>
+                            {alluser.map((r)=>{ if(r._id==q.userdname) return ' '+r.dname})}
+                        </NavLink>
+                    </div>
+                    <div style={{width:'37%',display:'inline-block',margin:'6px',fontFamily:'Times'}}> at {q.date}</div>
                 </div>
         </div>
         })}

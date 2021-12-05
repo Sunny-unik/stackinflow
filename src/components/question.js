@@ -17,6 +17,7 @@ export default function Question(props) {
     const [date, setdate] = useState(Date)
 
     const user = useSelector(state => state.user);
+    const [alluser, setalluser] = useState([])
 
     var qid = props.match.params.id;
     console.log(qid)
@@ -29,6 +30,10 @@ export default function Question(props) {
             setqdate(res.data.data[0].date)
             setqlikes(res.data.data[0].qlikes)
             setanswer(res.data.data[0].answers)
+        })
+        axios.get("http://localhost:3001/list-user").then((res) => {
+            console.log(res.data)
+            setalluser(res.data.data)
         })
     }, [])
     console.log(answer);
@@ -44,10 +49,10 @@ export default function Question(props) {
         }
         else{
             // var question_id = qid
-            var userdname = user.dname
+            var uid = user._id
             let answer = postanswer
             setdate(Date)
-            var lista = { userdname,date,answer,alikes,qid }
+            var lista = {uid,date,answer,alikes}
             console.log(lista)
             axios.post("http://localhost:3001/create-answer",lista).then((res) => {
                 alert(res.data.data);
@@ -59,7 +64,10 @@ export default function Question(props) {
         <div style={{display:'flex',justifyContent:'space-between' ,alignItems:'center'}}>
         <h1>Q.</h1><h2 className="col-sm-8 text-left" style={{fontFamily:'fantasy'}}>{question}</h2>
         <button className='col-sm-1 likebtn' style={{backgroundColor:'white',height:'min-content',width:'min-content'}}><FcLike/>{qlikes? qlikes.length : '0' }</button>
-        <div className="col-sm-3">Asked By <NavLink style={{fontFamily:'cursive'}} to={`/user/${qusername}`}>{qusername}</NavLink> on <br/>{qdate}.</div>
+        <div className="col-sm-3">Asked By&nbsp;
+        <NavLink style={{fontFamily:'cursive'}} to={`/user/${qusername}`}>
+            {alluser.map((r)=>{ if(r._id==qusername) return r.dname})}
+        </NavLink> on <br/>{qdate}.</div>
         </div><br/>
         <h4>Know someone who can answer? Share a link to this question via <a href='#' target="_blank">email</a>, <a href='#' target="_blank">Twitter</a>or <a href='#' target="_blank">Facebook</a>.</h4>
         
@@ -71,8 +79,10 @@ export default function Question(props) {
         <button className='col-sm-1 likebtn' style={{backgroundColor:'white',height:'min-content',width:'min-content'}}>
             <FcLikePlaceholder/>{a.alikes ? a.alikes.length : 0} 
         </button>
-        <div className="col-sm-3">Asked By 
-            <NavLink style={{fontFamily:'cursive'}} to={`/user/${a.userdname}`}>{a.userdname}</NavLink> on <br/>{a.date}.
+        <div className="col-sm-3">Given By&nbsp;
+            <NavLink style={{fontFamily:'cursive'}} to={`/user/${qusername}`}>
+                {alluser.map((r)=>{ if(r._id==qusername) return r.dname})}
+            </NavLink> on <br/>{a.date}.
         </div>
         </div>
         </div> }) }

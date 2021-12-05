@@ -17,15 +17,15 @@ export default function Askedquestions() {
     }, [])
     console.log(question)
 
-    const userdname = useSelector(state => state.user.dname);
+    const user = useSelector(state => state.user);
 
-    var askedquestion = question.filter((un)=>{return un.userdname===userdname})
+    var askedquestion = question.filter((un)=>{return un.userdname===user._id})
 
     console.log(askedquestion)
 
     return (<React.Fragment>
         <div>
-            <h1><label>Asked Questions</label></h1>
+            <h1><label>These Questions Asked by {user.dname}.</label></h1>
         </div>
         <div>
             {askedquestion && askedquestion.map((q) => {
@@ -43,10 +43,12 @@ export default function Askedquestions() {
                         {o}
                     </NavLink>
                 })}
-                <div style={{width:'37%',display:'inline-block',margin:'6px',fontFamily:'Times'}}>asked at {q.date}</div>
                 <div class="maindnamediv" style={{fontSize:'.9rem',fontFamily:'cursive'}}>asked by 
-                    <NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/user/${q.userdname}`}>{q.userdname}</NavLink>
+                    <NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/user/${q.userdname}`}>
+                        {user.dname}
+                    </NavLink>
                 </div>
+                <div style={{width:'37%',display:'inline-block',margin:'6px',fontFamily:'Times'}}> at {q.date}</div>
             </div>
                 </div>
             })}
@@ -60,7 +62,7 @@ export default function Askedquestions() {
                 <p>loading..</p>
                 <div>your network seems down or slow</div>
             </div>}
-            {!userdname && <div className="mt-md-2 mt-lg-2 loading text-center">
+            {!user._id && <div className="mt-md-2 mt-lg-2 loading text-center">
                 <i class="spinner"></i>
                 <p>loading..</p>
                 <div>your network seems down or slow</div>

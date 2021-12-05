@@ -31,7 +31,7 @@ export default function Popularusers() {
             return  <div className="mr-5 text-center" data-aos="flip-up" data-aos-once='true' data-aos-duration="500" key={p._id} 
                     style={{padding:'1rem',display:'inline-block',width:'23%'}}>
                         <div className="border border-1 border-secondary rounded-top m-0 p-0 card-header"> 
-                            <NavLink style={{fontFamily:'cursive'}} to={`/user/${p.dname}`}>{p.dname}</NavLink>
+                            <NavLink style={{fontFamily:'cursive'}} to={`/user/${p._id}`}>{p.dname}</NavLink>
                         </div>
                         <div className="border border-1 border-secondary rounded-bottom m-0 p-0 card-body">
                             Points: {p.userlikes} 

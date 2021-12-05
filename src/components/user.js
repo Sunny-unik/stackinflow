@@ -15,14 +15,13 @@ export default function User(props) {
     const [sociallinkbyudn, setsociallinkbyudn] = useState('')
     const [weblinkbyudn, setweblinkbyudn] = useState('')
     const [gitlinkbyudn, setgitlinkbyudn] = useState('')
-    const [questionbyudn, setdbquestionbyudn] = useState(0)
-    const [answerbyudn, setanswerbyudn] = useState(0)
-    const [likesbyudn, setlikesbyudn] = useState(0)
+    const [question, setquestion] = useState([])
+    const [users, setusers] = useState([])
 
-    var userdname = props.match.params.userdname;
+    var uid = props.match.params._id;
 
     useEffect(() => {
-        axios.get("http://localhost:3001/user-by-userdname/?userdname=" + userdname).then((res) => {
+        axios.get("http://localhost:3001/user-by-userdname/?_id=" + uid).then((res) => {
             console.log(res.data.data)
             setuserbyudn(res.data.data)
             setnamebyudn(res.data.data[0].name)
@@ -34,7 +33,21 @@ export default function User(props) {
             setsociallinkbyudn(res.data.data[0].twitter)
             setweblinkbyudn(res.data.data[0].weblink)
         })
+        axios.get("http://localhost:3001/list-question").then((res) => {
+            console.log(res.data.data)
+            setquestion(res.data.data)
+        })
+        axios.get("http://localhost:3001/list-user").then((res)=>{
+            console.log(res.data.data)
+            setusers(res.data.data)
+        })
     }, [])
+
+var answer = new Array
+question.forEach((un)=>{if(un.answers.length>0){un.answers.forEach((i)=>{if(i.userdname==uid)answer.push(i)})}})
+    
+var questions = new Array
+question.forEach((un)=>{ if(un.userdname==uid) questions.push(un)})
 
     return (<React.Fragment>
         {/* {userbyudn==[] ?  */}
@@ -53,9 +66,9 @@ export default function User(props) {
                 {sociallinkbyudn && <a target="_blank" href={sociallinkbyudn}><abbr title={sociallinkbyudn}><FaTwitter/></abbr></a>}&nbsp;</h4>
             </div>
             <div className="col-sm-9">
-                <p style={{ fontSize: 'large', fontFamily: 'sans-serif' }}>Total Likes : {questionbyudn} </p ><br />
-                <p style={{ fontSize: 'large', fontFamily: 'sans-serif' }}>Total Answers : {answerbyudn} </p ><br />
-                <p style={{ fontSize: 'large', fontFamily: 'sans-serif' }}>Total Questions : {likesbyudn} </p ><br />
+                <p style={{ fontSize: 'large', fontFamily: 'sans-serif' }}>Total Likes : likesbyudn </p ><br />
+                <p style={{ fontSize: 'large', fontFamily: 'sans-serif' }}>Total Answers : {answer.length} </p ><br />
+                <p style={{ fontSize: 'large', fontFamily: 'sans-serif' }}>Total Questions : {questions.length} </p ><br />
             </div>
             <div className="col-sm-12">
             {aboutbyudn && <div><label><h1>About </h1></label>

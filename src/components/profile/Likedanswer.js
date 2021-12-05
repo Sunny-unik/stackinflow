@@ -14,14 +14,15 @@ export default function Likedanswer() {
         })
     }, [])
     console.log(question)
-
+    
     const user = useSelector(state => state.user);
-    const userdname = useSelector(state => state.user.dname);
-    console.log(userdname)
+    const uid = useSelector(state => state.user._id);
+    console.log(uid)
     var userliked = new Array
     question.forEach((all) => {
         return all.qlikes.forEach((u) => {
-            if (u == userdname) {
+            console.log(u)
+            if (u == uid) {
                 userliked.push(all)
             }
         })
@@ -30,7 +31,7 @@ export default function Likedanswer() {
 
     return (
 <div style={{ borderLeft: "2px solid lightgrey",minHeight:'64vh'}}>
-    <h1 style={{ borderBottom: "2px solid lightgrey", paddingBottom: "2%" }}>&nbsp;All following questions are liked by {userdname}.</h1>
+    <h1 style={{ borderBottom: "2px solid lightgrey", paddingBottom: "2%" }}>&nbsp;All following questions are liked by {user.dname}.</h1>
     {userliked.map((g) => {
         return <div style={{ borderBottom: '.1rem solid lightgrey' }}>
             <h4 className='mainqdiv'>
@@ -47,10 +48,12 @@ export default function Likedanswer() {
                     </NavLink>
                 })}
             </div>
-            <div style={{ width: '37%', display: 'inline-block', margin: '6px', fontFamily: 'Times' }}>asked at {g.date}</div>
-            <div class="maindnamediv" style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>asked by
-                <NavLink style={{ color: 'navy', fontFamily: 'cursive' }} to={`/user/${g.userdname}`}>{g.userdname}</NavLink>
+            <div class="maindnamediv" style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>asked by &nbsp;
+                <NavLink style={{ color: 'navy', fontFamily: 'cursive' }} to={`/user/${g.userdname}`}>
+                    {user.dname}
+                </NavLink>
             </div>
+            <div style={{ width: '37%', display: 'inline-block', margin: '6px', fontFamily: 'Times' }}> at {g.date}</div>
         </div>
     })}
 </div>)

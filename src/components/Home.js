@@ -8,7 +8,6 @@ import Topquestions from "./Topquestions"
 import { useDispatch, useSelector } from "react-redux"
 import Notification from "./Notification"
 import Question from "./question"
-import Tag from "./tag"
 import React from "react"
 import Footer from "./Footer"
 import User from "./user"
@@ -86,8 +85,7 @@ export default function Home(props) {
                 <Route path="/populartags" component={Populartags} />
                 <Route path="/popularusers" component={Popularusers} />
                 <Route path="/question/:id" component={Question} />
-                <Route path="/user/:userdname" component={User} />
-                <Route path="/tag/:tag" component={Tag} />
+                <Route path="/user/:_id" component={User} />
                 <Route path="/notification" component={Notification} />
                 <Route path="/questionsby/:t" component={Questionsbytags} />
                 <Route path="/askaquestion" component={Askaquestion} />

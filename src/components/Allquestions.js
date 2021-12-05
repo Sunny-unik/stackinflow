@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react'
 import { NavLink } from "react-router-dom"
-import { useSelector } from 'react-redux';
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import Spinner from './spinner';
@@ -9,16 +8,20 @@ import Spinner from './spinner';
 export default function Allquestions() {
 
     const [question, setquestion] = useState([])
+    const [alluser, setalluser] = useState([])
 
     useEffect(() => {
         axios.get("http://localhost:3001/list-question").then((res) => {
             console.log(res.data)
             setquestion(res.data.data)
         })
+        axios.get("http://localhost:3001/list-user").then((res) => {
+            console.log(res.data)
+            setalluser(res.data.data)
+        })
     }, [])
     console.log(question)
-
-    const user = useSelector(state => state.user);
+    console.log(alluser)
 
     return (
 <div class="row" style={{borderLeft:'2px solid lightgrey',minHeight:'80vh'}}>
@@ -48,7 +51,9 @@ export default function Allquestions() {
     })}
     <div style={{width:'37%',display:'inline-block',margin:'6px',fontFamily:'Times'}}>asked at {q.date}</div>
     <div class="maindnamediv" style={{fontSize:'.9rem',fontFamily:'cursive'}}>asked by 
-        <NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/user/${q.userdname}`}>{q.userdname}</NavLink>
+        <NavLink style={{color:'navy',fontFamily:'cursive'}} to={`/user/${q.userdname}`}>
+            {alluser.map((r)=>{ if(r._id==q.userdname) return ' '+r.dname})}
+        </NavLink>
     </div>
 </div>
     </div>)

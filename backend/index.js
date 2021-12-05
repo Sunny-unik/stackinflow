@@ -49,25 +49,10 @@ app.get("/question-by-id", (req,res)=>{
     })
 });
 
-app.get("/question-by-tag", (req,res)=>{
-    var questioncollection = connection.db('stackinflow').collection('q&a');
-    questioncollection.find({tag:req.query.tag}).toArray((err,docs)=>{
-        if(!err){
-            console.log(docs)
-            res.send({status:"ok", data:docs})
-        }
-        else{
-            res.send({status:"failed", data:err})
-        }
-    })
-});
-
 app.get("/user-by-userdname", (req,res)=>{
     var usercollection = connection.db('stackinflow').collection('user');
-    console.log(req.query.id)
-    usercollection.find({dname:req.query.userdname}).toArray((err,docs)=>{
+    usercollection.find({_id:ObjectId(req.query._id)}).toArray((err,docs)=>{
         if(!err){
-            console.log(docs)
             res.send({status:"ok", data:docs})
         }
         else{
