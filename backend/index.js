@@ -36,6 +36,21 @@ app.get('/list-question', (req, res) => {
     })
 })
 
+app.get('/list-question-bypage', (req, res) => {
+    var questioncollection = connection.db('stackinflow').collection('q&a');
+    const limit=parseInt(req.query.limit);
+    const page=parseInt(req.query.page);
+    console.log(limit,page);
+    questioncollection.find().limit(limit *1).skip((page *1)*limit).toArray((err, docs) => {
+        if (!err) {
+            res.send({ status: "ok", data: docs })
+        }
+        else {
+            res.send({ status: "failed", data: err })
+        }
+    })
+})
+
 app.get("/question-by-id", (req,res)=>{
     var questioncollection = connection.db('stackinflow').collection('q&a');
     console.log(req.query.id)
@@ -87,15 +102,39 @@ app.post('/create-question', bodyparser.json(), (req, res) => {
 
 app.post('/create-answer', bodyparser.json(), (req, res) => {
     var questioncollection = connection.db('stackinflow').collection('q&a');
-    console.log('106')
     console.log(req.body);
     questioncollection.updateOne({_id:ObjectId(req.body.qid)},{$push: {answers:req.body}}, (err, docs) => {
-    console.log(req.body);
         if (!err) {
             res.send({ status: "ok", data: "Your Answer is Submitted" })
         }
         else {
             res.send({ status: "failed", data: err })
+        }
+    })
+})
+
+app.post('/add-qlike',bodyparser.json(),(req,res)=>{
+    var questioncollection = connection.db('stackinflow').collection('q&a')
+    console.log(req.body)
+    questioncollection.updateOne({_id:ObjectId(req.body.qid)},{$push: {qlikes:req.body.uid}},(err,docs)=>{
+            if(!err){
+                res.send({status:"ok",data:"like added"})
+            }
+            else{
+                res.send({status:"failed",data:err})
+            }
+    })
+})
+
+app.post('/remove-qlike',bodyparser.json(),(req,res)=>{
+    var questioncollection = connection.db('stackinflow').collection('q&a')
+    console.log(req.body)
+    questioncollection.updateOne({_id:ObjectId(req.body.qid)},{$set:{qlikes:req.body.qlikes}},(err,docs)=>{
+        if(!err){
+            res.send({status:"ok",data:"like removed"})
+        }
+        else{
+            res.send({status:"failed",data:err})
         }
     })
 })
@@ -184,18 +223,6 @@ app.post("/update-user", bodyparser.json(),(req,res)=>{
             res.send({status:"failed", data:err});
         }
     });
-})
-
-app.post("/username-in-question", bodyparser.json(),(req,res)=>{
-    var questioncollection = connection.db('stackinflow').collection('q&a');
-    questioncollection.update({userdname:req.body.udname}, {$set:{userdname:req.body.dname}}, (err,result)=>{
-    if(!err){
-        res.send({status:"ok", data:"username updated in questions successfully"})
-    }
-    else{
-        res.send({status:"failed", data:err})
-    }
-})
 })
 
 app.post("/update-password", bodyparser.json(),(req,res)=>{
