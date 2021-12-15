@@ -24,6 +24,18 @@ client.connect((err, db) => {
     }
 })
 
+app.get('/list-question-length', (req, res) => {
+    var questioncollection = connection.db('stackinflow').collection('q&a');
+    questioncollection.find().toArray((err, docs) => {
+        if (!err) {
+            res.send({ status: "ok", data: docs.length })
+        }
+        else {
+            res.send({ status: "failed", data: err })
+        }
+    })
+})
+
 app.get('/list-question', (req, res) => {
     var questioncollection = connection.db('stackinflow').collection('q&a');
     questioncollection.find().toArray((err, docs) => {

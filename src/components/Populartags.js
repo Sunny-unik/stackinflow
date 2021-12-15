@@ -4,18 +4,26 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { FcSearch } from 'react-icons/fc'
 import Spinner from './spinner'
+import ReactPaginate from 'react-paginate'
 
 export default function Populartags(props) {
 
+    const [questionlength, setquestionlength] = useState()
     const [question, setquestion] = useState([])
+    var limit = 5;
+    var currentpage = {selected:0};
 
     useEffect(() => {
-        axios.get("http://localhost:3001/list-question").then((res) => {
+        axios.get("http://localhost:3001/list-question-length").then((res) => {
+            setquestionlength(res.data.data)
+        })
+        axios.get(`http://localhost:3001/list-question-bypage?page=${currentpage.selected}&limit=${limit}`).then((res) => {
             console.log(res.data.data)
             setquestion(res.data.data)
         })
     }, [])
     console.log(question)
+    console.log(questionlength)
 
     var alltags = question.map((d)=>{
         return d.tags
@@ -28,19 +36,18 @@ export default function Populartags(props) {
     
     var printedtags = new Array;
 
-    // var b = new Array;
-    // var a;
-    // function checkintags(k,l){
-    //     console.log(k)
-        // console.log(l)
-    //     k.filter((j)=>{if(j==l){ console.log("hi");a='true'}else{a='false'}})
-    // }
-
     function questionsbytag(n){
-        // console.log(n)
-        // question.filter((v)=>{checkintags(v.tag,n);if(a=='true'){b.push(v._id)}})
-        // console.log(b)  
         props.history.push('questionsby/'+n)
+    }
+    
+    function pagechange(data) {
+        console.log(data);
+        currentpage = data;
+        console.log(limit);
+        axios.get(`http://localhost:3001/list-question-bypage?page=${currentpage.selected}&limit=${limit}`).then((res) => {
+            console.log(res.data)
+            setquestion(res.data.data)
+        })
     }
     
     return <div style={{borderLeft:'2px solid lightgrey'}}>
@@ -50,7 +57,7 @@ export default function Populartags(props) {
             <input type="text" placeholder=" Search Tag" style={{ paddingLeft: '1%', fontFamily: 'monospace', fontWeight: 'bold' }} name="searcht" id="searcht" required className="searchtp" />
             <button class="searchb" style={{ fontFamily: 'Fantasy' }}><FcSearch /> Search</button>
         </div>
-        <div style={{minHeight:'80vh'}}>
+        <div style={{minHeight:'40vh'}}>
         {!question && <Spinner />}
         {question && uniquetags.forEach((y)=>{
             printedtags.push(y)
@@ -60,6 +67,15 @@ export default function Populartags(props) {
             className="col-md-2 d-inline-block text-center m-2 p-2 border border-3 border-secondary rounded-3 card-footer"
             onClick={()=>{questionsbytag(t)}}>{t}</div>
         })}
+        {question && <div className="pt-3 pb-1">
+            <ReactPaginate previousLabel={"<<"} nextLabel={">>"} breakLabel={"..."} marginPagesDisplayed={5} 
+                pageCount={Math.floor(Math.ceil(questionlength/limit))} pageRangeDisplayed={2} onPageChange={pagechange}
+                containerClassName={"pagination justify-content-center"} pageClassName={"page-item"}
+                pageLinkClassName={"page-link"} previousClassName={"page-item"} previousLinkClassName={"page-link"}
+                nextClassName={"page-item"} nextLinkClassName={"page-link"} breakClassName={"page-item"} 
+                breakLinkClassName={"page-link"} activeClassName={"active"}
+            />
+        </div>}
         </div>
         </div>
 }
