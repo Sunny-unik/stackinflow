@@ -83,7 +83,7 @@ return (
         <div style={{ background: '#fdf7e2' }}>
             {questions && questions.map((q) => {
             return (
-            <div key={q._id}>
+            <div data-aos="fade-down" data-aos-offset='max-height' data-aos-once='true' data-aos-duration="200" key={q._id}>
                 <div style={{ borderBottom: '.1rem solid lightgrey' }}>
                     <h4 data-aos="fade-left" data-aos-offset='max-height' data-aos-once='true' data-aos-duration="400" className='mainqdiv'>
                         <NavLink style={{ textDecorationLine: "none",textShadow: ".02em .04em black" }} to={`/question/${q._id}`}>{q.question}</NavLink>

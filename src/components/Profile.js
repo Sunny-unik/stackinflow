@@ -87,14 +87,13 @@ export default function Profile(props) {
         <span activeClassName="active1" class="extralink" style={{fontSize:'inherit',fontFamily:'sans-serif'}} onClick={sidelink}><FaQuestion/> Ask Question </span><br/><br/>
         <NavLink activeClassName="active1" to="/popularusers" onClick={closeSlideMenu}><FaUsers/> Popular Users </NavLink><br /><br />
         <NavLink  activeClassName="active1" to="/Profile" onClick={closeSlideMenu}><FaUserTie/> Profile </NavLink><br /><br />
-        <NavLink activeClassName="active1" to="/notification" onClick={closeSlideMenu}><IoNotificationsCircleOutline/> Notifications </NavLink><br /><br />
         <NavLink  activeClassName="active1" onClick={logout} to="/Login" onClick={closeSlideMenu}><FaSignOutAlt/> LogOut </NavLink><br /><br />
     </div>
 
             <div className="container">
                 <div className="col-md-3 col-lg-3 col-sm-3 proimgdiv"><br />
                     <div className="profilepic" data-aos="flip-up" data-aos-once='true' data-aos-duration="600" >
-                        <img className="col-sm-12" height="225px" width="75px" src={uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/crea15.jpg"} alt="user profile" />
+                        <img className="col-sm-12" height="225rem" width="75rem" src={uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/crea15.jpg"} alt="user profile" />
                     </div>
                 </div>
                 <div data-aos="fade-left" data-aos-duration="600" className="col-md-9 col-lg-8 col-sm-9 procontent"><br />

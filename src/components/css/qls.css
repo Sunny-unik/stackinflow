@@ -297,8 +297,9 @@ a {
   box-shadow: 1px 1px 1px 1px #0e73d8;
 }
 .answersec{
-  border-radius: 0.5rem;
-  padding: 1rem 0rem 1.5rem 0rem;
+  border-radius: 0.6rem;
+  padding: .8rem 0rem 1.2rem 0rem;
+  width: 92%;
   background-color: #d3e3f3;
 }
 .qla{

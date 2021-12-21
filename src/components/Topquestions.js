@@ -11,7 +11,7 @@ export default function Topquestions() {
 
     const [question, setquestion] = useState([])
     const [alluser, setalluser] = useState([])
-    var limit = 15;
+    var limit = 25;
 
     useEffect(() => {
         axios.get(`http://localhost:3001/list-question-bypage?page=0&limit=${limit}`).then((res) => {
@@ -55,7 +55,7 @@ return <div className='row p-0' style={{borderLeft:'.1rem solid lightgrey',paddi
     <div style={{padding:'0 0 0 0'}}>
     {question && question.map((q) => {
     return  <div key={q._id}>
-            <div data-aos="fade-in" data-aos-once='true' data-aos-duration="400" data-aos-offset='max-height' style={{backgroundColor:'#eff',borderBottom:'.1rem solid grey'}}>
+            <div data-aos="fade-up" data-aos-once='true' data-aos-duration="400" data-aos-offset='max-height' style={{backgroundColor:'#fdf7e2',borderBottom:'.1rem solid grey'}}>
                 <h4 className='mainqdiv'>
                     <NavLink style={{ textDecorationLine: "none",textShadow: ".02em .04em black" }} to={`/question/${q._id}`}>
                         {q.question}
@@ -65,6 +65,7 @@ return <div className='row p-0' style={{borderLeft:'.1rem solid lightgrey',paddi
                 <div class="qla bg-secondary"><NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}> Answer: {q.answers.length} </NavLink></div>
                 <div class="maintagdiv mx-2">
                 {q.tags.map((o)=>{
+                if(o!=""&&" ")
                 return <NavLink style={{ color: 'white', fontFamily: 'monospace', padding: '.2rem' }} className="rounded-2 bg-dark" to={`/questionsby/${o}`}>
                         {o}
                     </NavLink>

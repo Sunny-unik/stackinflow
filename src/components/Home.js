@@ -6,16 +6,15 @@ import Askaquestion from "./Askaquestion"
 import Allquestions from "./Allquestions"
 import Topquestions from "./Topquestions"
 import { useDispatch, useSelector } from "react-redux"
-import Notification from "./Notification"
 import Question from "./question"
 import React from "react"
 import Footer from "./Footer"
 import User from "./user"
 import {  FaHome, FaQuestion, FaQuestionCircle, FaRegistered, FaSignInAlt, FaSignOutAlt, FaTags, FaUsers, FaUserTie, FaWindowClose } from "react-icons/fa"
 import { FcMenu } from "react-icons/fc"
-import { IoNotificationsCircleOutline } from "react-icons/io5"
 import { useEffect } from "react"
 import Questionsbytags from "./questionsbytags"
+import Editquestion from "./editquestion"
 
 export default function Home(props) {
 
@@ -66,18 +65,26 @@ export default function Home(props) {
         {!user && <br/>}
         {!user && <NavLink  activeClassName="active1" to="/Signup" onClick={closeSlideMenu}><FaRegistered/>SignIn</NavLink>}
         {user && <NavLink  activeClassName="active1" to="/Profile" onClick={closeSlideMenu}><FaUserTie/>Profile</NavLink>}<br /><br />
-        {user && <NavLink activeClassName="active1" to="/notification" onClick={closeSlideMenu}><IoNotificationsCircleOutline/> Notifications </NavLink>}<br /><br />
         {user && <span activeClassName="active1" style={{fontSize:'inherit',fontFamily:'sans-serif'}} class="extralink" onClick={logout}><FaSignOutAlt/>LogOut</span>}<br /><br />
     </div>
 <div className="container-md" style={{ marginBottom:'0px'}}>
     <div className="row p-0">
         <div id="sidenavbar" class="col-sm-2 pt-3">
-        <NavLink activeClassName="active1" style={{fontSize:'larger',fontFamily:'sans-serif'}} exact to="/">Home </NavLink><br /><br />
-        <NavLink activeClassName="active1" style={{fontSize:'larger',fontFamily:'sans-serif'}} to="/questions">Questions </NavLink><br /><br />
-        <NavLink activeClassName="active1" style={{fontSize:'larger',fontFamily:'sans-serif'}} to="/populartags">Popular Tags </NavLink><br /><br />
-        <NavLink activeClassName="active1" style={{fontSize:'larger',fontFamily:'sans-serif'}} to="/popularusers">Popular Users </NavLink><br /><br />
-        <h6 activeClassName="active1" class="extralink" style={{fontSize:'large',fontFamily:'sans-serif'}} onClick={sidelink} >Ask Question </h6><br />
-        {user && <NavLink activeClassName="active1" style={{fontSize:'larger',fontFamily:'sans-serif'}} to="/notification">Notifications </NavLink>}<br /><br />
+<NavLink activeClassName="active1" style={{fontSize:'larger',fontFamily:'serif',fontSize:"1.4em",textShadow:"0.02em 0.02em black"}} exact to="/"> 
+    Home
+</NavLink><br /><br />
+<NavLink activeClassName="active1" style={{fontSize:'larger',fontFamily:'serif',fontSize:"1.4em",textShadow:"0.02em 0.02em black"}} to="/questions">
+    Questions
+</NavLink><br /><br />
+<NavLink activeClassName="active1" style={{fontSize:'larger',fontFamily:'serif',fontSize:"1.4em",textShadow:"0.02em 0.02em black"}} to="/populartags">
+    Popular Tags
+</NavLink><br /><br />
+<NavLink activeClassName="active1" style={{fontSize:'larger',fontFamily:'serif',fontSize:"1.4em",textShadow:"0.02em 0.02em black"}} to="/popularusers">
+    Popular Users
+</NavLink><br /><br />
+<h6 activeClassName="active1" class="extralink" style={{fontSize:'large',fontFamily:'serif',textShadow:"0.02em 0.02em black",fontSize:"1.4rem"}} onClick={sidelink}>
+    Ask Question 
+</h6><br /><br />
         </div>
         <div className="topmain col-sm-10 p-0 ml-sm-2">
             <Switch class="p-0">
@@ -85,8 +92,8 @@ export default function Home(props) {
                 <Route path="/populartags" component={Populartags} />
                 <Route path="/popularusers" component={Popularusers} />
                 <Route path="/question/:id" component={Question} />
+                <Route path="/editquestion/:qid" component={Editquestion} />
                 <Route path="/user/:_id" component={User} />
-                <Route path="/notification" component={Notification} />
                 <Route path="/questionsby/:t" component={Questionsbytags} />
                 <Route path="/askaquestion" component={Askaquestion} />
                 <Route path="/" exact component={Topquestions} />

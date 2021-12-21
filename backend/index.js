@@ -184,12 +184,11 @@ app.post('/valid-dname', bodyparser.json(), (req, res) => {
     })
 })
 
-app.get('/delete-user', (req, res) => {
-    var usercollection = connection.db('stackinflow').collection('user')
-    // usercollection.filter(()=>{ var a = {_id=== ObjectId(req.query.id)}; a.profile.remove() }, (err, result) => {
-    usercollection.remove({ _id: ObjectId(req.query.id) }, (err, result) => {
+app.post('/delete-question',bodyparser.json(), (req, res) => {
+    var questioncollection = connection.db('stackinflow').collection('q&a')
+    questioncollection.deleteOne({ _id:ObjectId(req.body.qid) }, (err, result) => {
         if (!err) {
-            res.send({ status: "ok", data: "user deleted successfully" })
+            res.send({ status: "ok", data: "Question deleted successfully ☺"})
         }
         else {
             res.send({ status: "failed", data: err })
@@ -235,6 +234,20 @@ app.post("/update-user", bodyparser.json(),(req,res)=>{
             res.send({status:"failed", data:err});
         }
     });
+})
+
+app.post("/update-question", bodyparser.json(),(req,res)=>{
+    var questioncollection = connection.db('stackinflow').collection('q&a');
+    console.log(req.body.questionid+"hey");
+    questioncollection.updateOne({_id:ObjectId(req.body.questionid)}, {$set:{question:req.body.question,
+        questiondetail:req.body.questiondetail,tags:req.body.tags}}, (err,result)=>{
+    if(!err){
+        res.send({status:"ok", data:"Your question updated successfully 😊"})
+    }
+    else{
+        res.send({status:"failed", data:err})
+    }
+})
 })
 
 app.post("/update-password", bodyparser.json(),(req,res)=>{

@@ -28,14 +28,19 @@ export default function Popularusers() {
         <div style={{minHeight:'80vh'}}>
         {!users && <Spinner />}
         {users && users.map((p) => {
-            return  <div className="mr-5 text-center" data-aos="flip-up" data-aos-once='true' data-aos-duration="500" key={p._id} 
+            return  <div className="mr-5" data-aos="flip-up" data-aos-once='true' data-aos-duration="500" key={p._id} 
                     style={{padding:'1rem',display:'inline-block',width:'23%'}}>
-                        <div className="border border-1 border-secondary rounded-top m-0 p-0 card-header"> 
-                            <NavLink style={{fontFamily:'cursive'}} to={`/user/${p._id}`}>{p.dname}</NavLink>
-                        </div>
-                        <div className="border border-1 border-secondary rounded-bottom m-0 p-0 card-body">
-                            Points: {p.userlikes} 
-                        </div>
+                <div className="border border-1 border-secondary rounded-top m-0 p-0 card-header"> 
+                    <div className="profilepic mx-2 col-sm-3 my-1 p-0  d-inline-block">
+<img className='col-sm-12' height="50rem" width="60rem" src={p.profile ? `http://localhost:3001/${p.profile}` : "assets/img/crea15.jpg"} alt="user profile" />
+                    </div>  
+                    <div className="col-sm-7 d-inline-block text-center">
+                        <NavLink style={{fontFamily:'cursive',display:"inline-block"}} to={`/user/${p._id}`}>{p.dname}</NavLink><br/>
+                    </div>
+                </div>
+                    <div className="border text-center border-1 border-secondary rounded-bottom m-0 p-0 card-body">
+                        Points: {p.userlikes} 
+                    </div>
                     </div>
         })}
         </div>
