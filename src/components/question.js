@@ -18,9 +18,9 @@ export default function Question(props) {
     const [postanswer, setpostanswer] = useState()
     const [alikes, setalikes] = useState([])
     const [date, setdate] = useState(Date)
+    const [alluser, setalluser] = useState([])
 
     const user = useSelector(state => state.user);
-    const [alluser, setalluser] = useState([])
 
     var qid = props.match.params.id;
     console.log(qid)
@@ -52,15 +52,38 @@ export default function Question(props) {
         }
         else {
             // var question_id = qid
-            var uid = user._id
-            let answer = postanswer
-            setdate(Date)
-            var lista = { uid, date, answer, alikes, qid }
-            console.log(lista)
-            axios.post("http://localhost:3001/create-answer", lista).then((res) => {
-                alert(res.data.data);
-            })
-            document.getElementById("thanksforanswer").style.display = "block"
+            console.log(postanswer.length);
+            if(postanswer.length>10)
+            {
+                let a = [];
+                answer.forEach((o)=>{ a.push(o.answer) })
+                console.log(a.includes(postanswer))
+                if(a.includes(postanswer)!=true){
+                var uid = user._id
+                let answer = postanswer
+                setdate(Date)
+                var lista = { uid, date, answer, alikes, qid }
+                console.log(lista)
+                axios.post("http://localhost:3001/create-answer", lista).then((res) => {
+                    if(res.data.status==="ok"){
+                        let userpoint = user.userlikes + 10;
+                        if(userpoint<0){userpoint=0}
+                        console.log(qusername);
+                        if(user._id!=qusername){let userdname = user._id;
+                            let uid = {userdname,userpoint}
+                            axios.post('http://localhost:3001/update-user-point',uid).then((res)=>{
+                                console.log(res.data.data)
+                            })}
+                    }
+                    console.log(res.data.data);
+                })
+                document.getElementById("thanksforanswer").style.display = "block"
+                } else{
+                    alert("This answer is already posted.")
+                }
+            } else {
+                alert("your answer is to short please explain in detail")
+            }
         }
     }
 
@@ -87,11 +110,32 @@ export default function Question(props) {
     var qd;
     var amain;
     qd = questiondetail.replace(/(?:\r\n|\r|\n)/g, '<br/>')
+    let ausernames = answer.map((a)=>{return a.uid})
     
     function deleteHandler(){
         var deleteQues = {qid}
         axios.post('http://localhost:3001/delete-question',deleteQues).then(res => {
             if(res.data.status==="ok"){
+                let userdname = user._id
+                let userpoint = user.userlikes - 5;
+                if(userpoint<0){userpoint=0}
+                let uid = {userdname,userpoint}
+                axios.post(`http://localhost:3001/update-user-point`,uid).then((res)=>{
+                    console.log(res.data.data)
+                })
+                if(ausernames.length>0){
+                    ausernames.forEach((e)=>{
+                        let userdname = e;
+                        if(user._id!=e){
+                            let auser = alluser.filter((t)=>{return t._id==e});
+                            console.log(auser)
+                            let userpoint = auser[0].userlikes - 10;
+                            if(userpoint<0){userpoint=0}
+                            let uid = {userdname,userpoint}
+                            axios.post(`http://localhost:3001/update-user-point`,uid).then(res=>console.log(res.data.data+" alikes"))
+                        }
+                    })
+                }
                 alert(res.data.data)
                 props.history.push('/')
             }
@@ -158,7 +202,7 @@ export default function Question(props) {
     <h6 className='col-sm-11'><button type='button' onClick={listanswer} className='btn float-end btn-success postans rounded-3 mx-1' 
         style={{ marginBottom: '1.5rem', fontSize: 'large',}}>
             Post Answer
-    </button></h6>
+    </button></h6><br/><br/>
     <div className="col-sm-11 bg-danger text-info rounded-3 mx-1" id='thanksforanswer' style={{display:"none"}}>
         Thanks for contributing an answer to Stackinflow!<br />Please be sure to answer the question. Provide details and share your research!
         <br />But avoid …<br /><br />Asking for help, clarification, or responding to other answers.<br />Making statements based on opinion;

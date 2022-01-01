@@ -15,6 +15,11 @@ import { FcMenu } from "react-icons/fc"
 import { useEffect } from "react"
 import Questionsbytags from "./questionsbytags"
 import Editquestion from "./editquestion"
+import About from "./About"
+import Contact from "./Contact"
+import Searchq from "./searchq"
+import Askedquestionbyuser from "./Askedquestionbyuser"
+import Givenaswerbyuser from "./Givenaswerbyuser"
 
 export default function Home(props) {
 
@@ -51,19 +56,21 @@ export default function Home(props) {
     }
 
     return (
-<React.Fragment>
-    <button type="button" id='sidemenuopen' className="m-2 fixed-top btn-dark" onClick={openSlideMenu}><FcMenu/> </button>
-    <button type="button" id='sidemenuclose' className="m-2 fixed-top btn-primary" onClick={closeSlideMenu}><FaWindowClose/> </button>
+<div>
+    <button type="button" id='sidemenuopen' className="m-2 fixed-top btn-info rounded" onClick={openSlideMenu}><FcMenu/> </button>
+    <button type="button" id='sidemenuclose' className="m-2 fixed-top btn-dark rounded" onClick={closeSlideMenu}><FaWindowClose/> </button>
     <div id="hiddennav" className="py-2 px-2">
         <NavLink activeClassName="active1" exact to="/" onClick={closeSlideMenu}><FaHome/> Home </NavLink><br /><br />
-        <NavLink activeClassName="active1" to="/questions" onClick={closeSlideMenu}><FaQuestionCircle/> Questions </NavLink><br /><br />
-        <NavLink activeClassName="active1" to="/populartags" onClick={closeSlideMenu}><FaTags/> Popular Tags </NavLink><br /><br />
-        <span activeClassName="active1" class="extralink" style={{fontSize:'inherit',fontFamily:'sans-serif'}} onClick={sidelink}><FaQuestion/> Ask Question </span><br/><br/>
+        <NavLink activeClassName="active1" to="/questions" onClick={closeSlideMenu}><FaQuestionCircle/>All Questions </NavLink><br /><br />
+        <NavLink activeClassName="active1" to="/populartags" onClick={closeSlideMenu}><FaTags/>Popular Tags</NavLink><br /><br />
+        <span activeClassName="active1" class="extralink" style={{fontSize:'inherit',fontFamily:'sans-serif'}} onClick={sidelink}>
+            <FaQuestion/>Ask Question
+        </span><br/><br/>
         <NavLink activeClassName="active1" to="/popularusers" onClick={closeSlideMenu}><FaUsers/> Popular Users </NavLink><br/><br/>
         {!user && <NavLink  activeClassName="active1" onClick={closeSlideMenu} to="/Login"><FaSignInAlt/>LogIn</NavLink>}
         {!user && <br/>}
         {!user && <br/>}
-        {!user && <NavLink  activeClassName="active1" to="/Signup" onClick={closeSlideMenu}><FaRegistered/>SignIn</NavLink>}
+        {!user && <NavLink  activeClassName="active1" to="/Signup" onClick={closeSlideMenu}><FaRegistered/>SignUp</NavLink>}
         {user && <NavLink  activeClassName="active1" to="/Profile" onClick={closeSlideMenu}><FaUserTie/>Profile</NavLink>}<br /><br />
         {user && <span activeClassName="active1" style={{fontSize:'inherit',fontFamily:'sans-serif'}} class="extralink" onClick={logout}><FaSignOutAlt/>LogOut</span>}<br /><br />
     </div>
@@ -74,7 +81,7 @@ export default function Home(props) {
     Home
 </NavLink><br /><br />
 <NavLink activeClassName="active1" style={{fontSize:'larger',fontFamily:'serif',fontSize:"1.4em",textShadow:"0.02em 0.02em black"}} to="/questions">
-    Questions
+    All Question
 </NavLink><br /><br />
 <NavLink activeClassName="active1" style={{fontSize:'larger',fontFamily:'serif',fontSize:"1.4em",textShadow:"0.02em 0.02em black"}} to="/populartags">
     Popular Tags
@@ -86,9 +93,11 @@ export default function Home(props) {
     Ask Question 
 </h6><br /><br />
         </div>
-        <div className="topmain col-sm-10 p-0 ml-sm-2">
+        <div className="topmain col-sm-10 p-0">
             <Switch class="p-0">
-                <Route path="/questions" class="p-0" component={Allquestions} />
+            <Route path='/selfquestion/:id' component={Askedquestionbyuser} />
+            <Route path='/selfanswer/:id' component={Givenaswerbyuser} />
+                <Route path="/questions" component={Allquestions} />
                 <Route path="/populartags" component={Populartags} />
                 <Route path="/popularusers" component={Popularusers} />
                 <Route path="/question/:id" component={Question} />
@@ -97,11 +106,14 @@ export default function Home(props) {
                 <Route path="/questionsby/:t" component={Questionsbytags} />
                 <Route path="/askaquestion" component={Askaquestion} />
                 <Route path="/" exact component={Topquestions} />
+                <Route path="/about" component={About} />
+                <Route path="/feedback" component={Contact} />
+                <Route path="/search/:questionsearch" component={Searchq}/>
             </Switch>
         </div>
     </div>
 </div>
 <Footer />
-</React.Fragment>
+</div>
     )
 }

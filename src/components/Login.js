@@ -128,17 +128,17 @@ export default function Login(props) {
 
     return (<React.Fragment>
 
-    <button type="button" id='sidemenuopen' className="m-1 fixed-top btn" onClick={openSlideMenu}><FcMenu/></button>
-    <button type="button" id='sidemenuclose' className="m-1 fixed-top btn-primary" onClick={closeSlideMenu}><FaWindowClose/></button>
+    <button type="button" id='sidemenuopen' className="m-1 fixed-top btn-info rounded" onClick={openSlideMenu}><FcMenu/></button>
+    <button type="button" id='sidemenuclose' className="m-1 fixed-top btn-dark rounded" onClick={closeSlideMenu}><FaWindowClose/></button>
     <div id="hiddennav" className="py-2 px-2">
         <NavLink activeClassName="active1" exact to="/" onClick={closeSlideMenu}><FaHome/> Home </NavLink><br /><br />
         <NavLink activeClassName="active1" to="/questions" onClick={closeSlideMenu}><FaQuestionCircle/> Questions </NavLink><br /><br />
         <NavLink activeClassName="active1" to="/populartags" onClick={closeSlideMenu}><FaTags/> Popular Tags </NavLink><br /><br />
         <NavLink activeClassName="active1" to="/popularusers" onClick={closeSlideMenu}><FaUsers/> Popular Users </NavLink><br /><br />
         <NavLink  activeClassName="active1" to="/Login" onClick={closeSlideMenu}><FaSignInAlt/>LogIn</NavLink><br /><br />
-        <NavLink  activeClassName="active1" to="/Signup" onClick={closeSlideMenu}><FaRegistered/>SignIn</NavLink><br /><br />
+        <NavLink  activeClassName="active1" to="/Signup" onClick={closeSlideMenu}><FaRegistered/>SignUp</NavLink><br /><br />
     </div>
-
+<div className='text-center'>
         <div className="container logincon">
             <div data-aos="flip-left" data-aos-once='true' data-aos-duration="500" className="col-md-5 col-lg-4 " id="logindetail" >
                 <form className="d-inline-block" style={{padding:'3%',margin:'4px 0',borderRadius:'2%',boxShadow:'4px 4px 3px 3px #888888'}}>
@@ -184,6 +184,7 @@ export default function Login(props) {
                 </form>
             </div>
         </div>
+</div>
     </React.Fragment>)
 }
 AOS.init();

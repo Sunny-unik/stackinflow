@@ -76,6 +76,19 @@ app.get("/question-by-id", (req,res)=>{
     })
 });
 
+app.post("/list-question-byquestion",bodyparser.json(), (req,res)=>{
+    var questioncollection = connection.db('stackinflow').collection('q&a');
+    console.log(req.body.searchby)
+    questioncollection.find({question:req.body.searchby}).toArray((err,docs)=>{
+        if(!err){
+            res.send({status:"ok", data:docs})
+        } 
+        else{
+            res.send({status:"failed", data:err})
+        }
+    })
+});
+
 app.get("/user-by-userdname", (req,res)=>{
     var usercollection = connection.db('stackinflow').collection('user');
     usercollection.find({_id:ObjectId(req.query._id)}).toArray((err,docs)=>{
@@ -211,6 +224,34 @@ app.post("/send-otp-email", bodyparser.json(), (req, res) => {
     })
 })
 
+app.post("/update-question", bodyparser.json(),(req,res)=>{
+    var questioncollection = connection.db('stackinflow').collection('q&a');
+    console.log(req.body);
+    questioncollection.updateOne({_id:ObjectId(req.body.questionid)}, {$set:{question:req.body.question,
+        questiondetail:req.body.questiondetail,tags:req.body.tags}}, (err,result)=>{
+    if(!err){
+        res.send({status:"ok", data:"Your question updated successfully 😊"})
+    }
+    else{
+        res.send({status:"failed", data:err})
+    }
+})
+})
+
+app.post("/update-user-point", bodyparser.json(),(req,res)=>{
+    var usercollection = connection.db('stackinflow').collection('user');
+    console.log(req.body.userpoint);
+    console.log(req.body.userdname);
+    let upoint = req.body.userpoint;
+    usercollection.updateOne({_id:ObjectId(req.body.userdname)}, {$set: {userlikes:upoint}}, (err,result)=>{
+    if(!err){
+        res.send({status:"ok", data:"Your points updated successfully 😊"})
+    } else{
+        res.send({status:"failed", data:err})
+    }
+})
+})
+
 app.post("/update-user", bodyparser.json(),(req,res)=>{
     console.log("149--------------");
     upload(req,res,(err)=>{
@@ -236,20 +277,6 @@ app.post("/update-user", bodyparser.json(),(req,res)=>{
     });
 })
 
-app.post("/update-question", bodyparser.json(),(req,res)=>{
-    var questioncollection = connection.db('stackinflow').collection('q&a');
-    console.log(req.body.questionid+"hey");
-    questioncollection.updateOne({_id:ObjectId(req.body.questionid)}, {$set:{question:req.body.question,
-        questiondetail:req.body.questiondetail,tags:req.body.tags}}, (err,result)=>{
-    if(!err){
-        res.send({status:"ok", data:"Your question updated successfully 😊"})
-    }
-    else{
-        res.send({status:"failed", data:err})
-    }
-})
-})
-
 app.post("/update-password", bodyparser.json(),(req,res)=>{
     var usercollection = connection.db('stackinflow').collection('user');
     usercollection.update({ $or: [ { email:req.body.email }, { dname:req.body.email } ] }, {$set:{password:req.body.newpassword}}, (err,result)=>{
@@ -264,8 +291,24 @@ app.post("/update-password", bodyparser.json(),(req,res)=>{
 
 app.post("/send-user-otp",bodyparser.json(),(req,res)=>{
     console.log(req.body);
-    sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow", `Your One Time Password is - <h3>${req.body.otp}</h3><br><h6>We hope you find our service cool.</h6>`)
+    sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.email, "Welcome to stackinflow",
+     `Your One Time Password is - <h3>${req.body.otp}</h3><br><h6>We hope you find our service cool.</h6>`)
     res.send({status:"ok",data:"please verify your email"});
+})
+
+app.post('/send-feedback', bodyparser.json(), (req, res) => {
+    var feedbackcollection = connection.db('stackinflow').collection('feedbacks');
+    console.log(req.body);
+    feedbackcollection.insert(req.body, (err, result) => {
+        if (!err) {
+            res.send({ status: "ok", data: "Feedback Submitted Successfully" })
+            sendMail("process.env.APP_ID", "process.env.APP_PASSWORD", req.body.useremail, "Thanks for submit your feedback",
+             `<h2>stackinflow</h2><br><h4> Feedback Sent SuccessFull </h4><br><h6>We hope you find our service cool.</h6>`)
+        }
+        else {
+            res.send({ status: "failed", data: err })
+        }
+    })
 })
 
 app.post('/create-user', bodyparser.json(), (req, res) => {

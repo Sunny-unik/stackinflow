@@ -8,10 +8,14 @@ import Signup from './components/Signup';
 import {useDispatch, useSelector} from 'react-redux';
 import { FaRegistered, FaSearch, FaSignInAlt, FaSignOutAlt, FaUserTie } from 'react-icons/fa';
 import axios from 'axios';
+import Contact from './components/Contact';
+import About from './components/About';
+import Searchq from './components/searchq';
 
 function App() {
 
   const [questions, setquestions] = useState()
+  const [questionsearch, setquestionsearch] = useState('')
 
   const user = useSelector(state => state.user);
   const dispatch = useDispatch();
@@ -20,36 +24,42 @@ function App() {
     alert("User successfully logout")
   }
 
-  // useEffect(() => {
-  //   axios.get("http://localhost:3001/list-question").then((res) => {
-  //       console.log(res.data.data)
-  //       setquestions(res.data.data)
-  //   })
-  // }, [])
-  // console.log(questions)
-  
+  function inputhandler(params) {
+    params.target.name == "questionsearch" && setquestionsearch(params.target.value)
+    console.log(questionsearch)
+  }
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/list-question").then((res) => {
+      console.log(res.data.data)
+      setquestions(res.data.data)
+    })
+  }, [])
+  console.log(questions)
+  var date = new Date()
   return (
-<Router>
-  <nav class="navbar navbar-expand-sm bg-dark sticky-top">
+<Router class="w-100">
+  <nav class="navbar navbar-expand-sm bg-dark sticky-top" style={{width:"100% !important"}}>
     <div class="container">
-      <ul class="navbar-nav w-100 m-auto">
+      <ul class="navbar-nav w-100 ">
         <li class="navbar-header col-md-2 text-center">
-          <NavLink className="nabar-brand" style={{textDecoration:'none',fontSize:'1.4rem',fontFamily:'fantasy'}} activeClassName="active" exact to="/"><i>Stackinflow</i></NavLink>
+          <NavLink className="nabar-brand" style={{textDecoration:'none',fontSize:'1.4rem',fontFamily:'Fantasy'}} activeClassName="active"
+           exact to="/"><i>Stackinflow</i></NavLink>
         </li>
         <li class="nav-item col-md-8 text-center">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search Question" name="questionsearch" id="questionsearch" list="qsearch"/>
-          {/* {questions && questions.map((q)=>{ */}
-          {/* return */}
-            <datalist id="qsearch">
-                    <option value='_id'>{questions}</option>
-                    {/* <option key={q._id}>{q.question}</option>
-                    <option key={q._id}>{q.question}</option>
-                    <option key={q._id}>{q.question}</option> */}
-                  </datalist>
-          {/* })}  */}
-          <div class="input-group-btn">
-            <button class="btn btn-default bg-primary" type="button"><FaSearch/></button>
+        <div class="input-group" onClick={inputhandler}>
+          <input type="text" class="form-control" placeholder="Search Question" name="questionsearch" value={questionsearch}
+          onChange={(e)=>{inputhandler(e)}} id="questionsearch" list="qsearch"/>
+            <datalist id="qsearch" style={{maxHeight:"50vh !important"}}>
+              {questions && questions.map((i)=>{return <option value={i._id}>{i.question}</option>})}
+            </datalist>
+          <div class="input-group-btn" id='hidebtn'>
+            {/* <NavLink to={{pathname:`/search`,questionsearch}}> */}
+            <NavLink to={`./question/${questionsearch.replace("?","5a5")}`}>
+            <button class="btn btn-default bg-primary" type="button">
+              <FaSearch/>
+            </button>
+            </NavLink>
           </div>
         </div>
         </li>

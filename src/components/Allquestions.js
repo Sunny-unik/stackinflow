@@ -5,6 +5,7 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import Spinner from './spinner'
 import Reactpaginate from 'react-paginate'
+import Questionbox from './questionbox';
 
 export default function Allquestions() {
 
@@ -12,7 +13,7 @@ export default function Allquestions() {
     const [alluser, setalluser] = useState([])
     const [questions, setquestions] = useState([])
     
-    var limit = 4;
+    var limit = 5;
     var currentpage = {selected:0};
 
     useEffect(() => {
@@ -62,6 +63,7 @@ export default function Allquestions() {
         b2.style.backgroundColor = "dodgerblue"
         p.target.style.backgroundColor = "blue"
     }
+
 return (
     <div class="row" style={{ borderLeft: '2px solid lightgrey', minHeight: '80vh' }}>
         <div>
@@ -78,33 +80,37 @@ return (
             <span class="btn btn-primary" id="notanswer" onClick={sortnotanswer} style={{backgroundColor:"dodgerblue",textShadow:".02em .02em white"}} type='button'>
                 Not Answered
             </span>
-            </div><hr style={{ marginBottom: '0' }} />
+            </div>
+            <hr style={{ marginBottom: '0' }} />
         </div>
         <div style={{ background: '#fdf7e2' }}>
             {questions && questions.map((q) => {
             return (
-            <div data-aos="fade-down" data-aos-offset='max-height' data-aos-once='true' data-aos-duration="200" key={q._id}>
-                <div style={{ borderBottom: '.1rem solid lightgrey' }}>
-                    <h4 data-aos="fade-left" data-aos-offset='max-height' data-aos-once='true' data-aos-duration="400" className='mainqdiv'>
-                        <NavLink style={{ textDecorationLine: "none",textShadow: ".02em .04em black" }} to={`/question/${q._id}`}>{q.question}</NavLink>
-                    </h4>
-                    <div class="qla bg-secondary"> Likes: {q.qlikes.length}  </div>
-                    <div class="qla bg-secondary">
-                        <NavLink style={{ color: 'black', textDecoration: 'none' }} to={`/question/${q._id}`}> Answer: {q.answers.length} </NavLink>
-                    </div><br />
-                    {q.tags.map((o) => {
-                        return <NavLink style={{ color: 'white', fontFamily: 'monospace', padding: '.2rem' }} className="rounded-2 bg-dark" to={`/questionsby/${o}`}>
-                            {o}
-                        </NavLink>
-                    })}
-                    <div style={{ width: '37%', display: 'inline-block', margin: '6px', fontFamily: 'Times' }}>asked at {q.date}</div>
-                    <div class="maindnamediv" style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>asked by
-                        <NavLink style={{ color: 'navy', fontFamily: 'cursive' }} to={`/user/${q.userdname}`}>
-                            {alluser.map((r) => { if (r._id == q.userdname) return ' ' + r.dname })}
-                        </NavLink>
-                    </div>
-                </div>
-            </div>)
+            <Questionbox questionid={q._id} likes={q.qlikes.length} questiontitle={q.question} answer={q.answers.length} tags={q.tags} 
+            data_aos={'fade-left'} userdname={q.userdname} date={q.date} />
+            // <div data-aos="fade-down" data-aos-offset='max-height' data-aos-once='true' data-aos-duration="200" key={q._id}>
+            //     <div style={{ borderBottom: '.1rem solid lightgrey' }}>
+            //         <h4 data-aos='fade-left' data-aos-offset='max-height' data-aos-once='true' data-aos-duration="400" className='mainqdiv'>
+            //             <NavLink style={{ textDecorationLine: "none",textShadow: ".02em .04em black" }} to={`/question/${q._id}`}>{q.question}</NavLink>
+            //         </h4>
+            //         <div class="qla bg-secondary"> Likes: {q.qlikes.length}  </div>
+            //         <div class="qla bg-secondary">
+            //             <NavLink style={{ color: 'black', textDecoration: 'none' }} to={`/question/${q._id}`}> Answer: {q.answers.length} </NavLink>
+            //         </div><br />
+            //         {q.tags.map((o) => {
+            //             return <NavLink style={{ color: 'white', fontFamily: 'monospace', padding: '.2rem' }} className="rounded-2 bg-dark" to={`/questionsby/${o}`}>
+            //                 {o}
+            //             </NavLink>
+            //         })}
+            //         <div style={{ width: '37%', display: 'inline-block', margin: '6px', fontFamily: 'Times' }}>asked at {q.date}</div>
+            //         <div class="maindnamediv" style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>asked by
+            //             <NavLink style={{ color: 'navy', fontFamily: 'cursive' }} to={`/user/${q.userdname}`}>
+            //                 {alluser.map((r) => { if (r._id == q.userdname) return ' ' + r.dname })}
+            //             </NavLink>
+            //         </div>
+            //     </div>
+            // </div>
+            )
             })}
         </div>
         <div className="container">
@@ -119,11 +125,6 @@ return (
                 />
             </div>
             {/* <br/> */}
-            {/* <div class="btn-group" style={{margin:'0px .3rem 0px .8rem'}}>
-                <span class="btn btn-primary" type='button' onClick={changelimit} aria-current="page">4</span><vr/>
-                <span class="btn btn-primary" type='button' onClick={changelimit} >10</span>
-                <span class="btn btn-primary" type='button' onClick={changelimit} >15</span>
-            </div> */}
             </div>}
             </div>
         </div>

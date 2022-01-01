@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import div, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 
 export default function Editprofile(props) {
@@ -100,59 +100,61 @@ export default function Editprofile(props) {
     }
     
     return (
-        <React.Fragment>
+        <div className='py-1'>
             <div><h1><b> Edit Your Profile </b></h1></div>
-            <div className="container m-0 row ">
+            <div className="container bg-light py-3 m-0 row ">
                 {/* <div className=""> */}
                 <div className="col-md-3 ">
-                        <span className="font-dark">Upload avatar</span>
+                        <label className="text-dark"><b>Upload avatar</b></label>
                     <div >
                         <img className="col-sm-12" height="225px" width="75px" src={ uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/crea15.jpg"} alt="user profile" />
                     </div>
-                    <div className="bg-light ">
-                        <input type="file" onChange={(e)=>{setProfile(e)}} /> 
+                    <div className="">
+                        <input type="file" className='my-2 p-1.4 pr-0 btn btn-primary border rounded' accept='image/png,image/jpg,image/jpeg' onChange={(e)=>{setProfile(e)}}/> 
                         {uploadPercentage } {uploadPercentage && '% uploaded'}
                     </div>
                 </div>
-                <div className="col-md-9">
+                <div className='col-md-1'></div>
+                <div className="col-md-8">
                     {/* <div className="col-md-12"> */}
-                    <label>Display name</label><br />
+                    <label><b>Display name</b></label><br />
                     <input type="text" name="edname" value={dname} onChange={(e)=>{setValue(e)}} id="edname" placeholder="Display Name" required className="col-md-9"/><br /><br/>
                     {/* </div> */}
-                    <label>Your Name</label><br />
+                    <label><b>Your Name</b></label><br />
                     <input type="text" name="ename" value={name} onChange={(e)=>{setValue(e)}} id="ename" placeholder="Your Name" required className="col-md-9"/><br /><br/>
-                    <label>Title</label><br />
+                    <label><b>Title</b></label><br />
                     <input type="text" name="etitle" value={title} onChange={(e)=>{setValue(e)}} id="etitle" placeholder="Title" required className="col-md-9"/><br /><br/>
+                    {/* </div> */}
                 </div>
-                {/* </div> */}
                 <div className="col-md-12">
-                <label>About Me</label><br />
+                <label><b>About Me</b></label><br />
                     <textarea type="text" name="eabout" value={about} onChange={(e)=>{setValue(e)}} id="eabout" placeholder="explain about yourself" className="col-md-12" required />  
                 </div>
                 <div className="col-md-12">
-                <label>Web Preference</label><br />
+                <label><b>Web Preference</b></label><br />
                     <div className="col-md-4">
-                    <b>website link</b><br />
+                    website link<br />
                         <input type="text" name="eweblink" value={weblink} onChange={(e)=>{setValue(e)}} id="eweblink" placeholder="Website Link" required /><br />
                     </div>
                     <div className="col-md-4">
-                    <b>Github Link</b><br />
+                    Github Link<br />
                         <input type="text" name="egitlink" value={gitlink} onChange={(e)=>{setValue(e)}} id="egitlink" placeholder="Github Link" required /><br />
                     </div>
                     <div className="col-md-4">
-                    <b>Twitter link</b><br />
-                        <input type="text" name="etwitter" value={twitter} onChange={(e)=>{setValue(e)}} id="etwitter" placeholder="Twitter Link" required /><br />
+                    Twitter link<br />
+                        <input type="text" className='rounded bg-white' name="etwitter" value={twitter} onChange={(e)=>{setValue(e)}}
+                         id="etwitter" placeholder="Twitter Link" required /><br />
                     </div>
                 </div>
                 <div className="col-md-12">
-                <label>Address</label><br />
+                <label><b>Address</b></label><br />
                     <input type="text" name="eaddress" value={address} onChange={(e)=>{setValue(e)}} id="eaddress" placeholder="Address" className="col-md-12" required /><br /><br/>
                 </div>
                 <div className="col-md-12 text-right">
-                    <button type="button" className="updateprofile" onClick={sendvalues}> Update Profile </button>
+                    <button type="button" className="updateprofile btn btn-success float-end" onClick={sendvalues}> Update Profile </button>
                 </div>
             </div>
             <br/>
-        </React.Fragment>
+        </div>
     )
 }

@@ -17,8 +17,8 @@ export default function Editquestion(props) {
         e.target.name === "questiontitle" && setquestiontitle(e.target.value)
         e.target.name === "questiondetail" && setquestiond(e.target.value)
         e.target.name === "questiontag" && setqtag(e.target.value.replace(" ", ","))
+        console.log(qtags);
     }
-
     function validateq() {
         // eslint-disable-next-line
         if (question == "" || question == null || question == " ") {
@@ -33,8 +33,11 @@ export default function Editquestion(props) {
         }
     }
     function submitq() {
-        var tags = qtags.split(',');
-        console.log(tags)
+        if(typeof qtags != 'object'){
+            var tags = qtags.split(',');
+        } else{
+            var tags = qtags
+        }
         if (tags.length < 1) {
             alert("!For create your question you must use atleast 1 tags in it.")
         } else if (tags.length > 5) {

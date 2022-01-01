@@ -23,6 +23,8 @@ export default function Askaquestion(props) {
 
     const user = useSelector(state => state.user);
     const userdname = useSelector(state => state.user._id);
+    const userpoints = useSelector(state => state.user.userlikes);
+    console.log(userpoints);
 
     useEffect(() => {
         if (user == null) {
@@ -88,10 +90,18 @@ export default function Askaquestion(props) {
             setdate(Date)
             var createq = { qlikes, question, tags, userdname, date, answers, questiondetail }
             console.log(createq)
+            // var poststatus ;
             axios.post("http://localhost:3001/create-question", createq).then((res) => {
                 alert(res.data.data);
+                if (res.data.status==="ok"){
+                    let userpoint = userpoints + 5
+                    let uid = {userdname,userpoint}
+                    axios.post("http://localhost:3001/update-user-point", uid).then((res)=>{
+                        console.log(res.data.data);
+                    })
+                }    
             })
-        }
+            }
     }
 
     return (

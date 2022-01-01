@@ -93,13 +93,7 @@ export default function Signup(props) {
                     Signup.style.display = "none";
                     let Signup2 = document.getElementById('createotp');
                     Signup2.style.display = "block";
-                    // // 2min timer
-                    // setTimeout(() => {
-                    //     Signup.style.display = "block";
-                    //     Signup2.style.display = "none";
-                    // }, 120000);
-                }
-                else {
+                } else {
                     alert("some server error occured");
                 }
             })
@@ -107,7 +101,9 @@ export default function Signup(props) {
     }
 
     function create() {
-        var s = { email, name, dname, password, title, about, weblink, gitlink, twitter, address }
+        let userlikes = 0;
+        let profile = null;
+        var s = { email, name, dname, password, title, about, weblink, gitlink, twitter, address, userlikes, profile }
         console.log(s);
         axios.post('http://localhost:3001/create-user', s).then((res) => {
             alert(res.data.data);
@@ -155,19 +151,19 @@ export default function Signup(props) {
 
     return ( <React.Fragment>
 
-    <button type="button" id='sidemenuopen' className="m-1 fixed-top btn" onClick={openSlideMenu}><FcMenu/></button>
-    <button type="button" id='sidemenuclose' className="m-1 fixed-top btn-primary" onClick={closeSlideMenu}><FaWindowClose/></button>
+    <button type="button" id='sidemenuopen' className="m-1 fixed-top btn-info rounded" onClick={openSlideMenu}><FcMenu/></button>
+    <button type="button" id='sidemenuclose' className="m-1 fixed-top btn-dark rounded" onClick={closeSlideMenu}><FaWindowClose/></button>
     <div id="hiddennav" className="py-2 px-2">
         <NavLink activeClassName="active1" exact to="/" onClick={closeSlideMenu}><FaHome/> Home </NavLink><br /><br />
         <NavLink activeClassName="active1" to="/questions" onClick={closeSlideMenu}><FaQuestionCircle/> Questions </NavLink><br /><br />
         <NavLink activeClassName="active1" to="/populartags" onClick={closeSlideMenu}><FaTags/> Popular Tags </NavLink><br /><br />
         <NavLink activeClassName="active1" to="/popularusers" onClick={closeSlideMenu}><FaUsers/> Popular Users </NavLink><br /><br />
         <NavLink  activeClassName="active1" to="/Login" onClick={closeSlideMenu}><FaSignInAlt/>LogIn</NavLink><br /><br />
-        <NavLink  activeClassName="active1" to="/Signup" onClick={closeSlideMenu}><FaRegistered/>SignIn</NavLink><br /><br />
+        <NavLink  activeClassName="active1" to="/Signup" onClick={closeSlideMenu}><FaRegistered/>SignUp</NavLink><br /><br />
     </div>
-
+        <div className='text-center'>
         <div className="container signupcon">
-            <div data-aos="flip-right" data-aos-once='true' data-aos-duration="500" className="col-md-5 col-lg-4 " id="createdetail" >
+            <div data-aos="flip-right" data-aos-once='true' data-aos-duration="500" className="col-md-8 col-lg-4 " id="createdetail" >
                 <form style={{padding:'3%',margin:'4px 0',borderRadius:'2%',boxShadow:'3px 4px 3px 3px #888888'}} >
                     <h1>Create an account</h1>
                     <p>Please fill this form and get verified for register.</p>
@@ -188,7 +184,8 @@ export default function Signup(props) {
                 <form className="d-inline-block" style={{padding:'3%',margin:'4px 0',borderRadius:'2%',boxShadow:'3px 4px 3px 2px #888888'}}>
                     {/* 2 min. timer implementation pending */}
                     <h1 style={{display:'inline-block',width:'82%'}}>Confirm Email</h1>
-                    <button type='button' onClick={goreg} className='bg-warning' style={{fontWeight:'600',fontFamily:'sans-serif',padding:'2% 1%',margin:'0',borderRadius:'10%',boxShadow:'2px 3px 2px 3px #888888'}}> Go Back </button>
+                    <button type='button' onClick={goreg} className='border btn btn-warning float-end' style={{fontWeight:'600',fontFamily:'sans-serif',
+                    padding:'2% 1%',margin:'0',borderRadius:'10%',boxShadow:'2px 3px 2px 3px #888888'}}> Go Back </button>
                     <p>Please fill 6alphanumeric code for create your account.</p>
                     <hr className="signuphr" />
                     <label for="otp" className="inputotp"><b>Otp sent on gievn email-address</b></label>
@@ -197,6 +194,7 @@ export default function Signup(props) {
                     <button type="button" class="registerbtn" onClick={otpcheck}> Submit </button>
                 </form>
             </div>
+        </div>
         </div>
     </React.Fragment>
     )
