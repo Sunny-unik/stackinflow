@@ -7,12 +7,11 @@ import Allquestions from "./Allquestions"
 import Topquestions from "./Topquestions"
 import { useDispatch, useSelector } from "react-redux"
 import Question from "./question"
-import React from "react"
 import Footer from "./Footer"
 import User from "./user"
 import {  FaHome, FaQuestion, FaQuestionCircle, FaRegistered, FaSignInAlt, FaSignOutAlt, FaTags, FaUsers, FaUserTie, FaWindowClose } from "react-icons/fa"
 import { FcMenu } from "react-icons/fc"
-import { useEffect } from "react"
+import React, { useEffect } from "react"
 import Questionsbytags from "./questionsbytags"
 import Editquestion from "./editquestion"
 import About from "./About"
@@ -76,7 +75,7 @@ export default function Home(props) {
     </div>
 <div className="container-md" style={{ marginBottom:'0px'}}>
     <div className="row p-0">
-        <div id="sidenavbar" class="col-sm-2 pt-3">
+        <div id="sidenavbar" class="col-sm-2 px-0 mx-0 mr-1 pt-3 ">
 <NavLink activeClassName="active1" style={{fontSize:'larger',fontFamily:'serif',fontSize:"1.4em",textShadow:"0.02em 0.02em black"}} exact to="/"> 
     Home
 </NavLink><br /><br />
@@ -93,7 +92,7 @@ export default function Home(props) {
     Ask Question 
 </h6><br /><br />
         </div>
-        <div className="topmain col-sm-10 p-0">
+        <div className="topmain m-0 col-sm-10 p-2 overflow-hidden border border-primary">
             <Switch class="p-0">
             <Route path='/selfquestion/:id' component={Askedquestionbyuser} />
             <Route path='/selfanswer/:id' component={Givenaswerbyuser} />

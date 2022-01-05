@@ -9,7 +9,7 @@ import { NavLink } from 'react-router-dom';
 export default function Popularusers(props) {
 
     const [users, setusers] = useState('')
-    const [searchuser, setsearchuser] = useState('')
+    const [searchuser, setsearchuser] = useState(null)
 
     useEffect(() => {
         axios.get("http://localhost:3001/list-user").then((res) => {
@@ -19,10 +19,12 @@ export default function Popularusers(props) {
     }, [])
 
     function gotouser() {
-        // let getuser = users.filter((u)=>{ u.dname==params })
-        // let gotouserid = getuser._id;
-        // console.log(gotouserid);
-        props.history.push('/user/'+searchuser)
+            if(searchuser==null)
+            alert("Enter some tags first in input box")
+            else if(searchuser.includes(' ')==true)
+            alert("Remove blank space from input box")
+            else 
+            props.history.push('/user/'+searchuser)
     }
     
     return (<div style={{borderLeft:'2px solid lightgrey'}}>
@@ -38,7 +40,7 @@ export default function Popularusers(props) {
                 <FcSearch/> Search
             </button>
         </div>
-        <div style={{minHeight:'80vh'}}>
+        <div style={{minHeight:'60vh'}}>
         {!users && <Spinner />}
         {users && users.map((p) => {
             return  <div className="mr-5" data-aos="flip-up" data-aos-once='true' data-aos-duration="500" key={p._id} 

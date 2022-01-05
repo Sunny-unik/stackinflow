@@ -10,7 +10,7 @@ import Spinner from './spinner';
 
 export default function User(props) {
 
-    const [userbyudn, setuserbyudn] = useState()
+    const [userbyudn, setuserbyudn] = useState([])
     const [profilebyudn, setprofilebyudn] = useState('')
     const [namebyudn, setnamebyudn] = useState('')
     const [dnamebyudn, setdnamebyudn] = useState('')
@@ -45,6 +45,7 @@ export default function User(props) {
             setquestion(res.data.data)
         })
     }, [])
+    console.log(userbyudn);
 
 var answer = new Array
 question.forEach((un)=>{if(un.answers.length>0){un.answers.forEach((i)=>{if(i.userdname==uid)answer.push(i)})}})
@@ -53,7 +54,11 @@ var questions = new Array
 question.forEach((un)=>{ if(un.userdname==uid) questions.push(un)})
 
     return (<div style={{minHeight:"70vh"}}>
-        {userbyudn!=[] ? <div>
+        {
+            console.log(userbyudn.length)
+
+        }
+        {userbyudn.length!=0 ? <div>
         <div className="container">
         <div className='d-md-flex'>
          <div className="col-md-5 col-sm-10 col-lg-4 mx-auto proimgdiv"><br />
@@ -95,14 +100,8 @@ question.forEach((un)=>{ if(un.userdname==uid) questions.push(un)})
                 {dnamebyudn}'s answers
             </NavLink></p>
         </div>
-    {/* <div class="d-flex justify-content-center">
-        <div className="col-sm-10">
-        <Switch>
-        </Switch>
-        </div>
-    </div> */}
 </div>
-     </div>  : <Spinner/> }
+     </div>  : <h1 className='text-danger text-center mt-5'>!User not found</h1> }
     </div>
     )
 }

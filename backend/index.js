@@ -164,6 +164,34 @@ app.post('/remove-qlike',bodyparser.json(),(req,res)=>{
     })
 })
 
+app.post('/add-alike',bodyparser.json(),(req,res)=>{
+    var questioncollection = connection.db('stackinflow').collection('q&a')
+    console.log(req.body)
+    questioncollection.updateOne({"_id":ObjectId(req.body.qid), "answers": {"$elemMatch":{date: req.body.ad}}},{"$push": {"answers.$.alikes":req.body.uid}}
+        ,(err,docs)=>{
+            if(!err){
+                res.send({status:"ok",data:"like added"})
+            }
+            else{
+                res.send({status:"failed",data:err})
+            }
+    })
+})
+
+app.post('/remove-alike',bodyparser.json(),(req,res)=>{
+    var questioncollection = connection.db('stackinflow').collection('q&a')
+    console.log(req.body);
+    questioncollection.updateOne({"_id":ObjectId(req.body.qid), "answers": {"$elemMatch":{"date": req.body.ad}}},{$set:{"answers.$.alikes":req.body.al}}
+        ,(err,docs)=>{
+            if(!err){
+                res.send({status:"ok",data:"like removed"})
+            }
+            else{
+                res.send({status:"failed",data:err})
+            }
+    })
+})
+
 app.post('/check-login', bodyparser.json(), (req, res) => {
     console.log(req.body);
     var usercollection = connection.db('stackinflow').collection('user');
@@ -208,6 +236,21 @@ app.post('/delete-question',bodyparser.json(), (req, res) => {
         }
     })
 })
+
+// app.post('/delete-answer',bodyparser.json(), (req, res) => {
+//     var questioncollection = connection.db('stackinflow').collection('q&a')
+//     console.log(req.body)
+// // questioncollection.updateOne({"_id":ObjectId(req.body.qid), "answers": {"$elemMatch":{date: req.body.ad}}},{"$push": {"answers.$.alikes":req.body.uid}}
+//     questioncollection.deleteOne({"_id":ObjectId(req.body.qid), "answers": {"$elemMatch":{date: req.body.ad}}}
+//      ,(err, result) => {
+//         if (!err) {
+//             res.send({ status: "ok", data: "Answer deleted successfully ☺"})
+//         }
+//         else {
+//             res.send({ status: "failed", data: err })
+//         }
+//     })
+// })
 
 app.post("/send-otp-email", bodyparser.json(), (req, res) => {
     var usercollection = connection.db('stackinflow').collection('user');

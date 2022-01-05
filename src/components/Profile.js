@@ -4,7 +4,7 @@ import { Switch, Route, NavLink } from "react-router-dom"
 import Askedquestions from "./profile/Askedquestions"
 import Givenanswer from "./profile/Givenaswer"
 import Editprofile from "./profile/Editprofile"
-import Likedanswer from './profile/Likedanswer'
+import Likedquestions from './profile/Likedquestions'
 import { useDispatch, useSelector } from 'react-redux';
 import { FaGithub, FaHome, FaQuestion, FaQuestionCircle, FaSignOutAlt, FaTags, FaTwitter, FaUsers, FaUserTie, FaWindowClose } from 'react-icons/fa';
 import { IoLocationSharp } from 'react-icons/io5';
@@ -123,7 +123,7 @@ export default function Profile(props) {
                     <div class="d-flex flex-xs-column flex-md-row justify-content-center content py-2 bg-dark rounded">
                         <div data-aos="zoom-out" data-aos-once='true' data-aos-duration="600" class="d-flex flex-sm-column flex-md-row text-center">
                             <p className='mx-1 my-auto px-1'><NavLink class="btn text-primary rounded p-1" activeClassName="active" to="/Profile" style={{ fontSize: 'large' }}>
-                                Liked Answers
+                                Liked Questions
                             </NavLink></p>
                             <p className='mx-1 my-auto px-1'><NavLink class="btn text-primary rounded p-1" activeClassName="active" to="/Profile/editprofile" style={{ fontSize: 'large' }}>
                                 Edit Profile
@@ -139,7 +139,7 @@ export default function Profile(props) {
                     <div class="d-flex justify-content-center">
                         <div className="col-sm-10">
                         <Switch>
-                            <Route path="/Profile" exact component={Likedanswer} />
+                            <Route path="/Profile" exact component={Likedquestions} />
                             <Route path="/Profile/editprofile" component={Editprofile} />
                             <Route path="/Profile/selfquestion" component={Askedquestions} />
                             <Route path="/Profile/selfanswer" component={Givenanswer} />

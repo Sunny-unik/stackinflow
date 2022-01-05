@@ -45,7 +45,9 @@ export default function Givenaswerbyuser(props) {
             {users.map((r)=>{ if (r._id == uid) return ' ' + r.dname })}.</h1>
             {abyuser.map((g) => {
                 return <div className='bg-light my-1' style={{ borderBottom: '.1rem solid lightgrey' }}>
+                    <NavLink to={`/question/${g.qid}`}>
                     <h4 className='mainqdiv'>{g.answer}</h4>
+                    </NavLink>
                     <div class="qla bg-secondary"> Likes: {g.alikes.length} </div>
                     <div class="maindnamediv" style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>given by&nbsp;
                         <NavLink style={{ color: 'navy', fontFamily: 'cursive' }} to={`/user/${g.userdname}`}>

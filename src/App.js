@@ -51,11 +51,11 @@ function App() {
           <input type="text" class="form-control" placeholder="Search Question" name="questionsearch" value={questionsearch}
           onChange={(e)=>{inputhandler(e)}} id="questionsearch" list="qsearch"/>
             <datalist id="qsearch" style={{maxHeight:"50vh !important"}}>
-              {questions && questions.map((i)=>{return <option value={i._id}>{i.question}</option>})}
+              {questions && questions.map((i)=>{return <option>{i.question}</option>})}
             </datalist>
           <div class="input-group-btn" id='hidebtn'>
-            {/* <NavLink to={{pathname:`/search`,questionsearch}}> */}
-            <NavLink to={`./question/${questionsearch.replace("?","5a5")}`}>
+            <NavLink to={{pathname:`/search/${questionsearch}`,searchedquestion:questionsearch}}>
+            {/* <NavLink to={`./search/${questionsearch.replace("?","5a4")}`}> */}
             <button class="btn btn-default bg-primary" type="button">
               <FaSearch/>
             </button>

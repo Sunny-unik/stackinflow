@@ -40,7 +40,7 @@ export default function Contact() {
 
     return (
         <div className='w-100 card m-0 p-0' style={{borderLeft:"1px solid lightgrey"}}>
-            <h2 className='text-center display-5 '> &nbsp;Feedback</h2>
+            <h2 className='text-center display-5 btn-light'> Feedback</h2>
             <form className='col-sm-12 col-md-7 card bg-white p-3 mb-md-4 d-inline-block mx-md-4' style={{height:"inherit"}}>
         <div className='card-header'>
             <label for="ehead"><b>Enter your feedback title</b></label><br />
@@ -61,7 +61,7 @@ export default function Contact() {
         </div>
             <br />
         <button type="reset" onClick={submitfeedback} class="float-end submitquestion btn btn-primary m-2 form-btn" style={{borderRadius:".2em",boxShadow:" .08em .2em #888888"}}>
-            Post Feedback
+            Submit Feedback
         </button>
         <style jsx>{`.submitquestion:hover {color:pink !important}`}</style>
         <style jsx>{`.submitquestion:focus {color:pink !important}`}</style>

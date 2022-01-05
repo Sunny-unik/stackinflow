@@ -47,6 +47,9 @@ export default function Editquestion(props) {
             console.log(createq)
             axios.post('http://localhost:3001/update-question', createq).then((res) => {
                 alert(res.data.data);
+                if(res.data.status==="ok"){
+                    props.history.push(`/question/${questionid}`)
+                }
             })
         }
     }

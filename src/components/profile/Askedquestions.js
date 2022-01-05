@@ -20,8 +20,15 @@ export default function Askedquestions() {
     const user = useSelector(state => state.user);
 
     var askedquestion = question.filter((un)=>{return un.userdname===user._id})
-
     console.log(askedquestion)
+
+    function setdated(params) {
+        var d1 = new Date(params);
+        var d2 = new Date();
+        var t2 = d2.getTime();
+        var t1 = d1.getTime();
+        return parseInt((t2-t1)/(24*3600*1000));
+    }
 
     return (<React.Fragment>
         <div>
@@ -48,7 +55,9 @@ export default function Askedquestions() {
                         {user.dname}
                     </NavLink>
                 </div>
-                <div style={{width:'37%',display:'inline-block',margin:'6px',fontFamily:'Times'}}> at {q.date}</div>
+                <div style={{width:'37%',display:'inline-block',margin:'6px',fontFamily:'Times'}}> 
+                posted {setdated(q.date)!=0?setdated(q.date)+" day ago":"today"}
+                </div>
             </div>
                 </div>
             })}

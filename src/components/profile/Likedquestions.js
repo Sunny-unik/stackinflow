@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { NavLink } from "react-router-dom"
 import { useSelector } from 'react-redux'
 
-export default function Likedanswer() {
+export default function Likedquestions() {
 
     const [question, setquestion] = useState([])
 
@@ -17,17 +17,24 @@ export default function Likedanswer() {
     
     const user = useSelector(state => state.user);
     const uid = useSelector(state => state.user._id);
-    console.log(uid)
+    
     var userliked = new Array
     question.forEach((all) => {
         return all.qlikes.forEach((u) => {
-            console.log(u)
             if (u == uid) {
                 userliked.push(all)
             }
         })
     })
     console.log(userliked)
+
+    function setdated(params) {
+        var d1 = new Date(params);
+        var d2 = new Date();
+        var t2 = d2.getTime();
+        var t1 = d1.getTime();
+        return parseInt((t2-t1)/(24*3600*1000));
+    }
 
     return (
 <div style={{ borderLeft: "2px solid lightgrey",minHeight:'64vh'}}>
@@ -53,7 +60,9 @@ export default function Likedanswer() {
                     {user.dname}
                 </NavLink>
             </div>
-            <div style={{ width: '37%', display: 'inline-block', margin: '6px', fontFamily: 'Times' }}> at {g.date}</div>
+            <div style={{ width: '37%', display: 'inline-block', margin: '6px', fontFamily: 'Times' }}> 
+            posted {setdated(g.date)!=0?setdated(g.date)+" day ago":"today"}
+            </div>
         </div>
     })}
 </div>)

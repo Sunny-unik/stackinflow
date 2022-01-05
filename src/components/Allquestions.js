@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react'
-import { NavLink } from "react-router-dom"
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import Spinner from './spinner'
@@ -41,91 +40,35 @@ export default function Allquestions() {
         })
     }
 
-    function sortold(p) {
-        var b1 = document.getElementById("newest")
-        b1.style.backgroundColor = "dodgerblue"
-        var b2 = document.getElementById("notanswer")
-        b2.style.backgroundColor = "dodgerblue"
-        p.target.style.backgroundColor = "blue"
-    }
-    function sortnew(p) {
-        var b1 = document.getElementById("oldest")
-        b1.style.backgroundColor = "dodgerblue"
-        var b2 = document.getElementById("notanswer")
-        b2.style.backgroundColor = "dodgerblue"
-        p.target.style.backgroundColor = "blue"
-        setquestions(questions.reverse())
-    }
-    function sortnotanswer(p) {
-        var b1 = document.getElementById("oldest")
-        b1.style.backgroundColor = "dodgerblue"
-        var b2 = document.getElementById("newest")
-        b2.style.backgroundColor = "dodgerblue"
-        p.target.style.backgroundColor = "blue"
-    }
-
 return (
     <div class="row" style={{ borderLeft: '2px solid lightgrey', minHeight: '80vh' }}>
-        <div>
+        <div >
             <h1 style={{ padding: '0px 1%', margin: '.4rem 0 .4rem 0', fontFamily: 'sans-serif' }}>
                 Total {questionlength} Questions Asked
             </h1>
-            <div class="btn-group" style={{ margin: '0px .3rem 0px .8rem', borderBottom: '.1rem solid lightgrey' }}>
-            <span class="btn btn-primary active" id="oldest" onClick={sortold} type='button' style={{textShadow:".02em .02em white"}}>
-                Oldest
-            </span><vr />
-            <span class="btn btn-primary" id="newest" onClick={sortnew} style={{backgroundColor:"dodgerblue",textShadow:".02em .02em white"}} type='button'> 
-                Newest
-            </span><vr/>
-            <span class="btn btn-primary" id="notanswer" onClick={sortnotanswer} style={{backgroundColor:"dodgerblue",textShadow:".02em .02em white"}} type='button'>
-                Not Answered
-            </span>
-            </div>
-            <hr style={{ marginBottom: '0' }} />
+            <hr class="mb-0" />
         </div>
-        <div style={{ background: '#fdf7e2' }}>
+        <div>
             {questions && questions.map((q) => {
             return (
-            <Questionbox questionid={q._id} likes={q.qlikes.length} questiontitle={q.question} answer={q.answers.length} tags={q.tags} 
-            data_aos={'fade-left'} userdname={q.userdname} date={q.date} />
-            // <div data-aos="fade-down" data-aos-offset='max-height' data-aos-once='true' data-aos-duration="200" key={q._id}>
-            //     <div style={{ borderBottom: '.1rem solid lightgrey' }}>
-            //         <h4 data-aos='fade-left' data-aos-offset='max-height' data-aos-once='true' data-aos-duration="400" className='mainqdiv'>
-            //             <NavLink style={{ textDecorationLine: "none",textShadow: ".02em .04em black" }} to={`/question/${q._id}`}>{q.question}</NavLink>
-            //         </h4>
-            //         <div class="qla bg-secondary"> Likes: {q.qlikes.length}  </div>
-            //         <div class="qla bg-secondary">
-            //             <NavLink style={{ color: 'black', textDecoration: 'none' }} to={`/question/${q._id}`}> Answer: {q.answers.length} </NavLink>
-            //         </div><br />
-            //         {q.tags.map((o) => {
-            //             return <NavLink style={{ color: 'white', fontFamily: 'monospace', padding: '.2rem' }} className="rounded-2 bg-dark" to={`/questionsby/${o}`}>
-            //                 {o}
-            //             </NavLink>
-            //         })}
-            //         <div style={{ width: '37%', display: 'inline-block', margin: '6px', fontFamily: 'Times' }}>asked at {q.date}</div>
-            //         <div class="maindnamediv" style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>asked by
-            //             <NavLink style={{ color: 'navy', fontFamily: 'cursive' }} to={`/user/${q.userdname}`}>
-            //                 {alluser.map((r) => { if (r._id == q.userdname) return ' ' + r.dname })}
-            //             </NavLink>
-            //         </div>
-            //     </div>
-            // </div>
+                <Questionbox questionid={q._id} likes={q.qlikes.length} questiontitle={q.question} answer={q.answers.length} tags={q.tags} 
+                dataaos={'fade-left'} userdname={q.userdname} date={q.date} />
             )
             })}
         </div>
         <div className="container">
             <div className="row m-2">
-            {questions && <div><div className="pt-3 pb-1">
-                <Reactpaginate previousLabel={"<<"} nextLabel={">>"} breakLabel={"..."} marginPagesDisplayed={5} 
-                    pageCount={Math.floor(Math.ceil(questionlength/limit))} pageRangeDisplayed={2} onPageChange={pagechange}
-                    containerClassName={"pagination justify-content-center"} pageClassName={"page-item"}
-                    pageLinkClassName={"page-link"} previousClassName={"page-item"} previousLinkClassName={"page-link"}
-                    nextClassName={"page-item"} nextLinkClassName={"page-link"} breakClassName={"page-item"} 
-                    breakLinkClassName={"page-link"} activeClassName={"active"}
-                />
-            </div>
-            {/* <br/> */}
-            </div>}
+                {questions && <div>
+                    <div className="pt-3 pb-1">
+                    <Reactpaginate previousLabel={"<<"} nextLabel={">>"} breakLabel={"..."} marginPagesDisplayed={5} 
+                        pageCount={Math.floor(Math.ceil(questionlength/limit))} pageRangeDisplayed={2} onPageChange={pagechange}
+                        containerClassName={"pagination justify-content-center"} pageClassName={"page-item"}
+                        pageLinkClassName={"page-link"} previousClassName={"page-item"} previousLinkClassName={"page-link"}
+                        nextClassName={"page-item"} nextLinkClassName={"page-link"} breakClassName={"page-item"} 
+                        breakLinkClassName={"page-link"} activeClassName={"active"}
+                    />
+                    </div>
+                </div>}
             </div>
         </div>
         {!questions && <Spinner />}

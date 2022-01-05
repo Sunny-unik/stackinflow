@@ -32,8 +32,10 @@ export default function Questionsbytags(props) {
 
     return (
         <div style={{ borderLeft: "2px solid lightgrey",minHeight:'64vh'}}>
-            <h1 style={{ borderBottom: "2px solid lightgrey", paddingBottom: "2%" }}>&nbsp;All following questions are related to {tag}.</h1>
-            {bytag.map((g) => {
+            <h1 style={{ borderBottom: "2px solid lightgrey", paddingBottom: "2%", fontFamily:"SeogUI"}}>
+                &nbsp;All following questions are related to '{tag}'.
+            </h1>
+            {bytag.length>0 ? bytag.map((g) => {
                 return <div style={{ borderBottom: '.1rem solid lightgrey' }}>
                     <h4 className='mainqdiv'>
                         <NavLink style={{ color: 'black', textDecoration: 'none' }} to={`/question/${g._id}`}>{g.question}</NavLink>
@@ -58,7 +60,7 @@ export default function Questionsbytags(props) {
                     </div>
                     <div style={{ width: '37%', display: 'inline-block', margin: '6px', fontFamily: 'Times' }}> at {g.date}</div>
                 </div>
-            })}
+            }): <h1 className='text-center mt-5 text-danger'style={{fontFamily:"ethic"}}>Searched Tag is not listed</h1>}
         </div>
     )
 }

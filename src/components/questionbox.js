@@ -6,9 +6,10 @@ import './css/qls.css'
 export default function Questionbox(props) {
     
     const [alluser, setalluser] = useState([])
-    const [qid, setqid] = useState(props.questionid)
+    const [qid, setqid] = useState()
 
     useEffect(() => {
+        setqid(props.questionid)
         axios.get(`http://localhost:3001/list-user`).then((res)=>{setalluser(res.data.data)})
     }, [props])
     
@@ -21,22 +22,22 @@ export default function Questionbox(props) {
     }
 
 return (<div key={qid} className='rounded card'>
-    <div data-aos="fade-up" data-aos-once='true' data-aos-duration="400" data-aos-offset='max-height'
+    <div data-aos="fade-up" data-aos-duration="400" data-aos-offset='max-height'
      style={{backgroundColor:'#fdf7e2',borderBottom:'.1rem solid grey'}}>
-        <h4 className='mainqdiv'>
+        <h4 data-aos={props.dataaos} data-aos-duration="800" data-aos-offset='max-height' className='mainqdiv'>
             <NavLink style={{ textDecorationLine: "none",textShadow: ".02em .04em black" }} to={`/question/${qid}`}>
                 {props.questiontitle}
             </NavLink>
         </h4>
-        <div class="qla bg-secondary"> Likes: {props.likes}  </div>
+        <div class="qla bg-secondary" style={{textShadow:"0.02em 0.08em black"}}> Likes: {props.likes}  </div>
         <div class="qla bg-secondary">
-            <NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${qid}`}> Answer: {props.answer} </NavLink>
+            <NavLink style={{color:'white',textDecoration:'none',textShadow:"0.02em 0.08em black"}} to={`/question/${qid}`}> Answer: {props.answer} </NavLink>
         </div>
         <div class="maintagdiv mx-2">
         {props.tags.map((o)=>{
         if(o!=""&&" ")
-    return <NavLink style={{ color: 'white', fontFamily: 'monospace', padding: '.2rem' }} className="rounded bg-dark" to={`/questionsby/${o}`}>
-                {o}
+    return <NavLink style={{ color: 'white', fontFamily: 'monospace', padding: '.2rem', textDecorationLine:"none"}} className="m-1 rounded bg-dark" to={`/questionsby/${o}`}>
+                {o.replace(",","")}
             </NavLink>
         })}
         </div>
