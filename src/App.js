@@ -8,9 +8,6 @@ import Signup from './components/Signup';
 import {useDispatch, useSelector} from 'react-redux';
 import { FaRegistered, FaSearch, FaSignInAlt, FaSignOutAlt, FaUserTie } from 'react-icons/fa';
 import axios from 'axios';
-import Contact from './components/Contact';
-import About from './components/About';
-import Searchq from './components/searchq';
 
 function App() {
 
@@ -54,7 +51,7 @@ function App() {
               {questions && questions.map((i)=>{return <option>{i.question}</option>})}
             </datalist>
           <div class="input-group-btn" id='hidebtn'>
-            <NavLink to={{pathname:`/search/${questionsearch}`,searchedquestion:questionsearch}}>
+            <NavLink to={{pathname:`/search/${questionsearch}`,searchedquestion:questionsearch.replace(" ",",")}}>
             {/* <NavLink to={`./search/${questionsearch.replace("?","5a4")}`}> */}
             <button class="btn btn-default bg-primary" type="button">
               <FaSearch/>

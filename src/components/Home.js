@@ -94,8 +94,8 @@ export default function Home(props) {
         </div>
         <div className="topmain m-0 col-sm-10 p-2 overflow-hidden border border-primary">
             <Switch class="p-0">
-            <Route path='/selfquestion/:id' component={Askedquestionbyuser} />
-            <Route path='/selfanswer/:id' component={Givenaswerbyuser} />
+                <Route path='/selfquestion/:id' component={Askedquestionbyuser} />
+                <Route path='/selfanswer/:id' component={Givenaswerbyuser} />
                 <Route path="/questions" component={Allquestions} />
                 <Route path="/populartags" component={Populartags} />
                 <Route path="/popularusers" component={Popularusers} />

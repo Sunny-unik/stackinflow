@@ -12,6 +12,7 @@ import { FcCollaboration, FcMenu } from 'react-icons/fc';
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import Footer from './Footer'
+import axios from 'axios'
 
 export default function Profile(props) {
 
@@ -35,6 +36,9 @@ export default function Profile(props) {
     const uaddress = useSelector(state => state.user.address);
     const uprofile = useSelector(state => state.user.profile);
 
+    var profile;
+    const [uploadPercentage, setuploadPercentage] = useState('')
+
     const [name, setname] = useState(uname)
     const [dname, setdname] = useState(udname)
     const [email, setemail] = useState(uemail)
@@ -48,7 +52,7 @@ export default function Profile(props) {
     const [answeru, setanswerbyudnu] = useState(0)
     const [likesu, setlikesbyudnu] = useState(0)
 
-    
+
     function openSlideMenu() {
         document.getElementById('sidemenuopen').style.display = 'none';
         document.getElementById('sidemenuclose').style.display = 'block';
@@ -59,67 +63,104 @@ export default function Profile(props) {
         document.getElementById('sidemenuopen').style.display = 'block';
         document.getElementById('hiddennav').style.display = 'none';
     }
-    
+
     const dispatch = useDispatch();
-    function logout(){
-        dispatch({type:"LOGOUT_USER"});
+    function logout() {
+        dispatch({ type: "LOGOUT_USER" });
         alert("User successfully logout")
     }
 
-    function sidelink(){
-        if(user){
+    function sidelink() {
+        if (user) {
             props.history.push("/askaquestion")
             closeSlideMenu()
         }
-        else{
+        else {
             alert('User need to login first')
         }
+    }
+
+    function setProfile(e) {
+        profile = e.target.files[0];
+        console.log(profile);
+    }
+
+    function sendvalues() {
+        if (profile != undefined) {
+        var formData = new FormData();
+        formData.append("obid", user._id );
+        formData.append("profile", profile);
+        console.log(formData)
+        axios.post("http://localhost:3001/update-user", formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            onUploadProgress: function (progressEvent) {
+                console.log("file Uploading Progresss.......");
+                console.log(progressEvent);
+                setuploadPercentage(parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)));
+                //setfileInProgress(progressEvent.fileName)
+            }
+        }).then((res) => {
+            alert(res.data);
+        }).catch(res => {
+            alert("sorry you are not authorised to do this action");
+        })
+    }
+    else {
+        alert("please choose profile");
+    }
     }
 
     return (
         <React.Fragment>
 
-    <button type="button" id='sidemenuopen' className="m-1 fixed-top btn-info rounded" onClick={openSlideMenu}><FcMenu/></button>
-    <button type="button" id='sidemenuclose' className="m-1 fixed-top btn-dark rounded" onClick={closeSlideMenu}><FaWindowClose/></button>
-    <div id="hiddennav" className="py-2 px-2">
-        <NavLink activeClassName="active1" exact to="/" onClick={closeSlideMenu}><FaHome/> Home </NavLink><br /><br />
-        <NavLink activeClassName="active1" to="/questions" onClick={closeSlideMenu}><FaQuestionCircle/> Questions </NavLink><br /><br />
-        <NavLink activeClassName="active1" to="/populartags" onClick={closeSlideMenu}><FaTags/> Popular Tags </NavLink><br /><br />
-        <span activeClassName="active1" class="extralink" style={{fontSize:'inherit',fontFamily:'sans-serif'}} onClick={sidelink}><FaQuestion/> Ask Question </span><br/><br/>
-        <NavLink activeClassName="active1" to="/popularusers" onClick={closeSlideMenu}><FaUsers/> Popular Users </NavLink><br /><br />
-        <NavLink  activeClassName="active1" to="/Profile" onClick={closeSlideMenu}><FaUserTie/> Profile </NavLink><br /><br />
-        <NavLink  activeClassName="active1" onClick={logout} to="/Login" onClick={closeSlideMenu}><FaSignOutAlt/> LogOut </NavLink><br /><br />
-    </div>
+            <button type="button" id='sidemenuopen' className="m-1 fixed-top btn-info rounded" onClick={openSlideMenu}><FcMenu /></button>
+            <button type="button" id='sidemenuclose' className="m-1 fixed-top btn-dark rounded" onClick={closeSlideMenu}><FaWindowClose /></button>
+            <div id="hiddennav" className="py-2 px-2">
+                <NavLink activeClassName="active1" exact to="/" onClick={closeSlideMenu}><FaHome /> Home </NavLink><br /><br />
+                <NavLink activeClassName="active1" to="/questions" onClick={closeSlideMenu}><FaQuestionCircle /> Questions </NavLink><br /><br />
+                <NavLink activeClassName="active1" to="/populartags" onClick={closeSlideMenu}><FaTags /> Popular Tags </NavLink><br /><br />
+                <span activeClassName="active1" class="extralink" style={{ fontSize: 'inherit', fontFamily: 'sans-serif' }} onClick={sidelink}><FaQuestion /> Ask Question </span><br /><br />
+                <NavLink activeClassName="active1" to="/popularusers" onClick={closeSlideMenu}><FaUsers /> Popular Users </NavLink><br /><br />
+                <NavLink activeClassName="active1" to="/Profile" onClick={closeSlideMenu}><FaUserTie /> Profile </NavLink><br /><br />
+                <NavLink activeClassName="active1" onClick={logout} to="/Login" onClick={closeSlideMenu}><FaSignOutAlt /> LogOut </NavLink><br /><br />
+            </div>
 
             <div className="container">
-               <div className='d-md-flex'>
-                <div className="col-md-5 col-sm-10 col-lg-4 mx-auto proimgdiv"><br />
-                    <div className="profilepic col-sm-8" data-aos="flip-up" data-aos-once='true' data-aos-duration="600" >
-                        <img className="col-sm-12" height="225rem" width="75rem" src={uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/crea15.jpg"} alt="user profile" />
+                <div className='d-md-flex'>
+                    <div className="col-md-5 col-sm-10 col-lg-4 mx-auto proimgdiv"><br />
+                        <div className="profilepic w-75 m-auto" data-aos="flip-up" data-aos-once='true' data-aos-duration="600" >
+                            <img className="col-sm-12" height="225rem" width="75rem" src={uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/download.jpg"} alt="user profile" />
+                            <input type="file" className='btn btn-primary col-sm-12 my-2' accept='image/png,image/jpg,image/jpeg' onChange={(e) => { setProfile(e) }} />
+                            {uploadPercentage} {uploadPercentage && '% uploaded'}
+                            <div className='w-100 m-0 p-0 text-center'>
+                                <button type='button' className='updateprofile btn btn-success col-sm-12' onClick={sendvalues}>
+                                    Update Profile Picture
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-aos="fade-left" data-aos-duration="600" className="px-md-4 col-md-8 col-lg-7 col-sm-12 procontent"><br />
+                        <div className='text-center'>
+                            <label style={{ fontFamily: "SeogUI" }} >User's Name</label><div><h2 className="my-0" style={{ fontFamily: "Sans-Serif", fontWeight: "bold" }}>{name}</h2></div>
+                            <label style={{ fontFamily: "SeogUI" }}>Display Name</label><div><h3 style={{ fontFamily: "Sans-Serif", fontWeight: "bold" }}>{dname}</h3></div>
+                            {title && <div><label style={{ fontFamily: "SeogUI" }}>Work Title</label><h3>{title}</h3></div>}
+                            <label style={{ fontFamily: "SeogUI" }}>User Email</label><h3 style={{ fontFamily: "Sans-Serif", fontWeight: "bold" }}>{email}</h3>
+                            {address && <div><label style={{ fontFamily: "SeogUI" }}>Address</label>
+                                <h4 style={{ fontFamily: "Sans-Serif" }}><IoLocationSharp />&nbsp;{address}</h4> </div>}
+                            <h4>{website && <a target="_blank" href={website}><abbr title={website}><FcCollaboration /></abbr></a>}&nbsp;&middot;&nbsp;
+                                {githublink && <a target="_blank" href={githublink}><abbr title={githublink}><FaGithub /></abbr></a>}&nbsp;&middot;&nbsp;
+                                {twitterlink && <a target="_blank" href={twitterlink}><abbr title={twitterlink}><FaTwitter /></abbr></a>}&nbsp;</h4>
+                            <h4 style={{ fontFamily: 'SeogUI', fontWeight: "bold" }}>Total Points : {user.userlikes == null ? 0 : user.userlikes} </h4><br />
+                        </div>
                     </div>
                 </div>
-                <div data-aos="fade-left" data-aos-duration="600" className="px-md-4 col-md-8 col-lg-7 col-sm-12 procontent"><br />
-                    <div className='text-center'>
-                    <label style={{fontFamily:"SeogUI"}} >User's Name</label><div><h2 className="my-0" style={{fontFamily:"Sans-Serif",fontWeight:"bold"}}>{name}</h2></div>
-                    <label style={{fontFamily:"SeogUI"}}>Display Name</label><div><h3 style={{fontFamily:"Sans-Serif",fontWeight:"bold"}}>{dname}</h3></div>
-                    {title && <div><label style={{fontFamily:"SeogUI"}}>Work Title</label><h3>{title}</h3></div>}
-                    <label style={{fontFamily:"SeogUI"}}>User Email</label><h3 style={{fontFamily:"Sans-Serif",fontWeight:"bold"}}>{email}</h3> 
-                    {address && <div><label style={{fontFamily:"SeogUI"}}>Address</label>
-                        <h4 style={{fontFamily:"Sans-Serif"}}><IoLocationSharp />&nbsp;{address}</h4> </div>}
-                    <h4>{website && <a target="_blank" href={website}><abbr title={website}><FcCollaboration /></abbr></a>}&nbsp;&middot;&nbsp;
-                        {githublink && <a target="_blank" href={githublink}><abbr title={githublink}><FaGithub /></abbr></a>}&nbsp;&middot;&nbsp;
-                        {twitterlink && <a target="_blank" href={twitterlink}><abbr title={twitterlink}><FaTwitter /></abbr></a>}&nbsp;</h4>
-                    <h4 style={{ fontFamily: 'SeogUI', fontWeight:"bold" }}>Total Points : {user.userlikes==null?0:user.userlikes} </h4><br />
-                    </div>
-                </div>
-               </div>
                 <div className="col-sm-12">
                     {about && <div><label><h1>About </h1></label>
-                    <h3>{about}</h3> </div>}
+                        <h3>{about}</h3> </div>}
                 </div>
             </div><br />
             <div>
-                <div class="row ">
+                <div class="row w-100 m-auto">
                     <div class="d-flex flex-xs-column flex-md-row justify-content-center content py-2 bg-dark rounded">
                         <div data-aos="zoom-out" data-aos-once='true' data-aos-duration="600" class="d-flex flex-sm-column flex-md-row text-center">
                             <p className='mx-1 my-auto px-1'><NavLink class="btn text-primary rounded p-1" activeClassName="active" to="/Profile" style={{ fontSize: 'large' }}>
@@ -138,17 +179,17 @@ export default function Profile(props) {
                     </div>
                     <div class="d-flex justify-content-center">
                         <div className="col-sm-10">
-                        <Switch>
-                            <Route path="/Profile" exact component={Likedquestions} />
-                            <Route path="/Profile/editprofile" component={Editprofile} />
-                            <Route path="/Profile/selfquestion" component={Askedquestions} />
-                            <Route path="/Profile/selfanswer" component={Givenanswer} />
-                        </Switch>
+                            <Switch>
+                                <Route path="/Profile" exact component={Likedquestions} />
+                                <Route path="/Profile/editprofile" component={Editprofile} />
+                                <Route path="/Profile/selfquestion" component={Askedquestions} />
+                                <Route path="/Profile/selfanswer" component={Givenanswer} />
+                            </Switch>
                         </div>
                     </div>
                 </div>
             </div>
-            <Footer/>
+            <Footer />
         </React.Fragment>
     )
 }

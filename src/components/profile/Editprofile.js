@@ -22,8 +22,6 @@ export default function Editprofile(props) {
         const ugitlink = useSelector(state => state.user.gitlink);
         const utwitter = useSelector(state => state.user.twitter);
         const uaddress = useSelector(state => state.user.address);
-        const uprofile = useSelector(state => state.user.profile);
-        const uemail = useSelector(state => state.user.email);
 
         const [obid, setobid] = useState(objid)
         const [dname, setdname] = useState(udname)
@@ -34,10 +32,7 @@ export default function Editprofile(props) {
         const [gitlink, setgitlink] = useState(ugitlink)
         const [twitter, settwitter] = useState(utwitter)
         const [address, setaddress] = useState(uaddress)
-        // const [y, sety] = useState([])
-        var profile;
-        const [uploadPercentage, setuploadPercentage] = useState('')
-
+        
         function setValue(e){
             e.target.name==="edname" && setdname(e.target.value);
             e.target.name==="ename" && setname(e.target.value);
@@ -49,112 +44,104 @@ export default function Editprofile(props) {
             e.target.name==="eaddress" && setaddress(e.target.value);
         }
 
-        function setProfile(e){
-            profile= e.target.files[0];
-            console.log(profile);
-        }
-        
         function sendvalues(){
-        // axios.get("http://localhost:3001/list-user").then((res)=>{
-        //     console.log(res.data.data)
-        //     sety(res.data.data)
-        // })
-        // if(y!=dname){
-            // if(dname!=udname){
-            //     axios.post("http://localhost:3001/username-in-question",udname).then((res)=>{
-            //         console.log(res.data.data)
-            //         var qures = res.status
-            //     })
-            // }
-// if(qures==="ok"){
-            var formData = new FormData();
-            formData.append("profile", profile);
-            formData.append("obid", obid );
-            formData.append("name", name)
-            formData.append("dname",dname)
-            formData.append("title",title)
-            formData.append("about", about);
-            formData.append("weblink", weblink);
-            formData.append("gitlink", gitlink);
-            formData.append("twitter", twitter);
-            formData.append("address", address);    
-        // }
-        console.log(formData)
-        axios.post("http://localhost:3001/update-user",formData,{
-        headers: {'Content-Type': 'multipart/form-data'},
-        onUploadProgress: function( progressEvent ) {
-            console.log("file Uploading Progresss.......");
-            console.log(progressEvent);
-        setuploadPercentage( parseInt( Math.round( ( progressEvent.loaded / progressEvent.total ) * 100 )));
-        //setfileInProgress(progressEvent.fileName)
+            var dn = { dname,obid }
+            axios.post('http://localhost:3001/valid-dname', dn).then((res) => {
+                if (res.data.status === 'ok') {
+                    hidereg()
+                } else {
+                    if(res.data.status!=obid)
+                    alert(res.data.data);
+                    else
+                    hidereg()
+                }
+            })
         }
-        }).then((res)=>{
-            alert(res.data);
-        }).catch(res=>{
-          alert("sorry you are not authorised to do this action");
-      });
-// }
-// else{
-//     alert("some server side error")
-// }
-    }
+        function hidereg(){
+        //     var formData = new FormData();
+        //     formData.append("profile", profile);
+        //     formData.append("obid", obid );
+        //     formData.append("name", name)
+        //     formData.append("dname",dname)
+        //     formData.append("title",title)
+        //     formData.append("about", about);
+        //     formData.append("weblink", weblink);
+        //     formData.append("gitlink", gitlink);
+        //     formData.append("twitter", twitter);
+        //     formData.append("address", address);    
+        // console.log(formData)
+        // axios.post("http://localhost:3001/update-user",formData,{
+        // headers: {'Content-Type': 'multipart/form-data'},
+        // onUploadProgress: function( progressEvent ) {
+        //     console.log("file Uploading Progresss.......");
+        //     console.log(progressEvent);
+        // setuploadPercentage( parseInt( Math.round( ( progressEvent.loaded / progressEvent.total ) * 100 )));
+        // //setfileInProgress(progressEvent.fileName)
+        // }
+        // }).then((res)=>{
+        //     alert(res.data);
+        // }).catch(res=>{
+        //   alert("sorry you are not authorised to do this action");
+        // })
+            var isvalid = true;
+            // eslint-disable-next-line
+            if(name=="" || name==null || name==" ") {
+            isvalid=false;
+            alert("please enter your name");
+            }
+            // eslint-disable-next-line
+            if(dname=="" || dname==null || dname==" ") {
+            isvalid=false;
+            alert("please enter username");
+            }
+        if (isvalid === true) {    
+        var updateuserdetails = { obid, dname, name, title, about, weblink, gitlink, twitter, address };
+        console.log(updateuserdetails);
+        axios.post('http://localhost:3001/update-user-details', updateuserdetails).then((res) => {
+            alert(res.data.data);
+        }).catch(res => {
+            alert("Some error in update user details 😯");
+        })
+        }
+        }
     
-    return (
-        <div className='py-1'>
-            <div><h1><b> Edit Your Profile </b></h1></div>
-            <div className="container bg-light py-3 m-0 row ">
-                {/* <div className=""> */}
-                <div className="col-md-3 ">
-                        <label className="text-dark"><b>Upload avatar</b></label>
-                    <div >
-                        <img className="col-sm-12" height="225px" width="75px" src={ uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/crea15.jpg"} alt="user profile" />
-                    </div>
-                    <div className="">
-                        <input type="file" className='my-2 p-1.4 pr-0 btn btn-primary border rounded' accept='image/png,image/jpg,image/jpeg' onChange={(e)=>{setProfile(e)}}/> 
-                        {uploadPercentage } {uploadPercentage && '% uploaded'}
-                    </div>
-                </div>
-                <div className='col-md-1'></div>
-                <div className="col-md-8">
-                    {/* <div className="col-md-12"> */}
-                    <label><b>Display name</b></label><br />
-                    <input type="text" name="edname" value={dname} onChange={(e)=>{setValue(e)}} id="edname" placeholder="Display Name" required className="col-md-9"/><br /><br/>
-                    {/* </div> */}
-                    <label><b>Your Name</b></label><br />
-                    <input type="text" name="ename" value={name} onChange={(e)=>{setValue(e)}} id="ename" placeholder="Your Name" required className="col-md-9"/><br /><br/>
-                    <label><b>Title</b></label><br />
-                    <input type="text" name="etitle" value={title} onChange={(e)=>{setValue(e)}} id="etitle" placeholder="Title" required className="col-md-9"/><br /><br/>
-                    {/* </div> */}
-                </div>
-                <div className="col-md-12">
-                <label><b>About Me</b></label><br />
-                    <textarea type="text" name="eabout" value={about} onChange={(e)=>{setValue(e)}} id="eabout" placeholder="explain about yourself" className="col-md-12" required />  
-                </div>
-                <div className="col-md-12">
-                <label><b>Web Preference</b></label><br />
-                    <div className="col-md-4">
-                    website link<br />
-                        <input type="text" name="eweblink" value={weblink} onChange={(e)=>{setValue(e)}} id="eweblink" placeholder="Website Link" required /><br />
-                    </div>
-                    <div className="col-md-4">
-                    Github Link<br />
-                        <input type="text" name="egitlink" value={gitlink} onChange={(e)=>{setValue(e)}} id="egitlink" placeholder="Github Link" required /><br />
-                    </div>
-                    <div className="col-md-4">
-                    Twitter link<br />
-                        <input type="text" className='rounded bg-white' name="etwitter" value={twitter} onChange={(e)=>{setValue(e)}}
-                         id="etwitter" placeholder="Twitter Link" required /><br />
-                    </div>
-                </div>
-                <div className="col-md-12">
-                <label><b>Address</b></label><br />
-                    <input type="text" name="eaddress" value={address} onChange={(e)=>{setValue(e)}} id="eaddress" placeholder="Address" className="col-md-12" required /><br /><br/>
-                </div>
-                <div className="col-md-12 text-right">
-                    <button type="button" className="updateprofile btn btn-success float-end" onClick={sendvalues}> Update Profile </button>
-                </div>
-            </div>
-            <br/>
+    return (<div className='py-1'>
+<div><h1><b> Edit Your Profile </b></h1></div>
+<div className="container bg-light py-3 m-0 row ">
+    <div className="col-md-6">
+    <label><b>Display name</b></label><br />
+    <input type="text" name="edname" value={dname} onChange={(e)=>{setValue(e)}} id="edname" placeholder="Display Name" required className="col-md-9"/><br/>
+    <label><b>Your Name</b></label><br />
+    <input type="text" name="ename" value={name} onChange={(e)=>{setValue(e)}} id="ename" placeholder="Your Name" required className="col-md-9"/><br/>
+    <label><b>Work Title</b></label><br />
+    <input type="text" name="etitle" value={title} onChange={(e)=>{setValue(e)}} id="etitle" placeholder="Work Title" required className="col-md-9"/><br/>
+    </div>
+    <div className="col-md-6">
+    <label><b>Web Preference</b></label><br />
+        <div>
+        Website link<br />
+    <input style={{width:"80%"}} type="text" className='rounded' name="eweblink" value={weblink} onChange={(e)=>{setValue(e)}} id="eweblink" placeholder="Website Link" required /><br />
         </div>
-    )
+        <div>
+        Github Link<br />
+    <input style={{width:"80%"}} type="text" className='rounded' name="egitlink" value={gitlink} onChange={(e)=>{setValue(e)}} id="egitlink" placeholder="Github Link" required /><br />
+        </div>
+        <div>
+        Twitter link<br />
+    <input style={{width:"80%"}} type="text" className='rounded' name="etwitter" value={twitter} onChange={(e)=>{setValue(e)}} id="etwitter" placeholder="Twitter Link" required /><br />
+        </div>
+    </div>
+    <div className="col-md-12">
+    <label><b>About Me</b></label><br />
+        <textarea type="text" name="eabout" value={about} onChange={(e)=>{setValue(e)}} id="eabout" placeholder="explain about yourself" className="col-md-12" required />  
+    </div>
+    <div className="col-md-12">
+    <label><b>Address</b></label><br />
+        <input type="text" name="eaddress" value={address} onChange={(e)=>{setValue(e)}} id="eaddress" placeholder="Address" className="col-md-12" required /><br /><br/>
+    </div>
+    <div className="col-md-12 text-right">
+        <button type="button" className="updateprofile btn btn-success float-end" onClick={sendvalues}> Update User Details </button>
+    </div>
+</div><br/>
+    </div>)
 }

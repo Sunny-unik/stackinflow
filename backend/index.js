@@ -218,7 +218,7 @@ app.post('/valid-dname', bodyparser.json(), (req, res) => {
     var usercollection = connection.db('stackinflow').collection('user');
     usercollection.find({ dname: req.body.dname }).toArray((err, result) => {
         if (!err && result.length > 0) {
-            res.send({ status: 'error', data: "this username is already taken 🤔" });
+            res.send({ status: result[0]._id, data: "this username is already taken 🤔" });
         } else {
             res.send({ status: 'ok' })
         }
@@ -295,17 +295,30 @@ app.post("/update-user-point", bodyparser.json(),(req,res)=>{
 })
 })
 
+app.post("/update-user-details", bodyparser.json(),(req,res)=>{
+    var usercollection = connection.db('stackinflow').collection('user');
+    console.log(req.body)
+    usercollection.updateOne({_id:ObjectId(req.body.obid)}, {$set: {name:req.body.name,dname:req.body.dname,title:req.body.title,
+    about:req.body.about,weblink:req.body.weblink,gitlink:req.body.gitlink,twitter:req.body.twitter,address:req.body.address}},
+     (err,result)=>{
+    if(!err){
+        res.send({status:"ok", data:"Your details updated successfully 😊"})
+    } else{
+        res.send({status:"failed", data:err})
+    }
+})
+})
+
 app.post("/update-user", bodyparser.json(),(req,res)=>{
-    console.log("149--------------");
     upload(req,res,(err)=>{
         if (!err) {
             console.log("files",req.files);
             console.log(req.body);
             console.log("158");
             var usercollection = connection.db('stackinflow').collection('user');
-            usercollection.update({_id:ObjectId(req.body.obid)},{$set:{profile:req.files.profile[0].filename,name:req.body.name,dname:req.body.dname,title:req.body.title,about:req.body.about,weblink:req.body.weblink,gitlink:req.body.gitlink,twitter:req.body.twitter,address:req.body.address}},(err,result)=>{
+            usercollection.update({_id:ObjectId(req.body.obid)},{$set:{profile:req.files.profile[0].filename}},(err,result)=>{
                 if(!err){
-                    res.send({status:"ok", data:"user details updated successfully"})
+                    res.send({status:"ok", data:"user profile updated successfully"})
                 }
                 else{
                     res.send({status:"failed", data:err})

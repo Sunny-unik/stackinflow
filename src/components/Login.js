@@ -79,7 +79,7 @@ export default function Login(props) {
         }
     }
     function otplogin() {
-        if(newpassword===confirmpassword && confirmpassword!=''){
+        if(newpassword===confirmpassword && confirmpassword!='' && confirmpassword.length>=8 && confirmpassword.length<=16){
             axios.post("http://localhost:3001/update-password",{email,newpassword}).then((res)=>{
                 alert(res.data.data)
             })
@@ -89,7 +89,7 @@ export default function Login(props) {
             login.style.display = "block"
             props.history.push("/Login");
         }
-        else{ alert("check your confirm password it should not be empty and should same in both textbox") }
+        else{ alert("check your confirm password it's length must between 8to16 letters and should same in both textbox") }
     }
 
     function cancellog(){
