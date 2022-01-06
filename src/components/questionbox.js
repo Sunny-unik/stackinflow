@@ -29,9 +29,11 @@ return (<div key={qid} className='rounded card'>
                 {props.questiontitle}
             </NavLink>
         </h4>
+        <div className='d-inline-block'>
         <div class="qla bg-secondary" style={{textShadow:"0.02em 0.08em black"}}> Likes: {props.likes}  </div>
         <div class="qla bg-secondary">
             <NavLink style={{color:'white',textDecoration:'none',textShadow:"0.02em 0.08em black"}} to={`/question/${qid}`}> Answer: {props.answer} </NavLink>
+        </div>
         </div>
         <div class="maintagdiv mx-2">
         {props.tags.map((o)=>{

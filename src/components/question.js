@@ -25,10 +25,9 @@ export default function Question(props) {
     const user = useSelector(state => state.user);
 
     var qid = props.match.params.id;
-    console.log(qid)
+
     useEffect(() => {
         axios.get("http://localhost:3001/question-by-id/?id=" + qid).then((res) => {
-            console.log(res.data.data)
             setquestion(res.data.data[0].question)
             setqusername(res.data.data[0].userdname)
             settag(res.data.data[0].tags)
@@ -36,12 +35,13 @@ export default function Question(props) {
             setqlikes(res.data.data[0].qlikes)
             setanswer(res.data.data[0].answers)
             setquestiondetail(res.data.data[0].questiondetail)
+        }).catch(res => {
+            console.log("qd");
         })
         axios.get("http://localhost:3001/list-user").then((res) => {
-            console.log(res.data)
             setalluser(res.data.data)
         })
-    }, [statechange])
+    }, [statechange,qlikes])
 
     function setposta(e) {
         e.target.name === "seta" && setpostanswer(e.target.value)
@@ -65,7 +65,6 @@ export default function Question(props) {
                     if(res.data.status==="ok"){
                         let userpoint = user.userlikes + 10;
                         if(userpoint<0){userpoint=0}
-                        console.log(qusername);
                         if(user._id!=qusername){let userdname = user._id;
                             let uid = {userdname,userpoint}
                             axios.post('http://localhost:3001/update-user-point',uid).then((res)=>{
@@ -91,11 +90,11 @@ export default function Question(props) {
         } else if (qlikes.includes(user._id) == true) {
         var indexforpop = qlikes.indexOf(user._id)
         setqlikes(qlikes.splice(indexforpop,1))
+        setstatechange(statechange+1+1)
         var removeqlike = { qid, qlikes }
             axios.post("http://localhost:3001/remove-qlike", removeqlike).then((res) => {
                 console.log(res.data.data)
             })
-            setstatechange(statechange+1+1)
         } else {
             var uid = user._id
             setqlikes(qlikes.push(uid))
@@ -127,8 +126,7 @@ export default function Question(props) {
             setstatechange(statechange+1+1)
         }
     }
-    console.log(questiondetail)
-
+    
     var qd;
     var amain;
     qd = questiondetail.replace(/(?:\r\n|\r|\n)/g, '<br/>')

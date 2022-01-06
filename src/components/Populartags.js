@@ -4,7 +4,6 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { FcSearch } from 'react-icons/fc'
 import Spinner from './spinner'
-import ReactPaginate from 'react-paginate'
 
 export default function Populartags(props) {
 
@@ -16,16 +15,13 @@ export default function Populartags(props) {
             setquestion(res.data.data)
         })
     }, [])
-    console.log(question)
     
     var alltags = question.map((d)=>{
         return d.tags
     })
-    console.log(alltags)
     
     var uniquetags;
     uniquetags = new Set([].concat(...alltags))
-    console.log(uniquetags);
     
     var printedtags = new Array;
 
@@ -43,7 +39,7 @@ export default function Populartags(props) {
         }    
     }
     
-    return <div style={{borderLeft:'2px solid lightgrey'}}>
+    return <div>
         <div className="container" style={{ borderBottom: '2px solid lightgrey',paddingBottom:'.6rem' }}>
             <h1 style={{fontFamily:'sans-serif',marginTop:'.4rem'}}> Popular Tags </h1>
             <h4 style={{fontFamily:'Times',width:'95%'}}>A tag is a keyword or label that categorizes your question with other, similar questions. Using the right tags makes it easier for others to find and answer your question.</h4>

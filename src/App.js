@@ -18,7 +18,7 @@ function App() {
   const dispatch = useDispatch();
   function logout(){
     dispatch({type:"LOGOUT_USER"});
-    alert("User successfully logout")
+    // alert("User successfully logout")
   }
 
   function inputhandler(params) {

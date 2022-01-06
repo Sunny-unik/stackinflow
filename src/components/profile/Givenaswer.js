@@ -50,24 +50,24 @@ export default function Givenaswer() {
     }
 
     return (
-        <div style={{ borderLeft: "2px solid lightgrey",minHeight:'64vh'}}>
+        <div style={{ minHeight:'64vh'}}>
             <h1 style={{ borderBottom: "2px solid lightgrey", paddingBottom: "2%" }}>&nbsp;All following answers are given by {user.dname}.</h1>
             {abyuser.map((g) => {
-                return <div className='bg-light my-1' style={{ borderBottom: '.1rem solid lightgrey' }}>
+                return <div className=' my-1' style={{ border: '.1rem solid lightgrey' }}>
                     <NavLink to={`/question/${g.qid}`}>
-                    <h4 className='mainqdiv text-dark'>{g.answer}</h4>
+                    <h4 className='mainqdiv '>{g.answer}</h4>
                     </NavLink>
-                    <button className='qla btn btn-danger' style={{textDecoration:'none',textShadow:"0.02em 0.08em black"}}> 
-                    {/* onClick={() => {if(window.confirm('Are you sure to delete this question?')){ deleteHandler(g.date,g.qid)};}}> */}
+                    {/* <button className='qla btn btn-danger' style={{textDecoration:'none',textShadow:"0.02em 0.08em black"}} 
+                     onClick={() => {if(window.confirm('Are you sure to delete this question?')){ deleteHandler(g.date,g.qid)};}}> 
                          Delete 
-                    </button>
-                    <div class="qla bg-primary"> Likes: {g.alikes.length} </div>
-                    <div class="maindnamediv" style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>given by&nbsp;
+                    </button> */}
+                    <div class="qla bg-primary m-2"> Likes: {g.alikes.length} </div>
+                    <div class="maindnamediv m-1" style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>given by&nbsp;
                         <NavLink style={{ color: 'navy', fontFamily: 'cursive' }} to={`/user/${g.uid}`}>
                             {user.dname}
                         </NavLink>
                     </div>
-                    <div style={{ width: '37%', display: 'inline-block', margin: '6px', fontFamily: 'Times' }}>
+                    <div className='m-1' style={{ width: '37%', display: 'inline-block', margin: '6px', fontFamily: 'Times' }}>
                          posted {setdated(g.date)!=0?setdated(g.date)+" day ago":"today"}
                     </div>
                 </div>

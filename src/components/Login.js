@@ -32,7 +32,6 @@ export default function Login(props) {
       if(reduxUser){
         props.history.push("/");
       }
-      
     }, [reduxUser]);
   
     const dispatch = useDispatch();
@@ -106,15 +105,6 @@ export default function Login(props) {
         login.style.display = "block";
     }
 
-    // function checknpass(){
-    //     var passregex = /(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/;
-    //     if (!passregex.test(password)) {
-    //         alert("Password should have 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character and be at least 8 characters long");
-    //     }else{
-    //         otplogin
-    //     }
-    // }
-    
     function openSlideMenu() {
         document.getElementById('sidemenuopen').style.display = 'none';
         document.getElementById('sidemenuclose').style.display = 'block';
@@ -164,7 +154,7 @@ export default function Login(props) {
                     <label for="otplogin" className="otpemail"><b>Enter One Time Password</b></label>
                     <input style={{fontFamily:'sans-serif'}} type="number" value={otp} onChange={(e) => { setvalue(e); }} placeholder="6 digit otp" name="otplogin" id="otplogin" required />
                     <hr className="signuphr" />
-                    <button type="button" class="loginbtn" onClick={otppassword}> Submit </button>
+                    <button type="reset" class="loginbtn" onClick={otppassword}> Submit </button>
                 </form>
             </div>
             <div data-aos="flip-left" data-aos-once='true' data-aos-duration="1000" class="col-md-5 col-lg-4" id="loginpass">

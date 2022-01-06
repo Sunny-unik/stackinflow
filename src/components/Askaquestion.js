@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from "react-redux"
 import axios from "axios"
-import Spinner from './spinner'
 import { NavLink } from 'react-router-dom'
 
 export default function Askaquestion(props) {

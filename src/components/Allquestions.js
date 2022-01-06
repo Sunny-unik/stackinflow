@@ -9,26 +9,19 @@ import Questionbox from './questionbox';
 export default function Allquestions() {
 
     const [questionlength, setquestionlength] = useState()
-    const [alluser, setalluser] = useState([])
     const [questions, setquestions] = useState([])
-    
-    var limit = 5;
-    var currentpage = {selected:0};
+
+    var limit = 8;
+    var currentpage = { selected: 0 };
 
     useEffect(() => {
         axios.get("http://localhost:3001/list-question-length").then((res) => {
             setquestionlength(res.data.data)
         })
-        axios.get("http://localhost:3001/list-user").then((res) => {
-            setalluser(res.data.data)
-        })
         axios.get(`http://localhost:3001/list-question-bypage?page=${currentpage.selected}&limit=${limit}`).then((res) => {
             setquestions(res.data.data)
         })
     }, [])
-    console.log(questions)
-    console.log(questionlength)
-    console.log(alluser)
 
     function pagechange(data) {
         console.log(data);
@@ -40,39 +33,39 @@ export default function Allquestions() {
         })
     }
 
-return (
-    <div class="row" style={{ borderLeft: '2px solid lightgrey', minHeight: '80vh' }}>
-        <div >
-            <h1 style={{ padding: '0px 1%', margin: '.4rem 0 .4rem 0', fontFamily: 'sans-serif' }}>
-                Total {questionlength} Questions Asked
-            </h1>
-            <hr class="mb-0" />
-        </div>
-        <div>
-            {questions && questions.map((q) => {
-            return (
-                <Questionbox questionid={q._id} likes={q.qlikes.length} questiontitle={q.question} answer={q.answers.length} tags={q.tags} 
-                dataaos={'fade-left'} userdname={q.userdname} date={q.date} />
-            )
-            })}
-        </div>
-        <div className="container">
-            <div className="row m-2">
-                {questions && <div>
-                    <div className="pt-3 pb-1">
-                    <Reactpaginate previousLabel={"<<"} nextLabel={">>"} breakLabel={"..."} marginPagesDisplayed={5} 
-                        pageCount={Math.floor(Math.ceil(questionlength/limit))} pageRangeDisplayed={2} onPageChange={pagechange}
-                        containerClassName={"pagination justify-content-center"} pageClassName={"page-item"}
-                        pageLinkClassName={"page-link"} previousClassName={"page-item"} previousLinkClassName={"page-link"}
-                        nextClassName={"page-item"} nextLinkClassName={"page-link"} breakClassName={"page-item"} 
-                        breakLinkClassName={"page-link"} activeClassName={"active"}
-                    />
-                    </div>
-                </div>}
+    return (
+        <div class="row" style={{ borderLeft: '2px solid lightgrey', minHeight: '80vh' }}>
+            <div >
+                <h1 style={{ padding: '0px 1%', margin: '.4rem 0 .4rem 0', fontFamily: 'sans-serif' }}>
+                    Total {questionlength} Questions Asked
+                </h1>
+                <hr class="mb-0" />
             </div>
-        </div>
-        {!questions && <Spinner />}
-    </div >
-)
+            <div>
+                {questions && questions.map((q) => {
+                    return (
+                        <Questionbox questionid={q._id} likes={q.qlikes.length} questiontitle={q.question} answer={q.answers.length} tags={q.tags}
+                            dataaos={'fade-left'} userdname={q.userdname} date={q.date} />
+                    )
+                })}
+            </div>
+            <div className="container">
+                <div className="row m-2">
+                    {questions && <div>
+                        <div className="pt-3 pb-1">
+                            <Reactpaginate previousLabel={"<<"} nextLabel={">>"} breakLabel={"..."} marginPagesDisplayed={5}
+                                pageCount={Math.floor(Math.ceil(questionlength / limit))} pageRangeDisplayed={2} onPageChange={pagechange}
+                                containerClassName={"pagination justify-content-center"} pageClassName={"page-item"}
+                                pageLinkClassName={"page-link"} previousClassName={"page-item"} previousLinkClassName={"page-link"}
+                                nextClassName={"page-item"} nextLinkClassName={"page-link"} breakClassName={"page-item"}
+                                breakLinkClassName={"page-link"} activeClassName={"active"}
+                            />
+                        </div>
+                    </div>}
+                </div>
+            </div>
+            {!questions && <Spinner />}
+        </div >
+    )
 }
 AOS.init();

@@ -48,11 +48,7 @@ export default function Profile(props) {
     const [githublink, setgithublink] = useState(gitlink)
     const [twitterlink, settwitterlink] = useState(twitter)
     const [address, setaddress] = useState(uaddress)
-    const [questionu, setdbquestionu] = useState(0)
-    const [answeru, setanswerbyudnu] = useState(0)
-    const [likesu, setlikesbyudnu] = useState(0)
-
-
+    
     function openSlideMenu() {
         document.getElementById('sidemenuopen').style.display = 'none';
         document.getElementById('sidemenuclose').style.display = 'block';
@@ -100,7 +96,7 @@ export default function Profile(props) {
                 //setfileInProgress(progressEvent.fileName)
             }
         }).then((res) => {
-            alert(res.data);
+            alert(res.data.data);
         }).catch(res => {
             alert("sorry you are not authorised to do this action");
         })
@@ -127,9 +123,9 @@ export default function Profile(props) {
 
             <div className="container">
                 <div className='d-md-flex'>
-                    <div className="col-md-5 col-sm-10 col-lg-4 mx-auto proimgdiv"><br />
+                    <div className="col-md-5 col-sm-10 text-center col-lg-4 mx-auto proimgdiv"><br />
                         <div className="profilepic w-75 m-auto" data-aos="flip-up" data-aos-once='true' data-aos-duration="600" >
-                            <img className="col-sm-12" height="225rem" width="75rem" src={uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/download.jpg"} alt="user profile" />
+                            <img className="col-sm-12 m-auto" height="225rem" width="225rem" src={uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/download.jpg"} alt="user profile" />
                             <input type="file" className='btn btn-primary col-sm-12 my-2' accept='image/png,image/jpg,image/jpeg' onChange={(e) => { setProfile(e) }} />
                             {uploadPercentage} {uploadPercentage && '% uploaded'}
                             <div className='w-100 m-0 p-0 text-center'>

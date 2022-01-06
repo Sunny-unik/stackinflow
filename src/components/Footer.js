@@ -1,8 +1,6 @@
 import React from 'react'
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa'
-import { NavLink, Route, Switch } from 'react-router-dom'
-import About from './About'
-import Contact from './Contact'
+import { NavLink } from 'react-router-dom'
 
 export default function Footer() {
     return (

@@ -38,7 +38,6 @@ export default function Signup(props) {
         var em = { email }
         axios.post('http://localhost:3001/valid-email', em).then((res) => {
             var a = res.data.status
-            // console.log(a)
             if (a === 'ok') {
                 unikdname()
             } else {
@@ -50,7 +49,6 @@ export default function Signup(props) {
         var dn = { dname }
         axios.post('http://localhost:3001/valid-dname', dn).then((res) => {
             var a = res.data.status
-            // console.log(a)
             if (a === 'ok') {
                 hidereg()
             } else {
@@ -83,7 +81,6 @@ export default function Signup(props) {
             isvalid = false;
         }
         if (isvalid === true) {
-            // alert("valid")
             var random = Math.floor((Math.random() * 1000000) + 1);
             setrandomotp(random);
             axios.post("http://localhost:3001/send-user-otp", { email, otp: random }).then((res) => {
@@ -104,9 +101,7 @@ export default function Signup(props) {
         let userlikes = 0;
         let profile = null;
         var s = { email, name, dname, password, title, about, weblink, gitlink, twitter, address, userlikes, profile }
-        console.log(s);
         axios.post('http://localhost:3001/create-user', s).then((res) => {
-            alert(res.data.data);
             if (res.data.status === "ok") {
                 alert("Registration Successfull");
                 props.history.push("/Login");
@@ -182,7 +177,6 @@ export default function Signup(props) {
             </div>
             <div data-aos="flip-right" data-aos-once='true' data-aos-duration="1000" class="col-md-5 col-lg-4" id="createotp">
                 <form className="d-inline-block" style={{padding:'3%',margin:'4px 0',borderRadius:'2%',boxShadow:'3px 4px 3px 2px #888888'}}>
-                    {/* 2 min. timer implementation pending */}
                     <h1 style={{display:'inline-block',width:'82%'}}>Confirm Email</h1>
                     <button type='button' onClick={goreg} className='border btn btn-warning float-end' style={{fontWeight:'600',fontFamily:'sans-serif',
                     padding:'2% 1%',margin:'0',borderRadius:'10%',boxShadow:'2px 3px 2px 3px #888888'}}> Go Back </button>

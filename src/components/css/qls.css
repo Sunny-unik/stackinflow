@@ -260,3 +260,22 @@ a {
   width: 18%;
   display: inline-block;
 }
+@media only screen and (max-width: 992px) {
+  .maindnamediv {
+    width: 20%;
+  }
+}
+@media only screen and (max-width: 670px) {
+  .maindnamediv {
+    width: 46%;
+    margin-left: 1em;
+  }
+}
+@media only screen and (max-width: 470px) {
+  .maintagdiv {
+    width: 90%;
+  }
+  .mainqdiv {
+    width: 96%;
+  }
+}

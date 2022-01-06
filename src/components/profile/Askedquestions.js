@@ -32,21 +32,21 @@ export default function Askedquestions() {
 
     return (<React.Fragment>
         <div>
-            <h1><label>These Questions Asked by {user.dname}.</label></h1>
+            <h1 className='pb-2' style={{borderBottom:"2px solid lightgrey"}}><label>These Questions Asked by {user.dname}.</label></h1>
         </div>
         <div>
             {askedquestion && askedquestion.map((q) => {
             return  <div key={q._id}>
-            <div style={{borderBottom:'.1rem solid lightgrey'}}>
+            <div className='m-0' style={{border:'.1rem solid lightgrey'}}>
                 <h4 data-aos="fade-left" data-aos-offset='max-height' data-aos-once='true' data-aos-duration="400" className='mainqdiv'>
-                    <NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}>{q.question}</NavLink>
+                    <NavLink style={{textDecoration:'none'}} to={`/question/${q._id}`}>{q.question}</NavLink>
                 </h4>
                 <div class="qla bg-secondary"> Likes: {q.qlikes.length}  </div>
                 <div class="qla bg-secondary">
                     <NavLink style={{color:'black',textDecoration:'none'}} to={`/question/${q._id}`}> Answer: {q.answers.length} </NavLink>
                 </div>
                 {q.tags.map((o)=>{
-                return <NavLink style={{ color: 'white', fontFamily: 'monospace', padding: '.2rem' }} className="rounded-2 bg-dark" to={`/questionsby/${o}`}>
+                return <NavLink style={{ color: 'white', fontFamily: 'monospace', padding: '.2rem' }} className="rounded-2 bg-dark m-1" to={`/questionsby/${o}`}>
                         {o}
                     </NavLink>
                 })}
@@ -61,21 +61,6 @@ export default function Askedquestions() {
             </div>
                 </div>
             })}
-            {!askedquestion && <div className="mt-md-2 mt-lg-2 loading text-center">
-                <i class="spinner"></i>
-                <p>loading..</p>
-                <div>your network seems down or slow</div>
-            </div>}
-            {!question && <div className="mt-md-2 mt-lg-2 loading text-center">
-                <i class="spinner"></i>
-                <p>loading..</p>
-                <div>your network seems down or slow</div>
-            </div>}
-            {!user._id && <div className="mt-md-2 mt-lg-2 loading text-center">
-                <i class="spinner"></i>
-                <p>loading..</p>
-                <div>your network seems down or slow</div>
-            </div>}
         </div>
         </React.Fragment>
     )
