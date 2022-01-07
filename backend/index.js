@@ -65,7 +65,6 @@ app.get('/list-question-bypage', (req, res) => {
 
 app.get("/question-by-id", (req,res)=>{
     var questioncollection = connection.db('stackinflow').collection('q&a');
-    console.log(req.query.id)
     questioncollection.find({_id:ObjectId(req.query.id)}).toArray((err,docs)=>{
         if(!err){
             res.send({status:"ok", data:docs})
