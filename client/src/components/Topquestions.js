@@ -12,7 +12,7 @@ export default function Topquestions() {
     const [sortby, setsortby] = useState("newest")
 
     useEffect(() => {
-        axios.get(`${Process.env.REACT_APP_API_URL}/list-question`).then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
             if(sortby=="newest"){
                 setquestion(res.data.data.reverse())
             } else if (sortby=="oldest"){
