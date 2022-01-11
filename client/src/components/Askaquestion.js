@@ -34,7 +34,7 @@ export default function Askaquestion(props) {
             alert("User not found, for ask question you have to login first")
             props.history.push('/Login')
         }else{
-        axios.get("http://localhost:3001/list-question").then(res=>{
+        axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then(res=>{
             console.log(res.data.data)
             setallquestions(res.data.data)
         })}
@@ -90,12 +90,12 @@ export default function Askaquestion(props) {
             var createq = { qlikes, question, tags, userdname, date, answers, questiondetail }
             console.log(createq)
             // var poststatus ;
-            axios.post("http://localhost:3001/create-question", createq).then((res) => {
+            axios.post(`${process.env.REACT_APP_API_URL}/create-question`, createq).then((res) => {
                 alert(res.data.data);
                 if (res.data.status==="ok"){
                     let userpoint = userpoints + 5
                     let uid = {userdname,userpoint}
-                    axios.post("http://localhost:3001/update-user-point", uid).then((res)=>{
+                    axios.post(`${process.env.REACT_APP_API_URL}/update-user-point`, uid).then((res)=>{
                         console.log(res.data.data);
                     })
                 }    

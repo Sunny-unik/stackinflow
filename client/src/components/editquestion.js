@@ -45,7 +45,7 @@ export default function Editquestion(props) {
         } else {
             var createq = { qlikes, question, tags, userdname, date, answers, questiondetail, questionid }
             console.log(createq)
-            axios.post('http://localhost:3001/update-question', createq).then((res) => {
+            axios.post(`${process.env.REACT_APP_API_URL}/update-question`, createq).then((res) => {
                 alert(res.data.data);
                 if(res.data.status==="ok"){
                     props.history.push(`/question/${questionid}`)

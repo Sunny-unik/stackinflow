@@ -1,5 +1,5 @@
 import axios from 'axios';
-import div, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 
 export default function Editprofile(props) {
@@ -46,7 +46,7 @@ export default function Editprofile(props) {
 
         function sendvalues(){
             var dn = { dname,obid }
-            axios.post('http://localhost:3001/valid-dname', dn).then((res) => {
+            axios.post(`${process.env.REACT_APP_API_URL}/valid-dname`, dn).then((res) => {
                 if (res.data.status === 'ok') {
                     hidereg()
                 } else {
@@ -58,31 +58,6 @@ export default function Editprofile(props) {
             })
         }
         function hidereg(){
-        //     var formData = new FormData();
-        //     formData.append("profile", profile);
-        //     formData.append("obid", obid );
-        //     formData.append("name", name)
-        //     formData.append("dname",dname)
-        //     formData.append("title",title)
-        //     formData.append("about", about);
-        //     formData.append("weblink", weblink);
-        //     formData.append("gitlink", gitlink);
-        //     formData.append("twitter", twitter);
-        //     formData.append("address", address);    
-        // console.log(formData)
-        // axios.post("http://localhost:3001/update-user",formData,{
-        // headers: {'Content-Type': 'multipart/form-data'},
-        // onUploadProgress: function( progressEvent ) {
-        //     console.log("file Uploading Progresss.......");
-        //     console.log(progressEvent);
-        // setuploadPercentage( parseInt( Math.round( ( progressEvent.loaded / progressEvent.total ) * 100 )));
-        // //setfileInProgress(progressEvent.fileName)
-        // }
-        // }).then((res)=>{
-        //     alert(res.data);
-        // }).catch(res=>{
-        //   alert("sorry you are not authorised to do this action");
-        // })
             var isvalid = true;
             // eslint-disable-next-line
             if(name=="" || name==null || name==" ") {
@@ -97,7 +72,7 @@ export default function Editprofile(props) {
         if (isvalid === true) {    
         var updateuserdetails = { obid, dname, name, title, about, weblink, gitlink, twitter, address };
         console.log(updateuserdetails);
-        axios.post('http://localhost:3001/update-user-details', updateuserdetails).then((res) => {
+        axios.post( `${process.env.REACT_APP_API_URL}/update-user-details`, updateuserdetails).then((res) => {
             alert(res.data.data);
         }).catch(res => {
             alert("Some error in update user details 😯");

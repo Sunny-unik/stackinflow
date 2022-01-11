@@ -15,10 +15,10 @@ export default function Allquestions() {
     var currentpage = { selected: 0 };
 
     useEffect(() => {
-        axios.get("http://localhost:3001/list-question-length").then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/list-question-length`).then((res) => {
             setquestionlength(res.data.data)
         })
-        axios.get(`http://localhost:3001/list-question-bypage?page=${currentpage.selected}&limit=${limit}`).then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/list-question-bypage?page=${currentpage.selected}&limit=${limit}`).then((res) => {
             setquestions(res.data.data)
         })
     }, [])
@@ -27,7 +27,7 @@ export default function Allquestions() {
         console.log(data);
         currentpage = data;
         console.log(limit);
-        axios.get(`http://localhost:3001/list-question-bypage?page=${currentpage.selected}&limit=${limit}`).then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/list-question-bypage?page=${currentpage.selected}&limit=${limit}`).then((res) => {
             console.log(res.data)
             setquestions(res.data.data.reverse())
         })

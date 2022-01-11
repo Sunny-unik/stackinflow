@@ -36,7 +36,7 @@ export default function Signup(props) {
 
     function unikemail() {
         var em = { email }
-        axios.post('http://localhost:3001/valid-email', em).then((res) => {
+        axios.post(`${process.env.REACT_APP_API_URL}/valid-email`, em).then((res) => {
             var a = res.data.status
             if (a === 'ok') {
                 unikdname()
@@ -47,7 +47,7 @@ export default function Signup(props) {
     }
     function unikdname(){
         var dn = { dname }
-        axios.post('http://localhost:3001/valid-dname', dn).then((res) => {
+        axios.post(`${process.env.REACT_APP_API_URL}/valid-dname`, dn).then((res) => {
             var a = res.data.status
             if (a === 'ok') {
                 hidereg()
@@ -83,7 +83,7 @@ export default function Signup(props) {
         if (isvalid === true) {
             var random = Math.floor((Math.random() * 1000000) + 1);
             setrandomotp(random);
-            axios.post("http://localhost:3001/send-user-otp", { email, otp: random }).then((res) => {
+            axios.post(`${process.env.REACT_APP_API_URL}/send-user-otp`, { email, otp: random }).then((res) => {
                 if (res.data.status == "ok") {
                     alert("otp sent to your email");
                     let Signup = document.getElementById('createdetail');
@@ -101,7 +101,7 @@ export default function Signup(props) {
         let userlikes = 0;
         let profile = null;
         var s = { email, name, dname, password, title, about, weblink, gitlink, twitter, address, userlikes, profile }
-        axios.post('http://localhost:3001/create-user', s).then((res) => {
+        axios.post(`${process.env.REACT_APP_API_URL}/create-user`, s).then((res) => {
             if (res.data.status === "ok") {
                 alert("Registration Successfull");
                 props.history.push("/Login");

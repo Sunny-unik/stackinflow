@@ -12,7 +12,7 @@ export default function Popularusers(props) {
     const [searchuser, setsearchuser] = useState(null)
 
     useEffect(() => {
-        axios.get("http://localhost:3001/list-user").then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/list-user`).then((res) => {
             setusers(res.data.data.sort((a,b)=>{return a.userlikes-b.userlikes}).reverse())
         })
     }, [])

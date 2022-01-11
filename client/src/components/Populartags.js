@@ -11,7 +11,7 @@ export default function Populartags(props) {
     const [searchtag, setsearchtag] = useState(null)
     
     useEffect(() => {
-        axios.get("http://localhost:3001/list-question").then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
             setquestion(res.data.data)
         })
     }, [])

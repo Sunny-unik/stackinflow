@@ -25,7 +25,7 @@ export default function User(props) {
     var uid = props.match.params._id;
 
     useEffect(() => {
-        axios.get("http://localhost:3001/user-by-userdname/?_id=" + uid).then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/user-by-userdname/?_id=` + uid).then((res) => {
             console.log(res.data.data)
             setuserbyudn(res.data.data[0])
             setuserlikes(res.data.data[0].userlikes)
@@ -41,7 +41,7 @@ export default function User(props) {
         }).catch(res=>{
           setnotfound(`!User not found`)
         })
-        axios.get("http://localhost:3001/list-question").then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
             console.log(res.data.data)
             setquestion(res.data.data)
         })
@@ -57,7 +57,7 @@ question.forEach((un)=>{ if(un.userdname==uid) questions.push(un)})
     const [allquestions, setquestions] = useState([])
 
     useEffect(() => {
-        axios.get("http://localhost:3001/list-question").then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
             console.log(res.data.data)
             setquestions(res.data.data)
         })

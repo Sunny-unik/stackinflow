@@ -7,7 +7,7 @@ export default function Questionsbytags(props) {
     const [question, setquestion] = useState([])
 
     useEffect(() => {
-        axios.get("http://localhost:3001/list-question").then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
             console.log(res.data.data)
             setquestion(res.data.data)
         })

@@ -32,7 +32,7 @@ export default function Contact() {
         else{
             let feedback = {emailhead: Feedbackhead,emailbody: Feedbackbody,emailfoot: Feedbackfoot,useremail:user.email,username:user.name}
             console.log(feedback);
-            axios.post("http://localhost:3001/send-feedback",feedback).then((res)=>{
+            axios.post(`${process.env.REACT_APP_API_URL}/send-feedback`,feedback).then((res)=>{
                 alert(res.data.data)
             })
         }

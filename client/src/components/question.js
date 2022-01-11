@@ -27,7 +27,7 @@ export default function Question(props) {
     var qid = props.match.params.id;
 
     useEffect(() => {
-        axios.get("http://localhost:3001/question-by-id/?id=" + qid).then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/question-by-id/?id=` + qid).then((res) => {
             setquestion(res.data.data[0].question)
             setqusername(res.data.data[0].userdname)
             settag(res.data.data[0].tags)
@@ -38,7 +38,7 @@ export default function Question(props) {
         }).catch(res => {
             console.log("qd");
         })
-        axios.get("http://localhost:3001/list-user").then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/list-user`).then((res) => {
             setalluser(res.data.data)
         })
     }, [statechange,qlikes])
@@ -61,13 +61,13 @@ export default function Question(props) {
                 let answer = postanswer
                 setdate(Date)
                 let lista = { uid, date, answer, alikes, qid }
-                axios.post("http://localhost:3001/create-answer", lista).then((res) => {
+                axios.post(`${process.env.REACT_APP_API_URL}/create-answer`, lista).then((res) => {
                     if(res.data.status==="ok"){
                         let userpoint = user.userlikes + 10;
                         if(userpoint<0){userpoint=0}
                         if(user._id!=qusername){let userdname = user._id;
                             let uid = {userdname,userpoint}
-                            axios.post('http://localhost:3001/update-user-point',uid).then((res)=>{
+                            axios.post(`${process.env.REACT_APP_API_URL}/update-user-point`,uid).then((res)=>{
                                 console.log(res.data.data)
                             })}
                     }
@@ -92,14 +92,14 @@ export default function Question(props) {
         setqlikes(qlikes.splice(indexforpop,1))
         setstatechange(statechange+1+1)
         var removeqlike = { qid, qlikes }
-            axios.post("http://localhost:3001/remove-qlike", removeqlike).then((res) => {
+            axios.post(`${process.env.REACT_APP_API_URL}/remove-qlike`, removeqlike).then((res) => {
                 console.log(res.data.data)
             })
         } else {
             var uid = user._id
             setqlikes(qlikes.push(uid))
         var addqlike = { uid, qid }
-            axios.post("http://localhost:3001/add-qlike", addqlike).then((res) => {
+            axios.post(`${process.env.REACT_APP_API_URL}/add-qlike`, addqlike).then((res) => {
                 console.log(res.data.data)
             })
             setstatechange(statechange+1+1)
@@ -113,14 +113,14 @@ export default function Question(props) {
             let indexforpop = al.indexOf(user._id)
             al.splice(indexforpop,1)
             let removealike = { ad,al,qid }
-            axios.post("http://localhost:3001/remove-alike", removealike).then((res) => {
+            axios.post(`${process.env.REACT_APP_API_URL}/remove-alike`, removealike).then((res) => {
                 console.log(res.data.data)
             })
             setstatechange(statechange+1+1)
         } else {
             let uid = user._id
             let addqlike = { uid,qid,ad }
-            axios.post("http://localhost:3001/add-alike", addqlike).then((res) => {
+            axios.post(`${process.env.REACT_APP_API_URL}/add-alike`, addqlike).then((res) => {
                 console.log(res.data.data)
             })
             setstatechange(statechange+1+1)
@@ -134,13 +134,13 @@ export default function Question(props) {
     
     function deleteHandler(){
         var deleteQues = {qid}
-        axios.post('http://localhost:3001/delete-question',deleteQues).then(res => {
+        axios.post(`${process.env.REACT_APP_API_URL}/delete-question`,deleteQues).then(res => {
             if(res.data.status==="ok"){
                 let userdname = user._id
                 let userpoint = user.userlikes - 5;
                 if(userpoint<0){userpoint=0}
                 let uid = {userdname,userpoint}
-                axios.post(`http://localhost:3001/update-user-point`,uid).then((res)=>{
+                axios.post(`${process.env.REACT_APP_API_URL}/update-user-point`,uid).then((res)=>{
                     console.log(res.data.data)
                 })
                 if(ausernames.length>0){
@@ -152,7 +152,7 @@ export default function Question(props) {
                             let userpoint = auser[0].userlikes - 10;
                             if(userpoint<0){userpoint=0}
                             let uid = {userdname,userpoint}
-                            axios.post(`http://localhost:3001/update-user-point`,uid).then(res=>console.log(res.data.data+" alikes"))
+                            axios.post(`${process.env.REACT_APP_API_URL}/update-user-point`,uid).then(res=>console.log(res.data.data+" alikes"))
                         }
                     })
                 }
@@ -193,7 +193,7 @@ export default function Question(props) {
         </div>
         <h4 className='col-sm-11'>
     <button className='btn mx-1 btn-outline-dark float-end mr-' type='button' 
-        onClick={()=>{navigator.clipboard.writeText(`http://localhost:3000/question/${qid}`)}}>
+        onClick={()=>{navigator.clipboard.writeText(`${process.env.REACT_APP_API_URL}/question/${qid}`)}}>
         Copy Link
     </button>
     {user != null && user._id == qusername ? <button type='button' onClick={() => {if(window.confirm('Are you sure to delete this question?')){ deleteHandler()};}}

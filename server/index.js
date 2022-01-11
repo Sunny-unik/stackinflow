@@ -236,21 +236,6 @@ app.post('/delete-question',bodyparser.json(), (req, res) => {
     })
 })
 
-// app.post('/delete-answer',bodyparser.json(), (req, res) => {
-//     var questioncollection = connection.db('stackinflow').collection('q&a')
-//     console.log(req.body)
-// // questioncollection.updateOne({"_id":ObjectId(req.body.qid), "answers": {"$elemMatch":{date: req.body.ad}}},{"$push": {"answers.$.alikes":req.body.uid}}
-//     questioncollection.deleteOne({"_id":ObjectId(req.body.qid), "answers": {"$elemMatch":{date: req.body.ad}}}
-//      ,(err, result) => {
-//         if (!err) {
-//             res.send({ status: "ok", data: "Answer deleted successfully ☺"})
-//         }
-//         else {
-//             res.send({ status: "failed", data: err })
-//         }
-//     })
-// })
-
 app.post("/send-otp-email", bodyparser.json(), (req, res) => {
     var usercollection = connection.db('stackinflow').collection('user');
     usercollection.find({ $or: [ { email:req.body.email }, { dname:req.body.email } ] }).toArray((err, result) => {

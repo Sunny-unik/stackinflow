@@ -87,7 +87,7 @@ export default function Profile(props) {
         formData.append("obid", user._id );
         formData.append("profile", profile);
         console.log(formData)
-        axios.post("http://localhost:3001/update-user", formData, {
+        axios.post(`${process.env.REACT_APP_API_URL}/update-user`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
             onUploadProgress: function (progressEvent) {
                 console.log("file Uploading Progresss.......");

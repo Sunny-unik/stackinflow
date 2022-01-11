@@ -10,7 +10,7 @@ export default function Questionbox(props) {
 
     useEffect(() => {
         setqid(props.questionid)
-        axios.get(`http://localhost:3001/list-user`).then((res)=>{setalluser(res.data.data)})
+        axios.get(`${process.env.REACT_APP_API_URL}/list-user`).then((res)=>{setalluser(res.data.data)})
     }, [props])
     
     function setdated(params) {

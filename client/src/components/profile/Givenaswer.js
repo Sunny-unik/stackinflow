@@ -11,7 +11,7 @@ export default function Givenaswer() {
     const uid = useSelector(state => state.user._id)
     
     useEffect(() => {
-        axios.get("http://localhost:3001/list-question").then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
             console.log(res.data.data)
             setquestion(res.data.data)
         })
@@ -33,14 +33,6 @@ export default function Givenaswer() {
     })
     console.log(abyuser)
 
-    // function deleteHandler(ad,qid){
-    //     console.log(ad,qid)
-    //     let data = {ad,qid}
-    //     axios.post(`http://localhost:3001/delete-answer`,data).then((res)=>{
-    //         console.log(res.data.data)
-    //     })
-    // }
-    
     function setdated(params) {
         var d1 = new Date(params);
         var d2 = new Date();
@@ -57,10 +49,6 @@ export default function Givenaswer() {
                     <NavLink to={`/question/${g.qid}`}>
                     <h4 className='mainqdiv '>{g.answer}</h4>
                     </NavLink>
-                    {/* <button className='qla btn btn-danger' style={{textDecoration:'none',textShadow:"0.02em 0.08em black"}} 
-                     onClick={() => {if(window.confirm('Are you sure to delete this question?')){ deleteHandler(g.date,g.qid)};}}> 
-                         Delete 
-                    </button> */}
                     <div class="qla bg-primary m-2"> Likes: {g.alikes.length} </div>
                     <div class="maindnamediv m-1" style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>given by&nbsp;
                         <NavLink style={{ color: 'navy', fontFamily: 'cursive' }} to={`/user/${g.uid}`}>

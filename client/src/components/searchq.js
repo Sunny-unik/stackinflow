@@ -11,7 +11,7 @@ export default function Searchq(props) {
         props.location.searchedquestion.split(/[, ]+/).forEach(e => {
             searchby.push(e)
         })
-        axios.get(`http://localhost:3001/list-question`).then((res) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
             setquestions(res.data.data.reverse().filter((y)=>{return y.question.includes(searchby[0]||searchby[1]||searchby[2]||searchby[3]||searchby[4])==true}))
         })
     }, [])

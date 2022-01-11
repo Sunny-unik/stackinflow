@@ -48,7 +48,7 @@ export default function Login(props) {
         else{
             var random = Math.floor((Math.random() * 1000000) + 1);
             setrandomotp(random);
-            axios.post("http://localhost:3001/send-otp-email", { email, otp: random }).then((res) => {
+            axios.post(`${process.env.REACT_APP_API_URL}/send-otp-email`, { email, otp: random }).then((res) => {
                 if (res.data.status == "ok") {
                     alert("otp sent to your email");
                     var forgotpass = document.getElementById('logindetail');
@@ -79,7 +79,7 @@ export default function Login(props) {
     }
     function otplogin() {
         if(newpassword===confirmpassword && confirmpassword!='' && confirmpassword.length>=8 && confirmpassword.length<=16){
-            axios.post("http://localhost:3001/update-password",{email,newpassword}).then((res)=>{
+            axios.post(`${process.env.REACT_APP_API_URL}/update-password`,{email,newpassword}).then((res)=>{
                 alert(res.data.data)
             })
             let changepass = document.getElementById('loginpass');
