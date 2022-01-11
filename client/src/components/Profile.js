@@ -125,7 +125,7 @@ export default function Profile(props) {
                 <div className='d-md-flex'>
                     <div className="col-md-5 col-sm-10 text-center col-lg-4 mx-auto proimgdiv"><br />
                         <div className="profilepic w-75 m-auto" data-aos="flip-up" data-aos-once='true' data-aos-duration="600" >
-                            <img className="col-sm-12 m-auto" height="225rem" width="225rem" src={uprofile ? `http://localhost:3001/${uprofile}` : "assets/img/download.jpg"} alt="user profile" />
+                            <img className="col-sm-12 m-auto" height="225rem" width="225rem" src={uprofile ? `${process.env.REACT_APP_API_URL}/${uprofile}` : "assets/img/download.jpg"} alt="user profile" />
                             <input type="file" className='btn btn-primary col-sm-12 my-2' accept='image/png,image/jpg,image/jpeg' onChange={(e) => { setProfile(e) }} />
                             {uploadPercentage} {uploadPercentage && '% uploaded'}
                             <div className='w-100 m-0 p-0 text-center'>

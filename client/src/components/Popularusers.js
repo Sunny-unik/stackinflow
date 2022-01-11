@@ -47,7 +47,7 @@ export default function Popularusers(props) {
                 <div className='bg-dark rounded-2 text-center' style={{width:"fit-content"}}>
                 <div className="border border-1 border-secondary rounded-top m-0 p-0 card-header"> 
                     <div className="profilepic mx-2 col-sm-3 my-1 p-0  d-inline-block">
-                    <img className='col-sm-12 ' height="50rem" width="60rem" src={p.profile ? `http://localhost:3001/${p.profile}`
+                    <img className='col-sm-12 ' height="50rem" width="60rem" src={p.profile ? `${process.env.REACT_APP_API_URL}/${p.profile}`
                     : "assets/img/download.jpg"} alt="user profile" />
                     </div>
                     <div className="col-sm-7 d-inline-block text-center">

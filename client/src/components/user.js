@@ -71,7 +71,7 @@ question.forEach((un)=>{ if(un.userdname==uid) questions.push(un)})
         <div className='d-md-flex'>
          <div className="col-md-5 col-sm-10 text-center col-lg-4 mx-auto proimgdiv"><br />
              <div className="profilepic col-sm-8" data-aos="flip-up" data-aos-once='true' data-aos-duration="600" >
-                 <img className="col-sm-12 m-auto" height="225rem" width="225rem" src={profilebyudn ? `http://localhost:3001/${profilebyudn}`
+                 <img className="col-sm-12 m-auto" height="225rem" width="225rem" src={profilebyudn ? `${process.env.REACT_APP_API_URL}/${profilebyudn}`
                   : "../assets/img/download.jpg"} alt="user profile" />
              </div>
          </div>
