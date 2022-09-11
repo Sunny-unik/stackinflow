@@ -4,12 +4,8 @@ import thunk from 'redux-thunk';
 import { user } from '../reducers/userReducer';
 import { loading } from '../reducers/loading';
 
-var rootReducer = combineReducers({ user, loading });
+const rootReducer = combineReducers({ user, loading });
 
-var store = createStore(rootReducer,
-    composeWithDevTools(applyMiddleware(thunk))
-);
-
-
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 
 export default store;

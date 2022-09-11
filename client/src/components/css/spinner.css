@@ -1,10 +1,10 @@
-@keyframes spin{
-    0%{
-        transform: rotate(0deg);
-    }
-    100%{
-        transform: rotate(359deg);
-    }
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
 }
 /* .s{
     animation-name: n;
@@ -18,19 +18,19 @@
     width: 60px;
     display: inline-block;
 } */
-.spinner{
-    text-align: center;
-    display: inline-block;
-    margin-top: 1%;
-    height: 50px;
-    width: 50px;
-    border: 2px dashed;
-    border-color: black white red blue;
-    border-radius: 50%;
-    animation: spin 1.54s  infinite;
+.spinner {
+  text-align: center;
+  display: inline-block;
+  margin-top: 1%;
+  height: 50px;
+  width: 50px;
+  border: 2px dashed;
+  border-color: black white red blue;
+  border-radius: 50%;
+  animation: spin 1.54s infinite;
 }
-.spinnerdiv{
-    text-align: center;
+.spinnerdiv {
+  text-align: center;
 }
 
 /* <div className="mt-md-2 mt-lg-2 loading text-center">

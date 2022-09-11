@@ -1,20 +1,21 @@
-.img{
-    width: 300px;
-    height: 164px;
+.img {
+  width: 300px;
+  height: 164px;
 }
-.udetails{
-    outline: 0;
-    border: 0;
-    border-bottom: 1px solid black;
-    width: inherit;
+.udetails {
+  outline: 0;
+  border: 0;
+  border-bottom: 1px solid black;
+  width: inherit;
 }
-.uimg{
-    width: 300px;
-    height: 164px;
+.uimg {
+  width: 300px;
+  height: 164px;
 }
-.procontent h2,h3{
-    margin: 0%;
+.procontent h2,
+h3 {
+  margin: 0%;
 }
-.profilepic img{
-    border-radius: 12%;
+.profilepic img {
+  border-radius: 12%;
 }

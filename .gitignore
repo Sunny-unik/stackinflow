@@ -26,11 +26,3 @@ yarn-debug.log*
 yarn-error.log*
 
 .env
-env
-/server/env
-/client/env
-/server/.env
-/client/.env
-
-/vscode
-/.vscode

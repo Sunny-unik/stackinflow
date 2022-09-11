@@ -1,16 +1,16 @@
-.home{
-border: 1px dashed red;
+.home {
+  border: 1px dashed red;
 }
-#sidenavbar{
-position: sticky !important;
-top: 3.5rem;
-text-align: right;
-height: min-content;
+#sidenavbar {
+  position: sticky !important;
+  top: 3.5rem;
+  text-align: right;
+  height: min-content;
 }
-.active1{
-background-image: linear-gradient(to right, rgba(50, 300, 200, 0), rgba(50,400,150,5));
-font-weight: 600;
-font-size: x-large;
+.active1 {
+  background-image: linear-gradient(to right, rgba(50, 300, 200, 0), rgba(50, 400, 150, 5));
+  font-weight: 600;
+  font-size: x-large;
 }
 #sidemenuclose {
   display: none;
@@ -18,39 +18,39 @@ font-size: x-large;
 #sidemenuopen {
   display: none !important;
 }
-  #hiddennav{
-    height: 100%;
-    width: 46%;
-    position: fixed;
-    z-index: 20000 !important;
-    top: 0;
-    left: 0;
-    background-color: #111;
-    opacity: 0.9;
-    overflow-x: hidden;
-    margin-top: 40px;
-    transition: 0.5s; 
-    display: none; 
-  }
-  @media only screen and (max-width: 576px) {
+#hiddennav {
+  height: 100%;
+  width: 46%;
+  position: fixed;
+  z-index: 20000 !important;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  opacity: 0.9;
+  overflow-x: hidden;
+  margin-top: 40px;
+  transition: 0.5s;
+  display: none;
+}
+@media only screen and (max-width: 576px) {
   .topmain {
     width: 100%;
     margin-left: 0%;
     padding: 0 4% !important;
     overflow-x: hidden;
   }
-  #sidemenuopen{
+  #sidemenuopen {
     display: block !important;
   }
   #sidenavbar {
     display: none;
   }
-  }
-.extralink{
-  text-decoration:underline;
-  color:dodgerblue;
 }
-.extralink:hover{
+.extralink {
+  text-decoration: underline;
+  color: dodgerblue;
+}
+.extralink:hover {
   cursor: pointer;
   color: #0054d2;
   /* #FFC0CB stackpinkish */
