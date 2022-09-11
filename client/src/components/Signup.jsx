@@ -71,6 +71,7 @@ export default function Signup(props) {
       alert('please enter username');
     }
     const passregex =
+      // eslint-disable-next-line no-useless-escape
       /(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/;
     if (!passregex.test(password)) {
       alert(
