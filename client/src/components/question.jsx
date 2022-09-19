@@ -220,7 +220,7 @@ export default function Question(props) {
           className='btn mx-1 btn-outline-dark float-end mr-'
           type='button'
           onClick={() => {
-            navigator.clipboard.writeText(`${process.env.REACT_APP_API_URL}/question/${qid}`);
+            navigator.clipboard.writeText(`https://stackinflow.netlify.app/question/${qid}`);
           }}
         >
           Copy Link
