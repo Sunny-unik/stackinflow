@@ -251,7 +251,7 @@ app.post('/send-otp-email', bodyparser.json(), (req, res) => {
         console.log(req.body);
         console.log(result[0].email);
         sendMail(
-          'stackinflow1@gmail.com',
+          process.env.APP_ID,
           process.env.APP_PASSWORD,
           result[0].email,
           'Welcome to stackinflow',
@@ -367,7 +367,7 @@ app.post('/update-password', bodyparser.json(), (req, res) => {
 
 app.post('/send-user-otp', bodyparser.json(), (req, res) => {
   sendMail(
-    'stackinflow1@gmail.com',
+    process.env.APP_ID,
     process.env.APP_PASSWORD,
     req.body.email,
     'Welcome to stackinflow',
@@ -382,7 +382,7 @@ app.post('/send-feedback', bodyparser.json(), (req, res) => {
     if (!err) {
       res.send({ status: 'ok', data: 'Feedback Submitted Successfully' });
       sendMail(
-        'stackinflow1@gmail.com',
+        process.env.APP_ID,
         process.env.APP_PASSWORD,
         req.body.useremail,
         'Thanks for submit your feedback',
@@ -400,7 +400,7 @@ app.post('/create-user', bodyparser.json(), (req, res) => {
     if (!err) {
       res.send({ status: 'ok', data: 'user created successfully' });
       sendMail(
-        'stackinflow1@gmail.com',
+        process.env.APP_ID,
         process.env.APP_PASSWORD,
         req.body.email,
         'Welcome to stackinflow',
