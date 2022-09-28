@@ -154,7 +154,7 @@ export default function Profile(props) {
         <br />
         <span
           activeClassName='active1'
-          class='extralink'
+          className='extralink'
           style={{ fontSize: 'inherit', fontFamily: 'sans-serif' }}
           onClick={sidelink}
         >
@@ -298,17 +298,17 @@ export default function Profile(props) {
       </div>
       <br />
       <div>
-        <div class='row w-100 m-auto'>
-          <div class='d-flex flex-xs-column flex-md-row justify-content-center content py-2 bg-dark rounded'>
+        <div className='row w-100 m-auto'>
+          <div className='d-flex flex-xs-column flex-md-row justify-content-center content py-2 bg-dark rounded'>
             <div
               data-aos='zoom-out'
               data-aos-once='true'
               data-aos-duration='600'
-              class='d-flex flex-sm-column flex-md-row text-center'
+              className='d-flex flex-sm-column flex-md-row text-center'
             >
               <p className='mx-1 my-auto px-1'>
                 <NavLink
-                  class='btn text-primary rounded p-1'
+                  className='btn text-primary rounded p-1'
                   activeClassName='active'
                   to='/Profile'
                   style={{ fontSize: 'large' }}
@@ -318,7 +318,7 @@ export default function Profile(props) {
               </p>
               <p className='mx-1 my-auto px-1'>
                 <NavLink
-                  class='btn text-primary rounded p-1'
+                  className='btn text-primary rounded p-1'
                   activeClassName='active'
                   to='/Profile/editprofile'
                   style={{ fontSize: 'large' }}
@@ -328,7 +328,7 @@ export default function Profile(props) {
               </p>
               <p className='mx-1 my-auto px-1'>
                 <NavLink
-                  class='btn text-primary rounded p-1'
+                  className='btn text-primary rounded p-1'
                   activeClassName='active'
                   to='/Profile/selfquestion'
                   style={{ fontSize: 'large' }}
@@ -338,7 +338,7 @@ export default function Profile(props) {
               </p>
               <p className='mx-1 my-auto px-1'>
                 <NavLink
-                  class='btn text-primary rounded p-1'
+                  className='btn text-primary rounded p-1'
                   activeClassName='active'
                   to='/Profile/selfanswer'
                   style={{ fontSize: 'large' }}
@@ -348,7 +348,7 @@ export default function Profile(props) {
               </p>
             </div>
           </div>
-          <div class='d-flex justify-content-center'>
+          <div className='d-flex justify-content-center'>
             <div className='col-sm-10'>
               <Switch>
                 <Route path='/Profile' exact component={Likedquestions} />

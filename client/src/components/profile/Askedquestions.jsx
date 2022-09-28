@@ -43,8 +43,8 @@ export default function Askedquestions() {
                       {q.question}
                     </NavLink>
                   </h4>
-                  <div class='qla bg-secondary'> Likes: {q.qlikes.length} </div>
-                  <div class='qla bg-secondary'>
+                  <div className='qla bg-secondary'> Likes: {q.qlikes.length} </div>
+                  <div className='qla bg-secondary'>
                     <NavLink
                       style={{ color: 'black', textDecoration: 'none' }}
                       to={`/question/${q._id}`}
@@ -64,7 +64,10 @@ export default function Askedquestions() {
                       </NavLink>
                     );
                   })}
-                  <div class='maindnamediv' style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>
+                  <div
+                    className='maindnamediv'
+                    style={{ fontSize: '.9rem', fontFamily: 'cursive' }}
+                  >
                     asked by
                     <NavLink
                       style={{ color: 'navy', fontFamily: 'cursive' }}

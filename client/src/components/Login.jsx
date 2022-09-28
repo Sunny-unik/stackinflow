@@ -222,7 +222,7 @@ export default function Login(props) {
                 style={{ fontFamily: 'sans-serif' }}
               />
               <hr className='signuphr' />
-              <button type='button' class='loginbtn' onClick={() => checkauth()}>
+              <button type='button' className='loginbtn' onClick={() => checkauth()}>
                 {' '}
                 Log In{' '}
               </button>
@@ -238,7 +238,7 @@ export default function Login(props) {
             data-aos='flip-left'
             data-aos-once='true'
             data-aos-duration='1000'
-            class='col-md-5 col-lg-4'
+            className='col-md-5 col-lg-4'
             id='loginotp'
           >
             <form
@@ -283,7 +283,7 @@ export default function Login(props) {
                 required
               />
               <hr className='signuphr' />
-              <button type='reset' class='loginbtn' onClick={otppassword}>
+              <button type='reset' className='loginbtn' onClick={otppassword}>
                 {' '}
                 Submit{' '}
               </button>
@@ -293,7 +293,7 @@ export default function Login(props) {
             data-aos='flip-left'
             data-aos-once='true'
             data-aos-duration='1000'
-            class='col-md-5 col-lg-4'
+            className='col-md-5 col-lg-4'
             id='loginpass'
           >
             <form
@@ -352,7 +352,7 @@ export default function Login(props) {
                 </button>
                 <button
                   type='button'
-                  class='submitnpass'
+                  className='submitnpass'
                   style={{
                     fontFamily: 'monospace',
                     fontSize: 'large',

@@ -37,11 +37,11 @@ export default function Questionbox(props) {
           </NavLink>
         </h4>
         <div className='d-inline-block'>
-          <div class='qla bg-secondary' style={{ textShadow: '0.02em 0.08em black' }}>
+          <div className='qla bg-secondary' style={{ textShadow: '0.02em 0.08em black' }}>
             {' '}
             Likes: {props.likes}{' '}
           </div>
-          <div class='qla bg-secondary'>
+          <div className='qla bg-secondary'>
             <NavLink
               style={{ color: 'white', textDecoration: 'none', textShadow: '0.02em 0.08em black' }}
               to={`/question/${qid}`}
@@ -51,7 +51,7 @@ export default function Questionbox(props) {
             </NavLink>
           </div>
         </div>
-        <div class='maintagdiv mx-2'>
+        <div className='maintagdiv mx-2'>
           {props.tags.map(o => {
             if (o !== '' && ' ')
               return (
@@ -70,7 +70,7 @@ export default function Questionbox(props) {
               );
           })}
         </div>
-        <div class='maindnamediv'>
+        <div className='maindnamediv'>
           asked by &nbsp;
           <NavLink
             style={{ color: 'navy', fontFamily: 'SeogUI', fontWeight: 'bold' }}

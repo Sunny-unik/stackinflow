@@ -283,7 +283,7 @@ export default function Signup(props) {
                 required
               />
               <hr className='signuphr' />
-              <button type='button' class='registerbtn' onClick={unikemail}>
+              <button type='button' className='registerbtn' onClick={unikemail}>
                 {' '}
                 Sign Up{' '}
               </button>
@@ -293,7 +293,7 @@ export default function Signup(props) {
             data-aos='flip-right'
             data-aos-once='true'
             data-aos-duration='1000'
-            class='col-md-5 col-lg-4'
+            className='col-md-5 col-lg-4'
             id='createotp'
           >
             <form
@@ -340,7 +340,7 @@ export default function Signup(props) {
                 required
               />
               <hr className='signuphr' />
-              <button type='button' class='registerbtn' onClick={otpcheck}>
+              <button type='button' className='registerbtn' onClick={otpcheck}>
                 {' '}
                 Submit{' '}
               </button>

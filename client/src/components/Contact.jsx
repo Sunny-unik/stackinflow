@@ -128,7 +128,7 @@ export default function Contact() {
         <button
           type='reset'
           onClick={submitfeedback}
-          class='float-end submitquestion btn btn-primary m-2 form-btn'
+          className='float-end submitquestion btn btn-primary m-2 form-btn'
           style={{ borderRadius: '.2em', boxShadow: ' .08em .2em #888888' }}
         >
           Submit Feedback

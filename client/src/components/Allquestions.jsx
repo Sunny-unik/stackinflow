@@ -40,12 +40,12 @@ export default function Allquestions() {
   }
 
   return (
-    <div class='row' style={{ borderLeft: '2px solid lightgrey', minHeight: '80vh' }}>
+    <div className='row' style={{ borderLeft: '2px solid lightgrey', minHeight: '80vh' }}>
       <div>
         <h1 style={{ padding: '0px 1%', margin: '.4rem 0 .4rem 0', fontFamily: 'sans-serif' }}>
           Total {questionlength} Questions Asked
         </h1>
-        <hr class='mb-0' />
+        <hr className='mb-0' />
       </div>
       <div>
         {questions &&

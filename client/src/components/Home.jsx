@@ -99,7 +99,7 @@ export default function Home(props) {
         <br />
         <span
           activeClassName='active1'
-          class='extralink'
+          className='extralink'
           style={{ fontSize: 'inherit', fontFamily: 'sans-serif' }}
           onClick={sidelink}
         >
@@ -139,7 +139,7 @@ export default function Home(props) {
           <span
             activeClassName='active1'
             style={{ fontSize: 'inherit', fontFamily: 'sans-serif' }}
-            class='extralink'
+            className='extralink'
             onClick={logout}
           >
             <FaSignOutAlt />
@@ -151,7 +151,7 @@ export default function Home(props) {
       </div>
       <div className='container-md' style={{ marginBottom: '0px' }}>
         <div className='row p-0'>
-          <div id='sidenavbar' class='col-sm-2 px-0 mx-0 mr-1 pt-3 '>
+          <div id='sidenavbar' className='col-sm-2 px-0 mx-0 mr-1 pt-3 '>
             <NavLink
               activeClassName='active1'
               style={{
@@ -207,7 +207,7 @@ export default function Home(props) {
             <br />
             <h6
               activeClassName='active1'
-              class='extralink'
+              className='extralink'
               style={{
                 fontFamily: 'serif',
                 textShadow: '0.02em 0.02em black',
@@ -221,7 +221,7 @@ export default function Home(props) {
             <br />
           </div>
           <div className='topmain m-0 col-sm-10 p-2 overflow-hidden border border-primary'>
-            <Switch class='p-0'>
+            <Switch className='p-0'>
               <Route path='/questions' component={Allquestions} />
               <Route path='/populartags' component={Populartags} />
               <Route path='/popularusers' component={Popularusers} />

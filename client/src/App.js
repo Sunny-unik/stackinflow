@@ -31,11 +31,14 @@ function App() {
   }, []);
 
   return (
-    <Router class='w-100'>
-      <nav class='navbar navbar-expand-sm bg-dark sticky-top' style={{ width: '100% !important' }}>
-        <div class='container'>
-          <ul class='navbar-nav w-100 '>
-            <li class='navbar-header col-md-2 text-center'>
+    <Router className='w-100'>
+      <nav
+        className='navbar navbar-expand-sm bg-dark sticky-top'
+        style={{ width: '100% !important' }}
+      >
+        <div className='container'>
+          <ul className='navbar-nav w-100 '>
+            <li className='navbar-header col-md-2 text-center'>
               <NavLink
                 className='nabar-brand'
                 style={{ textDecoration: 'none', fontSize: '1.4rem', fontFamily: 'Fantasy' }}
@@ -46,11 +49,11 @@ function App() {
                 <i>Stackinflow</i>
               </NavLink>
             </li>
-            <li class='nav-item col-md-8 text-center'>
-              <div class='input-group' onClick={inputhandler}>
+            <li className='nav-item col-md-8 text-center'>
+              <div className='input-group' onClick={inputhandler}>
                 <input
                   type='text'
-                  class='form-control'
+                  className='form-control'
                   placeholder='Search Question'
                   name='questionsearch'
                   value={questionsearch}
@@ -64,14 +67,14 @@ function App() {
                       return <option>{i.question}</option>;
                     })}
                 </datalist>
-                <div class='input-group-btn' id='hidebtn'>
+                <div className='input-group-btn' id='hidebtn'>
                   <NavLink
                     to={{
                       pathname: `/search/${questionsearch}`,
                       searchedquestion: questionsearch.replace(' ', ','),
                     }}
                   >
-                    <button class='btn btn-default bg-primary' type='button'>
+                    <button className='btn btn-default bg-primary' type='button'>
                       <FaSearch />
                     </button>
                   </NavLink>
@@ -79,9 +82,9 @@ function App() {
               </div>
             </li>
             {!user && (
-              <li class='navshrink nav-item col-sm-1 text-center'>
+              <li className='navshrink nav-item col-sm-1 text-center'>
                 <NavLink
-                  class='nav-link'
+                  className='nav-link'
                   activeClassName='active'
                   to='/Login'
                   style={{ fontFamily: 'fantasy' }}
@@ -92,9 +95,9 @@ function App() {
               </li>
             )}
             {!user && (
-              <li class='nav-item navshrink col-sm-1 text-center'>
+              <li className='nav-item navshrink col-sm-1 text-center'>
                 <NavLink
-                  class='nav-link'
+                  className='nav-link'
                   activeClassName='active'
                   to='/Signup'
                   style={{ fontFamily: 'fantasy' }}
@@ -105,9 +108,9 @@ function App() {
               </li>
             )}
             {user && (
-              <li class='nav-item col-sm-1 navshrink text-center'>
+              <li className='nav-item col-sm-1 navshrink text-center'>
                 <NavLink
-                  class='nav-link'
+                  className='nav-link'
                   activeClassName='active'
                   to='/Profile'
                   style={{ fontFamily: 'fantasy' }}
@@ -118,9 +121,9 @@ function App() {
               </li>
             )}
             {user && (
-              <li class='nav-item col-sm-1 text-center navshrink'>
+              <li className='nav-item col-sm-1 text-center navshrink'>
                 <NavLink
-                  class='nav-link'
+                  className='nav-link'
                   activeClassName='active'
                   to='/Login'
                   onClick={logout}

@@ -233,7 +233,7 @@ export default function Question(props) {
                 deleteHandler();
               }
             }}
-            class='btn mx-2 btn-outline-danger'
+            className='btn mx-2 btn-outline-danger'
           >
             {' '}
             Delete Question{' '}
@@ -243,7 +243,7 @@ export default function Question(props) {
         )}
         {user != null && user._id === qusername ? (
           <NavLink
-            class='btn mx-1 btn-outline-primary'
+            className='btn mx-1 btn-outline-primary'
             to={{
               pathname: `/editquestion/${qid}`,
               questionid: qid,

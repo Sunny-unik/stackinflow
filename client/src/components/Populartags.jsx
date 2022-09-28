@@ -63,7 +63,7 @@ export default function Populartags(props) {
           })}
         </datalist>
         <button
-          class='searchb'
+          className='searchb'
           onClick={() => {
             questionsbytag('notvalid', 'search');
           }}

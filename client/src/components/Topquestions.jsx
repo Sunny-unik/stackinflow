@@ -69,22 +69,22 @@ export default function Topquestions() {
       style={{ borderLeft: '.1rem solid lightgrey', paddingLeft: '.2rem', minHeight: '80vh' }}
     >
       <div style={{ padding: '.5%', borderBottom: '.1rem solid lightgrey' }}>
-        <h1 class='d-inline-block'>&nbsp;Top Questions </h1>
+        <h1 className='d-inline-block'>&nbsp;Top Questions </h1>
         <div
-          class='btn-group float-end w-75-md w-100-sm my-2 p-2'
+          className='btn-group float-end w-75-md w-100-sm my-2 p-2'
           role='group'
           aria-label='Basic radio toggle button group'
         >
           <input
             type='radio'
-            class='btn-check'
+            className='btn-check'
             name='btnradio'
             id='btnradio1'
             autocomplete='off'
             onChange={radiohandler}
           />
           <label
-            class={
+            className={
               sortby === 'newest' ? 'btn btn-outline-primary active' : 'btn btn-outline-primary'
             }
             for='btnradio1'
@@ -94,46 +94,46 @@ export default function Topquestions() {
           </label>
           <input
             type='radio'
-            class='btn-check'
+            className='btn-check'
             name='btnradio'
             id='btnradio2'
             autocomplete='off'
             onChange={radiohandler}
           />
-          <label class='btn btn-outline-primary' for='btnradio2'>
+          <label className='btn btn-outline-primary' for='btnradio2'>
             Oldest
           </label>
           <input
             type='radio'
-            class='btn-check'
+            className='btn-check'
             name='btnradio'
             id='btnradio3'
             autocomplete='off'
             onChange={radiohandler}
           />
-          <label class='btn btn-outline-primary' for='btnradio3'>
+          <label className='btn btn-outline-primary' for='btnradio3'>
             Most Liked
           </label>
           <input
             type='radio'
-            class='btn-check'
+            className='btn-check'
             name='btnradio'
             id='btnradio4'
             autocomplete='off'
             onChange={radiohandler}
           />
-          <label class='btn btn-outline-primary' for='btnradio4'>
+          <label className='btn btn-outline-primary' for='btnradio4'>
             Most Answered
           </label>
           <input
             type='radio'
-            class='btn-check'
+            className='btn-check'
             name='btnradio'
             id='btnradio5'
             autocomplete='off'
             onChange={radiohandler}
           />
-          <label class='btn btn-outline-primary' for='btnradio5'>
+          <label className='btn btn-outline-primary' for='btnradio5'>
             Not Answered
           </label>
         </div>

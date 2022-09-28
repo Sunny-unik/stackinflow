@@ -35,14 +35,14 @@ export default function Likedquestions() {
                 {g.question}
               </NavLink>
             </h4>
-            <div class='qla bg-secondary'> Likes: {g.qlikes.length} </div>
-            <div class='qla bg-secondary'>
+            <div className='qla bg-secondary'> Likes: {g.qlikes.length} </div>
+            <div className='qla bg-secondary'>
               <NavLink style={{ color: 'black', textDecoration: 'none' }} to={`/question/${g._id}`}>
                 {' '}
                 Answer: {g.answers.length}{' '}
               </NavLink>
             </div>
-            <div class='maintagdiv mx-2'>
+            <div className='maintagdiv mx-2'>
               {g.tags.map(o => {
                 return (
                   <NavLink
@@ -55,7 +55,7 @@ export default function Likedquestions() {
                 );
               })}
             </div>
-            <div class='maindnamediv' style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>
+            <div className='maindnamediv' style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>
               asked by &nbsp;
               <NavLink style={{ color: 'navy', fontFamily: 'cursive' }} to={`/user/${g.userdname}`}>
                 {user.dname}

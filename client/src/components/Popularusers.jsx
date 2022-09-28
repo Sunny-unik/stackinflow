@@ -58,7 +58,7 @@ export default function Popularusers(props) {
               return <option value={u._id}>{u.dname}</option>;
             })}
         </datalist>
-        <button class='searchb' style={{ fontFamily: 'Fantasy' }} onClick={gotouser}>
+        <button className='searchb' style={{ fontFamily: 'Fantasy' }} onClick={gotouser}>
           <FcSearch /> Search
         </button>
       </div>

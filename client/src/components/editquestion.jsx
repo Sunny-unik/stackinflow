@@ -139,7 +139,7 @@ export default function Editquestion(props) {
             <div className='card-header'>
               <h4>Tips for your question</h4>
             </div>
-            <p class='p-2 card-header'>
+            <p className='p-2 card-header'>
               The community is here to help you with specific coding, algorithm, or language
               problems.
               <br />
@@ -147,7 +147,7 @@ export default function Editquestion(props) {
             </p>
             <details className='p-2'>
               <summary style={{ fontFamily: 'sans-serif' }}>
-                <h5 class='d-inline-block'>1. Summarize the problem</h5>
+                <h5 className='d-inline-block'>1. Summarize the problem</h5>
               </summary>
               <p className='px-3 py-1'>
                 Include details about your goal Describe expected and actual results Include any
@@ -156,16 +156,16 @@ export default function Editquestion(props) {
             </details>
             <details className='p-2'>
               <summary style={{ fontFamily: 'sans-serif' }}>
-                <h5 class='d-inline-block'>2. Describe what you’ve tried</h5>
+                <h5 className='d-inline-block'>2. Describe what you’ve tried</h5>
               </summary>
-              <p class='px-3 py-1'>
+              <p className='px-3 py-1'>
                 Show what you’ve tried and tell us what you found (on this site or elsewhere) and
                 why it didn’t meet your needs. You can get better answers when you provide research.
               </p>
             </details>
-            <details class='p-2'>
+            <details className='p-2'>
               <summary style={{ fontFamily: 'sans-serif' }}>
-                <h5 class='d-inline-block'>3. How to tag</h5>
+                <h5 className='d-inline-block'>3. How to tag</h5>
               </summary>
               <p>Tags help the right people find and answer your question.</p>
               <li>Identify your tags by completing the sentence, "My question is about…"</li>

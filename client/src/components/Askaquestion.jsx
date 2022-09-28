@@ -98,7 +98,7 @@ export default function Askaquestion(props) {
   return (
     <div className='bg-light' style={{ borderLeft: '2px solid lightgrey' }}>
       {user && (
-        <div class='ask m-0 mb-1'>
+        <div className='ask m-0 mb-1'>
           <h1 className='p-2'> Ask a public question </h1>
           <br />
           <div className='d-md-flex'>
@@ -167,7 +167,7 @@ export default function Askaquestion(props) {
               <button
                 type='reset'
                 onClick={validateq}
-                class='submitquestion btn btn-primary m-2 form-btn'
+                className='submitquestion btn btn-primary m-2 form-btn'
                 style={{ borderRadius: '.2em', boxShadow: ' .08em .2em #888888' }}
               >
                 Publish Question
@@ -187,7 +187,7 @@ export default function Askaquestion(props) {
               <div className='card-header text-center'>
                 <h4>Tips for your question</h4>
               </div>
-              <p class='p-2'>
+              <p className='p-2'>
                 The community is here to help you with specific coding, algorithm, or language
                 problems.
                 <br />
@@ -195,7 +195,7 @@ export default function Askaquestion(props) {
               </p>
               <details className='p-2'>
                 <summary style={{ fontFamily: 'sans-serif' }}>
-                  <h5 class='d-inline-block'>1. Summarize the problem</h5>
+                  <h5 className='d-inline-block'>1. Summarize the problem</h5>
                 </summary>
                 <p className='px-3 py-1'>
                   Include details about your goal Describe expected and actual results Include any
@@ -204,17 +204,17 @@ export default function Askaquestion(props) {
               </details>
               <details className='p-2'>
                 <summary style={{ fontFamily: 'sans-serif' }}>
-                  <h5 class='d-inline-block'>2. Describe what you’ve tried</h5>
+                  <h5 className='d-inline-block'>2. Describe what you’ve tried</h5>
                 </summary>
-                <p class='px-3 py-1'>
+                <p className='px-3 py-1'>
                   Show what you’ve tried and tell us what you found (on this site or elsewhere) and
                   why it didn’t meet your needs. You can get better answers when you provide
                   research.
                 </p>
               </details>
-              <details class='p-2'>
+              <details className='p-2'>
                 <summary style={{ fontFamily: 'sans-serif' }}>
-                  <h5 class='d-inline-block'>3. How to tag</h5>
+                  <h5 className='d-inline-block'>3. How to tag</h5>
                 </summary>
                 <p>Tags help the right people find and answer your question.</p>
                 <li>Identify your tags by completing the sentence, "My question is about…"</li>

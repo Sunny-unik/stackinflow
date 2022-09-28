@@ -35,8 +35,8 @@ export default function Givenaswer() {
             <NavLink to={`/question/${g.qid}`}>
               <h4 className='mainqdiv '>{g.answer}</h4>
             </NavLink>
-            <div class='qla bg-primary m-2'> Likes: {g.alikes.length} </div>
-            <div class='maindnamediv m-1' style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>
+            <div className='qla bg-primary m-2'> Likes: {g.alikes.length} </div>
+            <div className='maindnamediv m-1' style={{ fontSize: '.9rem', fontFamily: 'cursive' }}>
               given by&nbsp;
               <NavLink style={{ color: 'navy', fontFamily: 'cursive' }} to={`/user/${g.uid}`}>
                 {user.dname}
