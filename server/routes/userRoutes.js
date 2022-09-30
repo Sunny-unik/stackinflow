@@ -1,4 +1,3 @@
-const bodyParser = require('body-parser');
 const express = require('express');
 const {
   validDname,
@@ -15,16 +14,16 @@ const {
 
 const router = express.Router();
 
-router.post('/check-login', bodyParser.json(), checkLogin);
-router.post('/valid-dname', bodyParser.json(), validEmail);
-router.post('/valid-email', bodyParser.json(), validDname);
-router.post('/send-otp-email', bodyParser.json(), sendOtpEmail);
-router.post('/update-user-point', bodyParser.json(), updateUserPoint);
-router.post('/update-user-details', bodyParser.json(), updateUserDetails);
-router.post('/update-user', bodyParser.json(), updateUser);
-router.post('/update-password', bodyParser.json(), updatePassword);
-router.post('/create-user', bodyParser.json(), createUser);
-router.post('/user-by-userdname', bodyParser.json(), userByUserdname);
-router.post('/list-user', bodyParser.json(), listUser);
+router.post('/check-login', checkLogin);
+router.post('/valid-dname', validEmail);
+router.post('/valid-email', validDname);
+router.post('/send-otp-email', sendOtpEmail);
+router.post('/update-user-point', updateUserPoint);
+router.post('/update-user-details', updateUserDetails);
+router.post('/update-user', updateUser);
+router.post('/update-password', updatePassword);
+router.post('/create-user', createUser);
+router.post('/user-by-userdname', userByUserdname);
+router.post('/list-user', listUser);
 
 module.exports = router;

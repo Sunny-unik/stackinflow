@@ -4,9 +4,11 @@ const path = require('path');
 const app = express();
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const questionRoutes = require('./routes/questionRoutes');
 dotenv.config();
 
 app.use(cors());
+app.use(express.json());
 app.use(express.static(path.join(__dirname, 'uploads/userProfiles')));
 
 mongoose
@@ -16,7 +18,11 @@ mongoose
   })
   .then(() => console.log('Databse Connected'));
 
-mongoose.connection.on('error', err => console.log(`Error on connection: `, err));
+mongoose.connection.on('error', err => {
+  console.log(`Error on connection: `, err);
+});
+
+app.use('/', questionRoutes);
 
 // app.get('/list-question-length', (req, res) => {
 //   const questioncollection = connection.db('stackinflow').collection('q&a');
@@ -68,7 +74,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   });
 // });
 
-// app.get('/list-question-byquestion', bodyparser.json(), (req, res) => {
+// app.get('/list-question-byquestion',  (req, res) => {
 //   const questioncollection = connection.db('stackinflow').collection('q&a');
 //   questioncollection.find({ question: req.body.searchby }).toArray((err, docs) => {
 //     if (!err) {
@@ -101,7 +107,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   });
 // });
 
-// app.post('/create-question', bodyparser.json(), (req, res) => {
+// app.post('/create-question',  (req, res) => {
 //   const questioncollection = connection.db('stackinflow').collection('q&a');
 //   questioncollection.insert(req.body, (err, result) => {
 //     if (!err) {
@@ -112,7 +118,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   });
 // });
 
-// app.post('/create-answer', bodyparser.json(), (req, res) => {
+// app.post('/create-answer',  (req, res) => {
 //   const questioncollection = connection.db('stackinflow').collection('q&a');
 //   questioncollection.updateOne(
 //     { _id: ObjectId(req.body.qid) },
@@ -127,7 +133,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   );
 // });
 
-// app.post('/add-qlike', bodyparser.json(), (req, res) => {
+// app.post('/add-qlike',  (req, res) => {
 //   const questioncollection = connection.db('stackinflow').collection('q&a');
 //   questioncollection.updateOne(
 //     { _id: ObjectId(req.body.qid) },
@@ -142,7 +148,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   );
 // });
 
-// app.post('/remove-qlike', bodyparser.json(), (req, res) => {
+// app.post('/remove-qlike',  (req, res) => {
 //   const questioncollection = connection.db('stackinflow').collection('q&a');
 //   questioncollection.updateOne(
 //     { _id: ObjectId(req.body.qid) },
@@ -157,7 +163,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   );
 // });
 
-// app.post('/add-alike', bodyparser.json(), (req, res) => {
+// app.post('/add-alike',  (req, res) => {
 //   const questioncollection = connection.db('stackinflow').collection('q&a');
 //   questioncollection.updateOne(
 //     { _id: ObjectId(req.body.qid), answers: { $elemMatch: { date: req.body.ad } } },
@@ -172,7 +178,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   );
 // });
 
-// app.post('/remove-alike', bodyparser.json(), (req, res) => {
+// app.post('/remove-alike',  (req, res) => {
 //   const questioncollection = connection.db('stackinflow').collection('q&a');
 //   questioncollection.updateOne(
 //     { _id: ObjectId(req.body.qid), answers: { $elemMatch: { date: req.body.ad } } },
@@ -187,7 +193,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   );
 // });
 
-// app.post('/check-login', bodyparser.json(), (req, res) => {
+// app.post('/check-login',  (req, res) => {
 //   const usercollection = connection.db('stackinflow').collection('user');
 // usercollection
 //   .find({
@@ -203,7 +209,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   });
 // });
 
-// app.post('/valid-email', bodyparser.json(), (req, res) => {
+// app.post('/valid-email',  (req, res) => {
 //   const usercollection = connection.db('stackinflow').collection('user');
 //   usercollection.find({ email: req.body.email }).toArray((err, result) => {
 //     if (!err && result.length > 0) {
@@ -213,7 +219,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //     }
 //   });
 // });
-// app.post('/valid-dname', bodyparser.json(), (req, res) => {
+// app.post('/valid-dname',  (req, res) => {
 //   const usercollection = connection.db('stackinflow').collection('user');
 //   usercollection.find({ dname: req.body.dname }).toArray((err, result) => {
 //     if (!err && result.length > 0) {
@@ -224,7 +230,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   });
 // });
 
-// app.post('/delete-question', bodyparser.json(), (req, res) => {
+// app.post('/delete-question',  (req, res) => {
 //   const questioncollection = connection.db('stackinflow').collection('q&a');
 //   questioncollection.deleteOne({ _id: ObjectId(req.body.qid) }, (err, result) => {
 //     if (!err) {
@@ -235,7 +241,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   });
 // });
 
-// app.post('/send-otp-email', bodyparser.json(), (req, res) => {
+// app.post('/send-otp-email',  (req, res) => {
 //   const usercollection = connection.db('stackinflow').collection('user');
 //   usercollection
 //     .find({ $or: [{ email: req.body.email }, { dname: req.body.email }] })
@@ -257,7 +263,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //     });
 // });
 
-// app.post('/update-question', bodyparser.json(), (req, res) => {
+// app.post('/update-question',  (req, res) => {
 //   const questioncollection = connection.db('stackinflow').collection('q&a');
 //   questioncollection.updateOne(
 //     { _id: ObjectId(req.body.questionid) },
@@ -278,7 +284,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   );
 // });
 
-// app.post('/update-user-point', bodyparser.json(), (req, res) => {
+// app.post('/update-user-point',  (req, res) => {
 //   const usercollection = connection.db('stackinflow').collection('user');
 //   console.log(req.body.userpoint);
 //   console.log(req.body.userdname);
@@ -296,7 +302,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   );
 // });
 
-// app.post('/update-user-details', bodyparser.json(), (req, res) => {
+// app.post('/update-user-details',  (req, res) => {
 //   const usercollection = connection.db('stackinflow').collection('user');
 //   usercollection.updateOne(
 //     { _id: ObjectId(req.body.obid) },
@@ -322,7 +328,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   );
 // });
 
-// app.post('/update-user', bodyparser.json(), (req, res) => {
+// app.post('/update-user',  (req, res) => {
 //   upload(req, res, err => {
 //     if (!err) {
 //       const usercollection = connection.db('stackinflow').collection('user');
@@ -343,7 +349,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   });
 // });
 
-// app.post('/update-password', bodyparser.json(), (req, res) => {
+// app.post('/update-password',  (req, res) => {
 //   const usercollection = connection.db('stackinflow').collection('user');
 //   usercollection.update(
 //     { $or: [{ email: req.body.email }, { dname: req.body.email }] },
@@ -358,7 +364,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   );
 // });
 
-// app.post('/send-user-otp', bodyparser.json(), (req, res) => {
+// app.post('/send-user-otp',  (req, res) => {
 //   sendMail(
 //     process.env.APP_ID,
 //     process.env.APP_PASSWORD,
@@ -369,7 +375,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   res.send({ status: 'ok', data: 'please verify your email' });
 // });
 
-// app.post('/send-feedback', bodyparser.json(), (req, res) => {
+// app.post('/send-feedback',  (req, res) => {
 //   const feedbackcollection = connection.db('stackinflow').collection('feedbacks');
 //   feedbackcollection.insert(req.body, (err, result) => {
 //     if (!err) {
@@ -387,7 +393,7 @@ mongoose.connection.on('error', err => console.log(`Error on connection: `, err)
 //   });
 // });
 
-// app.post('/create-user', bodyparser.json(), (req, res) => {
+// app.post('/create-user',  (req, res) => {
 //   const usercollection = connection.db('stackinflow').collection('user');
 //   usercollection.insert(req.body, (err, result) => {
 //     if (!err) {
