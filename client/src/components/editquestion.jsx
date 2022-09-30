@@ -3,14 +3,15 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 export default function Editquestion(props) {
-  const [questionid, setquestionid] = useState(props.location.questionid);
-  const [question, setquestiontitle] = useState(props.location.questiontitle);
-  const [questiondetail, setquestiond] = useState(props.location.questiondetails);
-  const [qtags, setqtag] = useState(props.location.questiontags);
-  const [qlikes, setqlikes] = useState(props.location.questionlikes);
-  const [date, setqdate] = useState(props.location.questiondate);
-  const [userdname, setquserdname] = useState(props.location.questionuserdname);
-  const [answers, setqanswer] = useState(props.location.qanswers);
+  const propLocation = props.location;
+  const [questionid, setquestionid] = useState(propLocation.questionid);
+  const [question, setquestiontitle] = useState(propLocation.questiontitle);
+  const [questiondetail, setquestiond] = useState(propLocation.questiondetails);
+  const [qtags, setqtag] = useState(propLocation.questiontags);
+  const [qlikes, setqlikes] = useState(propLocation.questionlikes);
+  const [date, setqdate] = useState(propLocation.questiondate);
+  const [userdname, setquserdname] = useState(propLocation.questionuserdname);
+  const [answers, setqanswer] = useState(propLocation.qanswers);
 
   function setquestion(e) {
     e.target.name === 'questiontitle' && setquestiontitle(e.target.value);

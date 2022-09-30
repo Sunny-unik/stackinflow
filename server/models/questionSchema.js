@@ -1,0 +1,29 @@
+const { default: mongoose, Schema } = require('mongoose');
+
+const questionSchema = new Schema({
+  question: {
+    type: String,
+    required: true,
+  },
+  questiondetail: {
+    type: String,
+    minLength: [5, 'question description is too short!'],
+    maxLength: 46,
+    required: true,
+  },
+  qlikes: {
+    type: Array,
+    default: [],
+    required: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now(),
+    maxLength: 16,
+    required: true,
+  },
+  answers: { type: Array, default: [] },
+  tags: { type: Array, default: [] },
+});
+
+module.exports = mongoose.model('q&a', questionSchema);
