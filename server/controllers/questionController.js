@@ -1,7 +1,7 @@
-const question = require('../models/questionSchema');
+const questionSchema = require('../models/questionSchema');
 
 exports.listQuestions = async (req, res) => {
-  await question
+  await questionSchema
     .find()
     .select('_id question userdname date qlikes tags')
     .then(questions => res.status(200).json({ total: questions.length, data: questions }))
@@ -13,7 +13,7 @@ exports.listQuestions = async (req, res) => {
 
 exports.questionsPerPage = async (req, res) => {
   const [limit, page] = [+req.query.limit, +req.query.page];
-  await question
+  await questionSchema
     .find()
     .limit(limit * 1)
     .skip(page * 1 * limit)
@@ -26,7 +26,7 @@ exports.questionsPerPage = async (req, res) => {
 };
 
 exports.questionsSearch = async (req, res) => {
-  await question
+  await questionSchema
     .find(req.body.search ? { question: { $regex: req.body.search } } : { _id: req.query.id })
     .then(questions => res.status(200).json({ data: questions }))
     .catch(err => {
@@ -36,7 +36,7 @@ exports.questionsSearch = async (req, res) => {
 };
 
 exports.createQuestion = async (req, res) => {
-  const question = await new question(req.body);
+  const question = await new questionSchema(req.body);
   question
     .save()
     .then(result => {
@@ -50,7 +50,7 @@ exports.createQuestion = async (req, res) => {
 
 exports.addQlike = async (req, res) => {
   try {
-    await question.updateOne({ _id: req.body.id }, { $push: { qlikes: req.body.uid } });
+    await questionSchema.updateOne({ _id: req.body.id }, { $push: { qlikes: req.body.uid } });
     res.status(200).send('Like added successfully!');
   } catch (error) {
     res.send(error);
@@ -59,7 +59,7 @@ exports.addQlike = async (req, res) => {
 
 exports.removeQlike = async (req, res) => {
   try {
-    await question.updateOne({ _id: req.body.id }, { $set: { qlikes: req.body.qlikes } });
+    await questionSchema.updateOne({ _id: req.body.id }, { $set: { qlikes: req.body.qlikes } });
     res.status(200).send('Like removed successfully!');
   } catch (error) {
     res.send(error);
@@ -67,7 +67,7 @@ exports.removeQlike = async (req, res) => {
 };
 
 exports.deleteQuestion = async (req, res) => {
-  question.deleteOne({ _id: req.body.qid }, (err, result) => {
+  questionSchema.deleteOne({ _id: req.body.qid }, (err, result) => {
     if (err) throw err;
     res.status(200).send('Question is deleted!');
   });
@@ -75,7 +75,7 @@ exports.deleteQuestion = async (req, res) => {
 
 exports.updateQuestion = async (req, res) => {
   try {
-    await question.updateOne(
+    await questionSchema.updateOne(
       { _id: req.body.questionid },
       {
         $set: {

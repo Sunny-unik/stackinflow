@@ -1,8 +1,8 @@
 const { sendMail } = require('../helpers/mailer');
-const feedback = require('../models/feedbackSchema');
+const feedbackSchema = require('../models/feedbackSchema');
 
 exports.addFeedback = async (req, res) => {
-  const feedback = await new feedback(req.body);
+  const feedback = await new feedbackSchema(req.body);
   feedback
     .save()
     .then(result => {
@@ -22,7 +22,7 @@ exports.addFeedback = async (req, res) => {
 };
 
 exports.listFeedback = async (req, res) => {
-  await feedback
+  await feedbackSchema
     .find()
     .then(users => res.status(200).json({ total: users.length, data: users }))
     .catch(err => {

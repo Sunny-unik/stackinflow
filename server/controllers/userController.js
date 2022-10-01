@@ -1,9 +1,9 @@
 const { sendMail } = require('../helpers/mailer');
-const userCollection = require('../models/userSchema');
-const upload = require('./multerConfig');
+const user = require('../models/userSchema');
+const upload = require('../helpers/multerConfig');
 
 exports.checkLogin = async (req, res) => {
-  await userCollection
+  await user
     .find({
       $or: [{ email: req.body.email }, { dname: req.body.email }],
       password: req.body.password,
@@ -18,24 +18,17 @@ exports.checkLogin = async (req, res) => {
 };
 
 exports.validEmail = async (req, res) => {
-  exports.checkLogin = async (req, res) => {
-    await userCollection
-      .find({
-        $or: [{ email: req.body.email }, { dname: req.body.email }],
-        password: req.body.password,
-      })
-      .toArray((err, result) => {
-        if (!err && result.length > 0) {
-          res.send({ status: 'ok', data: result[0] });
-        } else {
-          res.send({ status: 'error', data: err });
-        }
-      });
-  };
+  await user.find({ email: req.body.email }).toArray((err, result) => {
+    if (!err && result.length > 0) {
+      res.send({ status: 'error', data: 'this email is already registered 🤔' });
+    } else {
+      res.send({ status: 'ok' });
+    }
+  });
 };
 
 exports.validDname = async (req, res) => {
-  await userCollection.find({ dname: req.body.dname }).toArray((err, result) => {
+  await user.find({ dname: req.body.dname }).toArray((err, result) => {
     if (!err && result.length > 0) {
       res.send({ status: result[0]._id, data: 'this username is already taken 🤔' });
     } else {
@@ -45,12 +38,10 @@ exports.validDname = async (req, res) => {
 };
 
 exports.sendOtpEmail = async (req, res) => {
-  await userCollection
+  await user
     .find({ $or: [{ email: req.body.email }, { dname: req.body.email }] })
     .toArray((err, result) => {
       if (!err && result.length > 0) {
-        console.log(req.body);
-        console.log(result[0].email);
         sendMail(
           process.env.APP_ID,
           process.env.APP_PASSWORD,
@@ -67,7 +58,7 @@ exports.sendOtpEmail = async (req, res) => {
 
 exports.updateUserPoint = async (req, res) => {
   const upoint = req.body.userpoint;
-  await userCollection.updateOne(
+  await user.updateOne(
     { _id: ObjectId(req.body.userdname) },
     { $set: { userlikes: upoint } },
     (err, result) => {
@@ -81,7 +72,7 @@ exports.updateUserPoint = async (req, res) => {
 };
 
 exports.updateUserDetails = async (req, res) => {
-  await userCollection.updateOne(
+  await user.updateOne(
     { _id: ObjectId(req.body.obid) },
     {
       $set: {
@@ -109,7 +100,7 @@ exports.updateUser = (req, res) => {
   upload(req, res, err => {
     if (!err) {
       (async () => {
-        await userCollection.update(
+        await user.update(
           { _id: ObjectId(req.body.obid) },
           { $set: { profile: req.files.profile[0].filename } },
           (err, result) => {
@@ -128,7 +119,7 @@ exports.updateUser = (req, res) => {
 };
 
 exports.updatePassword = async (req, res) => {
-  await userCollection.update(
+  await user.update(
     { $or: [{ email: req.body.email }, { dname: req.body.email }] },
     { $set: { password: req.body.newpassword } },
     (err, result) => {
@@ -142,7 +133,7 @@ exports.updatePassword = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  await userCollection.insert(req.body, (err, result) => {
+  await user.insert(req.body, (err, result) => {
     if (!err) {
       res.send({ status: 'ok', data: 'user created successfully' });
       sendMail(
@@ -159,7 +150,7 @@ exports.createUser = async (req, res) => {
 };
 
 exports.userByUserdname = async (req, res) => {
-  await userCollection.find({ _id: ObjectId(req.query._id) }).toArray((err, docs) => {
+  await user.find({ _id: ObjectId(req.query._id) }).toArray((err, docs) => {
     if (!err) {
       res.send({ status: 'ok', data: docs });
     } else {
@@ -169,11 +160,12 @@ exports.userByUserdname = async (req, res) => {
 };
 
 exports.listUser = async (req, res) => {
-  await userCollection.find().toArray((err, docs) => {
-    if (!err) {
-      res.send({ status: 'ok', data: docs });
-    } else {
-      res.send({ status: 'failed', data: err });
-    }
-  });
+  await user
+    .find()
+    .select('_id name dname userlikes')
+    .then(users => res.status(200).json({ total: users.length, data: users }))
+    .catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+    });
 };

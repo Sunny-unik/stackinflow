@@ -1,43 +1,32 @@
-const answer = require('../models/answerSchema');
+const answerSchema = require('../models/answerSchema');
 
 exports.createAnswer = async (req, res) => {
-  await answer.updateOne(
-    { _id: ObjectId(req.body.qid) },
-    { $push: { answers: req.body } },
-    (err, docs) => {
-      if (!err) {
-        res.send({ status: 'ok', data: 'Your Answer is Submitted' });
-      } else {
-        res.send({ status: 'failed', data: err });
-      }
-    }
-  );
+  const answer = await new answerSchema(req.body);
+  answer
+    .save()
+    .then(result => {
+      res.status(200).json({ data: result });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+    });
 };
 
 exports.addAlike = async (req, res) => {
-  await answer.updateOne(
-    { _id: ObjectId(req.body.qid), answers: { $elemMatch: { date: req.body.ad } } },
-    { $push: { 'answers.$.alikes': req.body.uid } },
-    (err, docs) => {
-      if (!err) {
-        res.send({ status: 'ok', data: 'like added' });
-      } else {
-        res.send({ status: 'failed', data: err });
-      }
-    }
-  );
+  try {
+    await answerSchema.updateOne({ _id: req.body.id }, { $push: { alikes: req.body.uid } });
+    res.status(200).send('Like added successfully!');
+  } catch (error) {
+    res.send(error);
+  }
 };
 
 exports.removeAlike = async (req, res) => {
-  await answer.updateOne(
-    { _id: ObjectId(req.body.qid), answers: { $elemMatch: { date: req.body.ad } } },
-    { $set: { 'answers.$.alikes': req.body.al } },
-    (err, docs) => {
-      if (!err) {
-        res.send({ status: 'ok', data: 'like removed' });
-      } else {
-        res.send({ status: 'failed', data: err });
-      }
-    }
-  );
+  try {
+    await answerSchema.updateOne({ _id: req.body.id }, { $set: { qlikes: req.body.al } });
+    res.status(200).send('Like removed successfully!');
+  } catch (error) {
+    res.send(error);
+  }
 };
