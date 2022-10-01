@@ -1,10 +1,12 @@
 const { sendMail } = require('../helpers/mailer');
-const feedbackCollection = require('../models/feedbackSchema');
+const feedback = require('../models/feedbackSchema');
 
-exports.sendFeedback = async (req, res) => {
-  await feedbackCollection.insert(req.body, (err, result) => {
-    if (!err) {
-      res.send({ status: 'ok', data: 'Feedback Submitted Successfully' });
+exports.addFeedback = async (req, res) => {
+  const feedback = await new feedback(req.body);
+  feedback
+    .save()
+    .then(result => {
+      res.status(200).json({ data: result });
       sendMail(
         process.env.APP_ID,
         process.env.APP_PASSWORD,
@@ -12,8 +14,19 @@ exports.sendFeedback = async (req, res) => {
         'Thanks for submit your feedback',
         `<h2>stackinflow</h2><br><h4> Feedback Sent SuccessFull </h4><br><h6>We hope you find our service cool.</h6>`
       );
-    } else {
-      res.send({ status: 'failed', data: err });
-    }
-  });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+    });
+};
+
+exports.listFeedback = async (req, res) => {
+  await feedback
+    .find()
+    .then(users => res.status(200).json({ total: users.length, data: users }))
+    .catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+    });
 };

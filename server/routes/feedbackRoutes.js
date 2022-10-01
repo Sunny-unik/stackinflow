@@ -1,8 +1,9 @@
 const express = require('express');
-const { sendFeedback } = require('../controllers/feedbackController');
+const { addFeedback, listFeedback } = require('../controllers/feedbackController');
 
 const router = express.Router();
 
-router.post('/send-feedback', sendFeedback);
+router.post('/add-feedback', addFeedback);
+router.post('/list-feedback', listFeedback);
 
 module.exports = router;
