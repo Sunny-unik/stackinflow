@@ -12,13 +12,13 @@ const {
 
 const router = express.Router();
 
-router.get('/list-question', listQuestions);
-router.get('/list-question-bypage', questionsPerPage);
-router.get('/questionSearch', questionsSearch);
-router.post('/create-question', createQuestion);
-router.put('/add-qlike', addQlike);
-router.put('/remove-qlike', removeQlike);
-router.put('/delete-question', deleteQuestion);
-router.put('/update-question', updateQuestion);
+router.get('/list', listQuestions);
+router.get('/onpage', questionsPerPage);
+router.get('/search', questionsSearch);
+router.post('/', createQuestion);
+router.put('/add-like', addQlike);
+router.put('/remove-like', removeQlike);
+router.delete('/', deleteQuestion);
+router.put('/', updateQuestion);
 
 module.exports = router;

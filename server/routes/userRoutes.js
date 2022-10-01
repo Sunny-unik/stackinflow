@@ -10,20 +10,21 @@ const {
   userByUserdname,
   createUser,
   checkLogin,
+  updateUserPoint,
 } = require('../controllers/userController');
 
 const router = express.Router();
 
-router.post('/check-login', checkLogin);
-router.post('/valid-dname', validEmail);
-router.post('/valid-email', validDname);
-router.post('/send-otp-email', sendOtpEmail);
-router.post('/update-user-point', updateUserPoint);
-router.post('/update-user-details', updateUserDetails);
-router.post('/update-user', updateUser);
-router.post('/update-password', updatePassword);
-router.post('/create-user', createUser);
-router.post('/user-by-userdname', userByUserdname);
-router.post('/list-user', listUser);
+router.get('/list', listUser);
+router.get('/by-dname', userByUserdname);
+router.get('/login', checkLogin);
+router.get('/dname', validEmail);
+router.get('/email', validDname);
+router.get('/otp-email', sendOtpEmail);
+router.put('/points', updateUserPoint);
+router.put('/details', updateUserDetails);
+router.put('/', updateUser);
+router.put('/password', updatePassword);
+router.post('/register', createUser);
 
 module.exports = router;
