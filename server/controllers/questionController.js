@@ -1,167 +1,92 @@
-const questionCollection = require('../models/questionSchema');
-
-exports.questionsLength = async (req, res) => {
-  await questionCollection.find().toArray((err, docs) => {
-    if (!err) {
-      res.send({ status: 'ok', data: docs.length });
-    } else {
-      res.send({ status: 'failed', data: err });
-    }
-  });
-};
+const question = require('../models/questionSchema');
 
 exports.listQuestions = async (req, res) => {
-  await questionCollection.find().toArray((err, docs) => {
-    if (!err) {
-      res.send({ status: 'ok', data: docs });
-    } else {
-      res.send({ status: 'failed', data: err });
-    }
-  });
-};
-
-exports.questionsPerPage = async (req, res) => {
-  const limit = parseInt(req.query.limit);
-  const page = parseInt(req.query.page);
-  await questionCollection
+  await question
     .find()
-    .limit(limit * 1)
-    .skip(page * 1 * limit)
-    .toArray((err, docs) => {
-      if (!err) {
-        res.send({ status: 'ok', data: docs });
-      } else {
-        res.send({ status: 'failed', data: err });
-      }
+    .select('_id question userdname date qlikes tags')
+    .then(questions => res.status(200).json({ total: questions.length, data: questions }))
+    .catch(err => {
+      console.log(err);
+      res.status(500).send(err);
     });
 };
 
-exports.questionsById = async (req, res) => {
-  await questionCollection.find({ _id: req.query.id }).toArray((err, docs) => {
-    if (!err) {
-      res.send({ status: 'ok', data: docs });
-    } else {
-      res.send({ status: 'failed', data: err });
-    }
-  });
+exports.questionsPerPage = async (req, res) => {
+  const [limit, page] = [+req.query.limit, +req.query.page];
+  await question
+    .find()
+    .limit(limit * 1)
+    .skip(page * 1 * limit)
+    .select('_id question userdname date qlikes tags')
+    .then(questions => res.status(200).json({ data: questions }))
+    .catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+    });
 };
 
-exports.questionsByQuestion = async (req, res) => {
-  await questionCollection.find({ question: req.body.searchby }).toArray((err, docs) => {
-    if (!err) {
-      res.send({ status: 'ok', data: docs });
-    } else {
-      res.send({ status: 'failed', data: err });
-    }
-  });
+exports.questionsSearch = async (req, res) => {
+  await question
+    .find(req.body.search ? { question: { $regex: req.body.search } } : { _id: req.query.id })
+    .then(questions => res.status(200).json({ data: questions }))
+    .catch(err => {
+      console.log(err);
+      res.status(400).send(err);
+    });
 };
 
 exports.createQuestion = async (req, res) => {
-  await questionCollection.insert(req.body, (err, result) => {
-    if (!err) {
-      res.send({ status: 'ok', data: 'Your Question Listed' });
-    } else {
-      res.send({ status: 'failed', data: err });
-    }
-  });
-};
-
-exports.createAnswer = async (req, res) => {
-  await questionCollection.updateOne(
-    { _id: ObjectId(req.body.qid) },
-    { $push: { answers: req.body } },
-    (err, docs) => {
-      if (!err) {
-        res.send({ status: 'ok', data: 'Your Answer is Submitted' });
-      } else {
-        res.send({ status: 'failed', data: err });
-      }
-    }
-  );
+  const question = await new question(req.body);
+  question
+    .save()
+    .then(result => {
+      res.status(200).json({ data: result });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+    });
 };
 
 exports.addQlike = async (req, res) => {
-  await questionCollection.updateOne(
-    { _id: ObjectId(req.body.qid) },
-    { $push: { qlikes: req.body.uid } },
-    (err, docs) => {
-      if (!err) {
-        res.send({ status: 'ok', data: 'like added' });
-      } else {
-        res.send({ status: 'failed', data: err });
-      }
-    }
-  );
+  try {
+    await question.updateOne({ _id: req.body.id }, { $push: { qlikes: req.body.uid } });
+    res.status(200).send('Like added successfully!');
+  } catch (error) {
+    res.send(error);
+  }
 };
 
 exports.removeQlike = async (req, res) => {
-  await questionCollection.updateOne(
-    { _id: ObjectId(req.body.qid) },
-    { $set: { qlikes: req.body.qlikes } },
-    (err, docs) => {
-      if (!err) {
-        res.send({ status: 'ok', data: 'like removed' });
-      } else {
-        res.send({ status: 'failed', data: err });
-      }
-    }
-  );
-};
-
-exports.addAlike = async (req, res) => {
-  await questioncollection.updateOne(
-    { _id: ObjectId(req.body.qid), answers: { $elemMatch: { date: req.body.ad } } },
-    { $push: { 'answers.$.alikes': req.body.uid } },
-    (err, docs) => {
-      if (!err) {
-        res.send({ status: 'ok', data: 'like added' });
-      } else {
-        res.send({ status: 'failed', data: err });
-      }
-    }
-  );
-};
-
-exports.removeAlike = async (req, res) => {
-  await questioncollection.updateOne(
-    { _id: ObjectId(req.body.qid), answers: { $elemMatch: { date: req.body.ad } } },
-    { $set: { 'answers.$.alikes': req.body.al } },
-    (err, docs) => {
-      if (!err) {
-        res.send({ status: 'ok', data: 'like removed' });
-      } else {
-        res.send({ status: 'failed', data: err });
-      }
-    }
-  );
+  try {
+    await question.updateOne({ _id: req.body.id }, { $set: { qlikes: req.body.qlikes } });
+    res.status(200).send('Like removed successfully!');
+  } catch (error) {
+    res.send(error);
+  }
 };
 
 exports.deleteQuestion = async (req, res) => {
-  await questionCollection.deleteOne({ _id: ObjectId(req.body.qid) }, (err, result) => {
-    if (!err) {
-      res.send({ status: 'ok', data: 'Question deleted successfully ☺' });
-    } else {
-      res.send({ status: 'failed', data: err });
-    }
+  question.deleteOne({ _id: req.body.qid }, (err, result) => {
+    if (err) throw err;
+    res.status(200).send('Question is deleted!');
   });
 };
 
 exports.updateQuestion = async (req, res) => {
-  await questionCollection.updateOne(
-    { _id: ObjectId(req.body.questionid) },
-    {
-      $set: {
-        question: req.body.question,
-        questiondetail: req.body.questiondetail,
-        tags: req.body.tags,
-      },
-    },
-    (err, result) => {
-      if (!err) {
-        res.send({ status: 'ok', data: 'Your question updated successfully 😊' });
-      } else {
-        res.send({ status: 'failed', data: err });
+  try {
+    await question.updateOne(
+      { _id: req.body.questionid },
+      {
+        $set: {
+          question: req.body.question,
+          questiondetail: req.body.questiondetail,
+          tags: req.body.tags,
+        },
       }
-    }
-  );
+    );
+    res.status(200).send('Your question updated successfully 😊');
+  } catch (error) {
+    res.send(error);
+  }
 };

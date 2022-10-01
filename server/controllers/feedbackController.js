@@ -1,3 +1,4 @@
+const { sendMail } = require('../helpers/mailer');
 const feedbackCollection = require('../models/feedbackSchema');
 
 exports.sendFeedback = async (req, res) => {

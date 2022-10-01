@@ -22,8 +22,17 @@ const questionSchema = new Schema({
     maxLength: 16,
     required: true,
   },
-  answers: { type: Array, default: [] },
+  userdname: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
+  answers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'answers',
+    },
+  ],
   tags: { type: Array, default: [] },
 });
 
-module.exports = mongoose.model('q&a', questionSchema);
+module.exports = mongoose.model('questions', questionSchema);

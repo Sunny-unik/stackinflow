@@ -22,4 +22,4 @@ const feedbackSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model('feedback', feedbackSchema);
+module.exports = mongoose.model('feedbacks', feedbackSchema);
