@@ -8,22 +8,20 @@ const questionSchema = new Schema({
   questiondetail: {
     type: String,
     minLength: [5, 'question description is too short!'],
-    maxLength: 46,
+    maxLength: 1080,
     required: true,
   },
   qlikes: {
     type: Array,
     default: [],
-    required: true,
   },
   date: {
     type: Date,
     default: Date.now(),
-    maxLength: 16,
-    required: true,
   },
-  userdname: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
     required: true,
   },
   answers: [

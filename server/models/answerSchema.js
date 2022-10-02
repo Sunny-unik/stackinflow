@@ -1,20 +1,17 @@
 const { default: mongoose, Schema } = require('mongoose');
 
 const answerSchema = new Schema({
-  uid: {
-    type: String,
-    required: true,
-  },
   date: {
     type: Date,
     default: Date.now(),
   },
   userId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
     required: true,
   },
   answer: {
-    type: Array,
+    type: String,
     required: true,
   },
   alikes: {
@@ -22,7 +19,8 @@ const answerSchema = new Schema({
     default: [],
   },
   qid: {
-    type: mongoose.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'questions',
     required: true,
   },
 });

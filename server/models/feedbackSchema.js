@@ -10,14 +10,15 @@ const feedbackSchema = new Schema({
     required: true,
   },
   emailFoot: {
-    type: Array,
+    type: String,
   },
   userEmail: {
-    type: Array,
+    type: String,
     required: true,
   },
-  userName: {
-    type: Array,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
     required: true,
   },
 });
