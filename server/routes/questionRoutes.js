@@ -8,6 +8,7 @@ const {
   deleteQuestion,
   updateQuestion,
   questionsSearch,
+  questionById,
 } = require('../controllers/questionController');
 
 const router = express.Router();
@@ -15,6 +16,7 @@ const router = express.Router();
 router.get('/list', listQuestions);
 router.get('/onpage', questionsPerPage);
 router.get('/search', questionsSearch);
+router.get('/', questionById);
 router.post('/', createQuestion);
 router.put('/add-like', addQlike);
 router.put('/remove-like', removeQlike);
