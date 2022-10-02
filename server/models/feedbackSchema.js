@@ -1,21 +1,9 @@
 const { default: mongoose, Schema } = require('mongoose');
 
 const feedbackSchema = new Schema({
-  emailHead: {
-    type: String,
-    required: true,
-  },
-  emailBody: {
-    type: String,
-    required: true,
-  },
-  emailFoot: {
-    type: String,
-  },
-  userEmail: {
-    type: String,
-    required: true,
-  },
+  title: { type: String, required: true },
+  description: { type: String },
+  conclusion: { type: String },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',

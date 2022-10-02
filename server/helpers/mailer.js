@@ -1,3 +1,5 @@
+const nodemailer = require('nodemailer');
+
 exports.sendMail = (from, appPassword, to, subject, htmlmsg) => {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
