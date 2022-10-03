@@ -7,26 +7,19 @@ exports.createAnswer = async (req, res) => {
     .then(result => {
       res.status(200).json({ data: result });
     })
-    .catch(err => {
-      console.log(err);
-      res.status(500).send(err);
-    });
+    .catch(err => res.status(500).send(err));
 };
 
 exports.addAlike = async (req, res) => {
-  try {
-    await answerSchema.updateOne({ _id: req.body.id }, { $push: { alikes: req.body.uid } });
-    res.status(200).send('Like added successfully!');
-  } catch (error) {
-    res.send(error);
-  }
+  await answerSchema
+    .updateOne({ _id: req.body.id }, { $push: { alikes: req.body.uid } })
+    .then(result => res.status(200).send({ result: result, msg: 'Like added successfully!' }))
+    .catch(error => res.send(error));
 };
 
 exports.removeAlike = async (req, res) => {
-  try {
-    await answerSchema.updateOne({ _id: req.body.id }, { $set: { qlikes: req.body.al } });
-    res.status(200).send('Like removed successfully!');
-  } catch (error) {
-    res.send(error);
-  }
+  await answerSchema
+    .updateOne({ _id: req.body.id }, { $set: { alikes: req.body.al } })
+    .then(result => res.status(200).send({ result: result, msg: 'Like removed successfully!' }))
+    .catch(err => res.send(err));
 };

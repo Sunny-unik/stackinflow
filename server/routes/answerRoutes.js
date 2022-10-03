@@ -3,7 +3,7 @@ const { addAlike, removeAlike, createAnswer } = require('../controllers/answerCo
 
 const router = express.Router();
 
-router.post('/answer', createAnswer);
+router.post('/', createAnswer);
 router.put('/add-like', addAlike);
 router.put('/remove-like', removeAlike);
 
