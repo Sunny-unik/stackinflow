@@ -7,11 +7,8 @@ const questionController = {
       .find()
       .select('_id question userId date qlikes tags')
       .populate('userId', '_id dname userlikes')
-      .then(questions => res.status(200).json({ total: questions.length, data: questions }))
-      .catch(err => {
-        console.log(err);
-        res.status(500).send(err);
-      });
+      .then(questions => res.send({ msg: questions.length, data: questions }))
+      .catch(err => res.send(err));
   },
 
   questionsPerPage: async (req, res) => {
@@ -22,11 +19,8 @@ const questionController = {
       .skip(page * 1 * limit)
       .select('_id question userId date qlikes tags')
       .populate('userId', '_id dname userlikes')
-      .then(questions => res.status(200).json({ data: questions }))
-      .catch(err => {
-        console.log(err);
-        res.status(500).send(err);
-      });
+      .then(questions => res.send({ data: questions, msg: 'success' }))
+      .catch(err => res.send(err));
   },
 
   questionsSearch: async (req, res) => {
@@ -34,16 +28,13 @@ const questionController = {
       .find({ question: { $regex: req.body.search } })
       .select('_id question userId date qlikes tags')
       .populate('userId', '_id dname userlikes')
-      .then(questions => res.status(200).json({ data: questions }))
-      .catch(err => {
-        console.log(err);
-        res.status(400).send(err);
-      });
+      .then(questions => res.send({ data: questions, msg: 'success' }))
+      .catch(err => res.send(err));
   },
 
   questionById: async (req, res) => {
     await questionSchema
-      .find({ _id: req.query.id })
+      .findOne({ _id: req.query.id })
       .populate({
         path: 'answers',
         select: '_id answer date userId alikes',
@@ -51,38 +42,30 @@ const questionController = {
         populate: [{ path: 'userId', select: '_id dname userlikes' }],
       })
       .populate('userId', '_id dname userlikes')
-      .then(question => res.send(question));
+      .then(question => res.send({ data: question, msg: 'success' }))
+      .catch(err => res.send(err));
   },
 
   createQuestion: async (req, res) => {
     const question = await new questionSchema(req.body);
     question
       .save()
-      .then(result => {
-        res.status(200).json({ data: result });
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).send(err);
-      });
+      .then(result => res.send({ data: result, msg: 'Question listed successfully' }))
+      .catch(err => res.send(err));
   },
 
   addQlike: async (req, res) => {
-    try {
-      await questionSchema.updateOne({ _id: req.body.id }, { $push: { qlikes: req.body.uid } });
-      res.status(200).send('Like added successfully!');
-    } catch (error) {
-      res.send(error);
-    }
+    await questionSchema
+      .updateOne({ _id: req.body.id }, { $push: { qlikes: req.body.uid } })
+      .then(result => res.send({ data: result, msg: 'Like added successfully!' }))
+      .catch(error => res.send(error));
   },
 
   removeQlike: async (req, res) => {
-    try {
-      await questionSchema.updateOne({ _id: req.body.id }, { $set: { qlikes: req.body.qlikes } });
-      res.status(200).send('Like removed successfully!');
-    } catch (error) {
-      res.send(error);
-    }
+    await questionSchema
+      .updateOne({ _id: req.body.id }, { $set: { qlikes: req.body.qlikes } })
+      .then(result => res.send({ data: result, msg: 'Like removed successfully!' }))
+      .catch(error => res.send(error));
   },
 
   deleteQuestion: async (req, res) => {
@@ -94,18 +77,17 @@ const questionController = {
     answerIds.forEach(id =>
       answerSchema.deleteOne({ _id: id }, (err, result) => {
         if (err) throw err;
-        console.log(result);
       })
     );
     questionSchema.deleteOne({ _id: req.body.id }, (err, result) => {
       if (err) throw err;
-      res.status(200).send('Question is deleted!');
+      res.send({ data: result, msg: 'Question is deleted!' });
     });
   },
 
   updateQuestion: async (req, res) => {
-    try {
-      await questionSchema.updateOne(
+    await questionSchema
+      .updateOne(
         { _id: req.body.id },
         {
           $set: {
@@ -114,11 +96,9 @@ const questionController = {
             tags: req.body.tags,
           },
         }
-      );
-      res.status(200).send('Your question updated successfully 😊');
-    } catch (error) {
-      res.send(error);
-    }
+      )
+      .then(result => res.send({ data: result, msg: 'Your question updated successfully 😊' }))
+      .catch(error => res.send(error));
   },
 };
 

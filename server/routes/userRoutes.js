@@ -7,7 +7,7 @@ const {
   updateUserProfile,
   updatePassword,
   listUser,
-  userByUserdname,
+  userById,
   createUser,
   checkLogin,
   updateUserPoint,
@@ -16,14 +16,14 @@ const {
 const router = express.Router();
 
 router.get('/list', listUser);
-router.get('/', userByUserdname);
+router.get('/', userById);
 router.get('/login', checkLogin);
 router.get('/dname', validDname);
 router.get('/email', validEmail);
 router.get('/otp-mail', sendOtpEmail);
 router.put('/points', updateUserPoint);
-router.put('/details', updateUserDetails);
-router.put('/', updateUserProfile);
+router.put('/', updateUserDetails);
+router.put('/profile', updateUserProfile);
 router.put('/password', updatePassword);
 router.post('/', createUser);
 

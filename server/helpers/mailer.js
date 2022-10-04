@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-exports.sendMail = (from, appPassword, to, subject, htmlmsg) => {
+sendMail = (from, appPassword, to, subject, htmlmsg) => {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
@@ -20,7 +20,9 @@ exports.sendMail = (from, appPassword, to, subject, htmlmsg) => {
     if (error) {
       console.log(error);
     } else {
-      console.log('Email sent:' + info.response);
+      console.log('Email sent: ', info);
     }
   });
 };
+
+module.exports = sendMail;
