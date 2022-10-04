@@ -1,171 +1,135 @@
 const { sendMail } = require('../helpers/mailer');
-const user = require('../models/userSchema');
+const userSchema = require('../models/userSchema');
 const upload = require('../helpers/multerConfig');
 
 exports.checkLogin = async (req, res) => {
-  await user
-    .find({
-      $or: [{ email: req.body.email }, { dname: req.body.email }],
-      password: req.body.password,
+  const checkPassword = user => {
+    if (user.password === req.body.password) {
+      user.password = undefined;
+      return user;
+    }
+  };
+  await userSchema
+    .findOne({ $or: [{ email: req.body.email }, { dname: req.body.email }] })
+    .then(user => {
+      let filterData;
+      if (!user) {
+        res.send('user not found');
+        return false;
+      } else filterData = checkPassword(user);
+      filterData ? res.send(filterData) : res.send('incorrect password');
     })
-    .toArray((err, result) => {
-      if (!err && result.length > 0) {
-        res.send({ status: 'ok', data: result[0] });
-      } else {
-        res.send({ status: 'error', data: err });
-      }
-    });
+    .catch(err => res.send(err));
 };
 
 exports.validEmail = async (req, res) => {
-  await user.find({ email: req.body.email }).toArray((err, result) => {
-    if (!err && result.length > 0) {
-      res.send({ status: 'error', data: 'this email is already registered 🤔' });
-    } else {
-      res.send({ status: 'ok' });
-    }
-  });
+  await userSchema
+    .findOne({ email: req.body.email })
+    .select('email')
+    .then(result => res.send(result ?? 'valid email'))
+    .catch(err => res.send(err));
 };
 
 exports.validDname = async (req, res) => {
-  await user.find({ dname: req.body.dname }).toArray((err, result) => {
-    if (!err && result.length > 0) {
-      res.send({ status: result[0]._id, data: 'this username is already taken 🤔' });
-    } else {
-      res.send({ status: 'ok' });
-    }
-  });
+  await userSchema
+    .findOne({ dname: req.body.dname })
+    .select('dname')
+    .then(result => res.send(result ?? 'valid dname'))
+    .catch(err => res.send(err));
 };
 
 exports.sendOtpEmail = async (req, res) => {
-  await user
-    .find({ $or: [{ email: req.body.email }, { dname: req.body.email }] })
-    .toArray((err, result) => {
-      if (!err && result.length > 0) {
-        sendMail(
-          process.env.APP_ID,
-          process.env.APP_PASSWORD,
-          result[0].email,
-          'Welcome to stackinflow',
-          `Your One Time Password is - <h3>${req.body.otp}</h3><br><h6>We hope you find our service cool.</h6>`
-        );
-        res.send({ status: 'ok', data: 'please enter correct otp' });
-      } else {
-        res.send({ status: 'error', data: err });
-      }
-    });
+  const otp = Math.floor(Math.random() * 1000000 + 1);
+  await userSchema
+    .findOne({ $or: [{ email: req.body.email }, { dname: req.body.email }] })
+    .select('email')
+    .then(user => {
+      sendMail(
+        process.env.APP_ID,
+        process.env.APP_PASSWORD,
+        user.email,
+        'Welcome to stackinflow',
+        `Your One Time Password is - <h3>${otp}</h3><br>
+        <h6>We hope you find our service cool.</h6>`
+      );
+      res.send({ data: user });
+    })
+    .catch(err => res.send({ data: err }));
 };
 
 exports.updateUserPoint = async (req, res) => {
-  const upoint = req.body.userpoint;
-  await user.updateOne(
-    { _id: ObjectId(req.body.userdname) },
-    { $set: { userlikes: upoint } },
-    (err, result) => {
-      if (!err) {
-        res.send({ status: 'ok', data: 'Your points updated successfully 😊' });
-      } else {
-        res.send({ status: 'failed', data: err });
-      }
-    }
-  );
+  await userSchema
+    .updateOne({ _id: req.body.id }, { $set: { userlikes: req.body.userpoint } })
+    .then(result => res.send(result))
+    .catch(err => res.send(err));
 };
 
 exports.updateUserDetails = async (req, res) => {
-  await user.updateOne(
-    { _id: ObjectId(req.body.obid) },
-    {
-      $set: {
-        name: req.body.name,
-        dname: req.body.dname,
-        title: req.body.title,
-        about: req.body.about,
-        weblink: req.body.weblink,
-        gitlink: req.body.gitlink,
-        twitter: req.body.twitter,
-        address: req.body.address,
-      },
-    },
-    (err, result) => {
-      if (!err) {
-        res.send({ status: 'ok', data: 'Your details updated successfully 😊' });
-      } else {
-        res.send({ status: 'failed', data: err });
+  await userSchema
+    .updateOne(
+      { _id: req.body.id },
+      {
+        $set: {
+          name: req.body.name,
+          dname: req.body.dname,
+          title: req.body.title,
+          about: req.body.about,
+          weblink: req.body.weblink,
+          gitlink: req.body.gitlink,
+          twitter: req.body.twitter,
+          address: req.body.address,
+        },
       }
-    }
-  );
+    )
+    .then(result => res.send(result))
+    .catch(err => res.send(err));
 };
 
-exports.updateUser = (req, res) => {
+exports.updateUserProfile = (req, res) => {
   upload(req, res, err => {
-    if (!err) {
-      (async () => {
-        await user.update(
-          { _id: ObjectId(req.body.obid) },
-          { $set: { profile: req.files.profile[0].filename } },
-          (err, result) => {
-            if (!err) {
-              res.send({ status: 'ok', data: 'user profile updated successfully' });
-            } else {
-              res.send({ status: 'failed', data: err });
-            }
-          }
-        );
-      })();
-    } else {
+    if (err) {
       res.send({ status: 'failed', data: err });
+      return false;
     }
+    (async () => {
+      await userSchema
+        .updateOne({ _id: req.body.id }, { $set: { profile: req.files.profile[0].filename } })
+        .then(result => res.send(result))
+        .catch(err => res.send(err));
+    })();
   });
 };
 
 exports.updatePassword = async (req, res) => {
-  await user.update(
-    { $or: [{ email: req.body.email }, { dname: req.body.email }] },
-    { $set: { password: req.body.newpassword } },
-    (err, result) => {
-      if (!err) {
-        res.send({ status: 'ok', data: 'user password updated successfully' });
-      } else {
-        res.send({ status: 'failed', data: err });
-      }
-    }
-  );
+  await userSchema
+    .updateOne(
+      { $or: [{ email: req.body.email }, { dname: req.body.email }] },
+      { $set: { password: req.body.password } }
+    )
+    .then(user => res.send(user))
+    .catch(err => res.send(err));
 };
 
 exports.createUser = async (req, res) => {
-  await user.insert(req.body, (err, result) => {
-    if (!err) {
-      res.send({ status: 'ok', data: 'user created successfully' });
-      sendMail(
-        process.env.APP_ID,
-        process.env.APP_PASSWORD,
-        req.body.email,
-        'Welcome to stackinflow',
-        `<h2>stackinflow</h2><br><h4> Registration SuccessFull </h4><br>We hope you find our service cool.`
-      );
-    } else {
-      res.send({ status: 'failed', data: err });
-    }
-  });
+  const user = await new userSchema(req.body);
+  user
+    .save()
+    .then(data => res.send(data))
+    .catch(err => res.send(err));
 };
 
 exports.userByUserdname = async (req, res) => {
-  await user.find({ _id: ObjectId(req.query._id) }).toArray((err, docs) => {
-    if (!err) {
-      res.send({ status: 'ok', data: docs });
-    } else {
-      res.send({ status: 'failed', data: err });
-    }
-  });
+  await userSchema
+    .find({ _id: req.query.id })
+    .select('_id name dname userlikes email about address gitlink title twitter weblink profile')
+    .then(user => res.status(200).send({ data: user }))
+    .catch(err => res.send(err));
 };
 
 exports.listUser = async (req, res) => {
-  await user
+  await userSchema
     .find()
     .select('_id name dname userlikes')
     .then(users => res.status(200).json({ total: users.length, data: users }))
-    .catch(err => {
-      console.log(err);
-      res.status(500).send(err);
-    });
+    .catch(err => res.status(500).send(err));
 };

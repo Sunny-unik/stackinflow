@@ -3,19 +3,19 @@ const { default: mongoose, Schema } = require('mongoose');
 const userSchema = new Schema({
   email: {
     type: String,
-    minLength: [5, 'email is not valid!'],
+    minLength: [5, 'email is too short!'],
     required: true,
   },
   name: {
     type: String,
     minLength: [2, 'name is too short!'],
-    maxLength: 46,
+    maxLength: [46, 'name length must be under 47'],
     required: true,
   },
   dname: {
     type: String,
     minLength: [4, 'username is too short!'],
-    maxLength: 36,
+    maxLength: [16, 'username length must be under 17!'],
     required: true,
   },
   password: {
@@ -31,7 +31,7 @@ const userSchema = new Schema({
   title: { type: String },
   twitter: { type: String, default: '#' },
   weblink: { type: String, default: '#' },
-  profile: { type: String, default: null },
+  profile: { type: String, default: '' },
 });
 
 module.exports = mongoose.model('users', userSchema);
