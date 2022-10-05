@@ -1,6 +1,7 @@
 const sendMail = require('../helpers/mailer');
 const userSchema = require('../models/userSchema');
 const upload = require('../helpers/multerConfig');
+const fs = require('fs');
 
 const userController = {
   checkLogin: async (req, res) => {
@@ -27,25 +28,34 @@ const userController = {
 
   validEmail: async (req, res) => {
     await userSchema
-      .findOne({ email: req.body.email })
+      .findOne({
+        $and: [{ email: req.body.email }, { _id: { $ne: req.body.id } }],
+      })
       .select('email')
       .then(result => res.send(result ?? 'valid email'))
       .catch(err => res.send(err));
   },
 
   validDname: async (req, res) => {
+    let isDnameValid;
     await userSchema
-      .findOne({ dname: req.body.dname })
+      .findOne({
+        $and: [{ dname: req.body.dname }, { _id: { $ne: req.body.id } }],
+      })
       .select('dname')
-      .then(result => res.send(result ?? 'valid dname'))
-      .catch(err => res.send(err));
+      .then(result => {
+        isDnameValid = result ?? 'valid dname';
+        res && res.send(isDnameValid);
+      })
+      .catch(err => res && res.send(err));
+    return isDnameValid === 'valid dname' ? true : false;
   },
 
   sendOtpEmail: async (req, res) => {
     const otp = Math.floor(Math.random() * 1000000 + 1);
     await userSchema
       .findOne({ $or: [{ email: req.body.email }, { dname: req.body.email }] })
-      .select('email')
+      .select('_id name dname userlikes email about address gitlink title twitter weblink profile')
       .then(user => {
         sendMail(
           process.env.APP_ID,
@@ -68,23 +78,18 @@ const userController = {
   },
 
   updateUserDetails: async (req, res) => {
-    let validDname;
-    await userSchema
-      .findOne({ dname: req.body.dname })
-      .select('dname')
-      .then(result => (validDname = result === null ? req.body.dname : result.dname))
-      .catch(err => console.log('On update details', err));
-    const message =
-      validDname !== req.body.dname
-        ? 'All fields are updated except username beacause entered username is already taken'
-        : 'All entered details updated successfully';
+    const validDname = await userController.validDname(req, undefined);
+    if (!validDname) {
+      res.send({ data: null, msg: 'Entered username is already taken' });
+      return false;
+    }
     await userSchema
       .updateOne(
         { _id: req.body.id },
         {
           $set: {
             name: req.body.name,
-            dname: validDname,
+            dname: req.body.dname,
             title: req.body.title,
             about: req.body.about,
             weblink: req.body.weblink,
@@ -94,7 +99,7 @@ const userController = {
           },
         }
       )
-      .then(result => res.send({ data: result, msg: message }))
+      .then(result => res.send({ data: result, msg: 'Your details updated' }))
       .catch(err => res.send(err));
   },
 
@@ -107,7 +112,16 @@ const userController = {
       (async () => {
         await userSchema
           .updateOne({ _id: req.body.id }, { $set: { profile: req.files.profile[0].filename } })
-          .then(result => res.send({ data: result, msg: 'Profile Updated' }))
+          .then(result => {
+            res.send({ data: result, msg: 'Profile Updated' });
+            try {
+              const oldProfile = req.body.oldProfile;
+              fs.unlinkSync(`${__dirname}/../uploads/userProfiles/${oldProfile}`);
+              console.log(oldProfile + ' deleted successfully');
+            } catch (error) {
+              console.log('Old profile delete error: ', error);
+            }
+          })
           .catch(err => res.send(err));
       })();
     });
@@ -116,10 +130,21 @@ const userController = {
   updatePassword: async (req, res) => {
     await userSchema
       .updateOne(
-        { $or: [{ email: req.body.email }, { dname: req.body.email }] },
-        { $set: { password: req.body.password } }
+        req.body.oldPassword
+          ? {
+              $and: [{ _id: req.body.id }, { password: req.body.oldPassword }],
+            }
+          : { _id: req.body.id },
+        { $set: { password: req.body.newPassword } }
       )
-      .then(user => res.send({ data: user, msg: 'Password Updated' }))
+      .then(result =>
+        res.send({
+          data: result,
+          msg: result.matchedCount
+            ? 'Your Password Updated Successfully'
+            : 'Old password is not correct',
+        })
+      )
       .catch(err => res.send(err));
   },
 
@@ -127,7 +152,7 @@ const userController = {
     const user = await new userSchema(req.body);
     user
       .save()
-      .then(result => res.send({ data: result, msg: 'Account registered' }))
+      .then(result => res.send({ data: result, msg: 'Account Registered' }))
       .catch(err => res.send(err));
   },
 
