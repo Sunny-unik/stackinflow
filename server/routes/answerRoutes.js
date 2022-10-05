@@ -4,11 +4,12 @@ const {
   removeAlike,
   createAnswer
 } = require("../controllers/answerController");
+const validAnswer = require("../validations/validAnswer");
 
 const router = express.Router();
 
-router.post("/", createAnswer);
-router.put("/add-like", addAlike);
-router.put("/remove-like", removeAlike);
+router.post("/", validAnswer(), createAnswer);
+router.put("/add-like", validAnswer(), addAlike);
+router.put("/remove-like", validAnswer(), removeAlike);
 
 module.exports = router;

@@ -12,6 +12,8 @@ const answerSchema = new Schema({
   },
   answer: {
     type: String,
+    minLength: [5, "Answer is too short!"],
+    maxLength: [720, "Answer is too long!"],
     required: true
   },
   alikes: {

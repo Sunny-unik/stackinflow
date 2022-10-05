@@ -11,7 +11,7 @@ const answerController = {
 
   addAlike: async (req, res) => {
     await answerSchema
-      .updateOne({ _id: req.body.id }, { $push: { alikes: req.body.uid } })
+      .updateOne({ _id: req.body.id }, { $push: { alikes: req.body.userId } })
       .then((result) =>
         res.send({ data: result, msg: "Like added successfully!" })
       )
@@ -20,7 +20,7 @@ const answerController = {
 
   removeAlike: async (req, res) => {
     await answerSchema
-      .updateOne({ _id: req.body.id }, { $set: { alikes: req.body.al } })
+      .updateOne({ _id: req.body.id }, { $set: { alikes: req.body.alikes } })
       .then((result) =>
         res.send({ data: result, msg: "Like removed successfully!" })
       )
