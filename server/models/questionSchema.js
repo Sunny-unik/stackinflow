@@ -3,6 +3,8 @@ const { default: mongoose, Schema } = require("mongoose");
 const questionSchema = new Schema({
   question: {
     type: String,
+    minLength: [4, "question title is too short!"],
+    maxLength: 100,
     required: true
   },
   questiondetail: {

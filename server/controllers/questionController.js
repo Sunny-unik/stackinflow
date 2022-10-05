@@ -12,7 +12,7 @@ const questionController = {
   },
 
   questionsPerPage: async (req, res) => {
-    const [limit, page] = [+req.query.limit, +req.query.page];
+    const [limit, page] = [+req.query.limit || 10, +req.query.page || 1];
     await questionSchema
       .find()
       .limit(limit * 1)
@@ -25,7 +25,7 @@ const questionController = {
 
   questionsSearch: async (req, res) => {
     await questionSchema
-      .find({ question: { $regex: req.body.search } })
+      .find({ question: { $regex: req.body.search, $options: "$i" } })
       .select("_id question userId date qlikes tags")
       .populate("userId", "_id dname userlikes")
       .then((questions) => res.send({ data: questions, msg: "success" }))
@@ -58,7 +58,7 @@ const questionController = {
 
   addQlike: async (req, res) => {
     await questionSchema
-      .updateOne({ _id: req.body.id }, { $push: { qlikes: req.body.uid } })
+      .updateOne({ _id: req.body.id }, { $push: { qlikes: req.body.userId } })
       .then((result) =>
         res.send({ data: result, msg: "Like added successfully!" })
       )
@@ -79,7 +79,7 @@ const questionController = {
     await questionSchema
       .findById(req.body.id)
       .then((question) => (answerIds = question.answers))
-      .catch((err) => res.send(err));
+      .catch((err) => console.log(err));
     answerIds.forEach((id) =>
       answerSchema.deleteOne({ _id: id }, (err, result) => {
         if (err) throw err;
