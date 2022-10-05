@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const {
   validDname,
   validEmail,
@@ -10,21 +10,22 @@ const {
   userById,
   createUser,
   checkLogin,
-  updateUserPoint,
-} = require('../controllers/userController');
+  updateUserPoint
+} = require("../controllers/userController");
+const validUser = require("../validations/validUser");
 
 const router = express.Router();
 
-router.get('/list', listUser);
-router.get('/', userById);
-router.get('/login', checkLogin);
-router.get('/dname', validDname);
-router.get('/email', validEmail);
-router.get('/otp-mail', sendOtpEmail);
-router.put('/points', updateUserPoint);
-router.put('/', updateUserDetails);
-router.put('/profile', updateUserProfile);
-router.put('/password', updatePassword);
-router.post('/', createUser);
+router.get("/list", listUser);
+router.get("/", userById);
+router.get("/login", validUser(), checkLogin);
+router.get("/dname", validUser(), validDname);
+router.get("/email", validUser(), validEmail);
+router.get("/otp-mail", validUser(), sendOtpEmail);
+router.put("/points", validUser(), updateUserPoint);
+router.put("/", validUser(), updateUserDetails);
+router.put("/profile", updateUserProfile);
+router.put("/password", validUser(), updatePassword);
+router.post("/", validUser(), createUser);
 
 module.exports = router;

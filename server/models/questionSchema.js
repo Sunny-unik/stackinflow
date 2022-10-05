@@ -1,36 +1,38 @@
-const { default: mongoose, Schema } = require('mongoose');
+const { default: mongoose, Schema } = require("mongoose");
 
 const questionSchema = new Schema({
   question: {
     type: String,
-    required: true,
+    minLength: [4, "question title is too short!"],
+    maxLength: 100,
+    required: true
   },
   questiondetail: {
     type: String,
-    minLength: [5, 'question description is too short!'],
+    minLength: [5, "question description is too short!"],
     maxLength: 1080,
-    required: true,
+    required: true
   },
   qlikes: {
     type: Array,
-    default: [],
+    default: []
   },
   date: {
     type: Date,
-    default: Date.now(),
+    default: Date.now()
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'users',
-    required: true,
+    ref: "users",
+    required: true
   },
   answers: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'answers',
-    },
+      ref: "answers"
+    }
   ],
-  tags: { type: Array, default: [] },
+  tags: { type: Array, default: [] }
 });
 
-module.exports = mongoose.model('questions', questionSchema);
+module.exports = mongoose.model("questions", questionSchema);
