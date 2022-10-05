@@ -4,6 +4,7 @@ const userSchema = new Schema({
   email: {
     type: String,
     minLength: [5, "email is too short!"],
+    maxLength: [50],
     required: true
   },
   name: {

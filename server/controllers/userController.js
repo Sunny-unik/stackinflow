@@ -11,14 +11,13 @@ const userController = {
         return user;
       }
     };
+
     await userSchema
       .findOne({ $or: [{ email: req.body.email }, { dname: req.body.email }] })
       .then((user) => {
         let filterData;
-        if (!user) {
-          res.send({ msg: "user not found" });
-          return false;
-        } else filterData = checkPassword(user);
+        if (!user) return res.send({ msg: "user not found" });
+        else filterData = checkPassword(user);
         filterData
           ? res.send({ data: filterData, msg: "Credentials Matched" })
           : res.send({ msg: "incorrect password" });
@@ -84,10 +83,9 @@ const userController = {
 
   updateUserDetails: async (req, res) => {
     const validDname = await userController.validDname(req, undefined);
-    if (!validDname) {
-      res.send({ data: null, msg: "Entered username is already taken" });
-      return false;
-    }
+    if (!validDname)
+      return res.send({ data: null, msg: "Entered username is already taken" });
+
     await userSchema
       .updateOne(
         { _id: req.body.id },
@@ -110,10 +108,8 @@ const userController = {
 
   updateUserProfile: (req, res) => {
     upload(req, res, (err) => {
-      if (err) {
-        res.send({ data: err, msg: "Profile update failed" });
-        return false;
-      }
+      if (err) return res.send({ data: err, msg: "Profile update failed" });
+
       (async () => {
         await userSchema
           .updateOne(

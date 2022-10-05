@@ -44,13 +44,14 @@ const schemaProvider = {
 const validQuestion = () => {
   return async (req, res, next) => {
     try {
-      console.log(req);
       const model = schemaProvider[req.method][req.url];
-      console.log(model);
-      // await model.schema.validate(req.body, model.options || {});
-      // next();
+      await model.schema.validate(
+        req.body,
+        model.options || { abortEarly: false }
+      );
+      next();
     } catch (err) {
-      res.status(400).json(err);
+      res.send(err);
     }
   };
 };
