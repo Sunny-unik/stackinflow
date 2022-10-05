@@ -1,4 +1,4 @@
-const { default: mongoose, Schema } = require('mongoose');
+const { default: mongoose, Schema } = require("mongoose");
 
 const feedbackSchema = new Schema({
   title: { type: String, required: true },
@@ -6,9 +6,9 @@ const feedbackSchema = new Schema({
   conclusion: { type: String },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'users',
-    required: true,
-  },
+    ref: "users",
+    required: true
+  }
 });
 
-module.exports = mongoose.model('feedbacks', feedbackSchema);
+module.exports = mongoose.model("feedbacks", feedbackSchema);

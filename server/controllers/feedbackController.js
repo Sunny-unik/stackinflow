@@ -1,40 +1,44 @@
-const sendMail = require('../helpers/mailer');
-const feedbackSchema = require('../models/feedbackSchema');
-const userSchema = require('../models/userSchema');
+const sendMail = require("../helpers/mailer");
+const feedbackSchema = require("../models/feedbackSchema");
+const userSchema = require("../models/userSchema");
 
 const feedbackController = {
   addFeedback: async (req, res) => {
     const feedback = await new feedbackSchema(req.body);
     feedback
       .save()
-      .then(result => {
-        res.send({ data: result, msg: 'Your feedback submitted' });
+      .then((result) => {
+        res.send({ data: result, msg: "Your feedback submitted" });
         userSchema
           .findOne({ _id: result.userId.valueOf() })
-          .select('_id email')
-          .then(userData => {
+          .select("_id email")
+          .then((userData) => {
             sendMail(
               process.env.APP_ID,
               process.env.APP_PASSWORD,
               userData.email,
-              'Thanks for submit your feedback',
+              "Thanks for submit your feedback",
               `<h2>stackinflow</h2><br>
               <h4> Feedback Sent SuccessFull </h4><br>
               <h6>We hope you find our service cool.</h6><br>`
             );
           })
-          .catch(err => console.log('Error on feedback recieved mail: ', err));
+          .catch((err) =>
+            console.log("Error on feedback recieved mail: ", err)
+          );
       })
-      .catch(err => res.send(err));
+      .catch((err) => res.send(err));
   },
 
   listFeedback: async (req, res) => {
     await feedbackSchema
       .find()
-      .populate('userId', '_id dname name userlikes')
-      .then(users => res.status(200).json({ total: users.length, data: users }))
-      .catch(err => res.status(500).send(err));
-  },
+      .populate("userId", "_id dname name userlikes")
+      .then((users) =>
+        res.status(200).json({ total: users.length, data: users })
+      )
+      .catch((err) => res.status(500).send(err));
+  }
 };
 
 module.exports = feedbackController;
