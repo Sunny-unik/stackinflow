@@ -5,7 +5,7 @@ const questionController = {
   listQuestions: async (req, res) => {
     await questionSchema
       .find()
-      .select("_id question userId date qlikes tags")
+      .select("_id question answers userId date qlikes tags")
       .populate("userId", "_id dname userlikes")
       .then((questions) => res.send({ msg: questions.length, data: questions }))
       .catch((err) => res.send(err));
