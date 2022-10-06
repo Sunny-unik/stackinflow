@@ -139,7 +139,7 @@ export default function Profile(props) {
       </button>
       <div id="hiddennav" className="py-2 px-2">
         <NavLink
-          activeClassName="active1"
+          activeclassname="active1"
           exact
           to="/"
           onClick={closeSlideMenu}
@@ -149,7 +149,7 @@ export default function Profile(props) {
         <br />
         <br />
         <NavLink
-          activeClassName="active1"
+          activeclassname="active1"
           to="/questions"
           onClick={closeSlideMenu}
         >
@@ -158,7 +158,7 @@ export default function Profile(props) {
         <br />
         <br />
         <NavLink
-          activeClassName="active1"
+          activeclassname="active1"
           to="/populartags"
           onClick={closeSlideMenu}
         >
@@ -167,7 +167,7 @@ export default function Profile(props) {
         <br />
         <br />
         <span
-          activeClassName="active1"
+          activeclassname="active1"
           className="extralink"
           style={{ fontSize: "inherit", fontFamily: "sans-serif" }}
           onClick={sidelink}
@@ -177,7 +177,7 @@ export default function Profile(props) {
         <br />
         <br />
         <NavLink
-          activeClassName="active1"
+          activeclassname="active1"
           to="/popularusers"
           onClick={closeSlideMenu}
         >
@@ -186,7 +186,7 @@ export default function Profile(props) {
         <br />
         <br />
         <NavLink
-          activeClassName="active1"
+          activeclassname="active1"
           to="/Profile"
           onClick={closeSlideMenu}
         >
@@ -194,7 +194,7 @@ export default function Profile(props) {
         </NavLink>
         <br />
         <br />
-        <NavLink activeClassName="active1" onClick={logout} to="/Login">
+        <NavLink activeclassname="active1" onClick={logout} to="/Login">
           <FaSignOutAlt /> LogOut{" "}
         </NavLink>
         <br />
@@ -338,7 +338,7 @@ export default function Profile(props) {
               <p className="mx-1 my-auto px-1">
                 <NavLink
                   className="btn text-primary rounded p-1"
-                  activeClassName="active"
+                  activeclassname="active"
                   to="/Profile"
                   style={{ fontSize: "large" }}
                 >
@@ -348,7 +348,7 @@ export default function Profile(props) {
               <p className="mx-1 my-auto px-1">
                 <NavLink
                   className="btn text-primary rounded p-1"
-                  activeClassName="active"
+                  activeclassname="active"
                   to="/Profile/editprofile"
                   style={{ fontSize: "large" }}
                 >
@@ -358,7 +358,7 @@ export default function Profile(props) {
               <p className="mx-1 my-auto px-1">
                 <NavLink
                   className="btn text-primary rounded p-1"
-                  activeClassName="active"
+                  activeclassname="active"
                   to="/Profile/selfquestion"
                   style={{ fontSize: "large" }}
                 >
@@ -368,7 +368,7 @@ export default function Profile(props) {
               <p className="mx-1 my-auto px-1">
                 <NavLink
                   className="btn text-primary rounded p-1"
-                  activeClassName="active"
+                  activeclassname="active"
                   to="/Profile/selfanswer"
                   style={{ fontSize: "large" }}
                 >

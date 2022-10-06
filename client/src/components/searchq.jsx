@@ -7,9 +7,10 @@ export default function Searchq(props) {
   const [questions, setquestions] = useState([]);
 
   useEffect(() => {
-    props.location.searchedquestion.split(/[, ]+/).forEach((e) => {
-      searchby.push(e);
-    });
+    props.location.searchedquestion
+      .split(/[, ]+/)
+      .forEach((e) => setsearchby(searchby.push(e)));
+
     axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
       setquestions(
         res.data.data.reverse().filter((y) => {

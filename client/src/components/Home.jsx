@@ -81,7 +81,7 @@ export default function Home(props) {
       </button>
       <div id="hiddennav" className="py-2 px-2">
         <NavLink
-          activeClassName="active1"
+          activeclassname="active1"
           exact
           to="/"
           onClick={closeSlideMenu}
@@ -91,7 +91,7 @@ export default function Home(props) {
         <br />
         <br />
         <NavLink
-          activeClassName="active1"
+          activeclassname="active1"
           to="/questions"
           onClick={closeSlideMenu}
         >
@@ -101,7 +101,7 @@ export default function Home(props) {
         <br />
         <br />
         <NavLink
-          activeClassName="active1"
+          activeclassname="active1"
           to="/populartags"
           onClick={closeSlideMenu}
         >
@@ -111,7 +111,7 @@ export default function Home(props) {
         <br />
         <br />
         <span
-          activeClassName="active1"
+          activeclassname="active1"
           className="extralink"
           style={{ fontSize: "inherit", fontFamily: "sans-serif" }}
           onClick={sidelink}
@@ -122,7 +122,7 @@ export default function Home(props) {
         <br />
         <br />
         <NavLink
-          activeClassName="active1"
+          activeclassname="active1"
           to="/popularusers"
           onClick={closeSlideMenu}
         >
@@ -132,7 +132,7 @@ export default function Home(props) {
         <br />
         {!user && (
           <NavLink
-            activeClassName="active1"
+            activeclassname="active1"
             onClick={closeSlideMenu}
             to="/Login"
           >
@@ -144,7 +144,7 @@ export default function Home(props) {
         {!user && <br />}
         {!user && (
           <NavLink
-            activeClassName="active1"
+            activeclassname="active1"
             to="/Signup"
             onClick={closeSlideMenu}
           >
@@ -154,7 +154,7 @@ export default function Home(props) {
         )}
         {user && (
           <NavLink
-            activeClassName="active1"
+            activeclassname="active1"
             to="/Profile"
             onClick={closeSlideMenu}
           >
@@ -166,7 +166,7 @@ export default function Home(props) {
         <br />
         {user && (
           <span
-            activeClassName="active1"
+            activeclassname="active1"
             style={{ fontSize: "inherit", fontFamily: "sans-serif" }}
             className="extralink"
             onClick={logout}
@@ -182,7 +182,7 @@ export default function Home(props) {
         <div className="row p-0">
           <div id="sidenavbar" className="col-sm-2 px-0 mx-0 mr-1 pt-3 ">
             <NavLink
-              activeClassName="active1"
+              activeclassname="active1"
               style={{
                 fontFamily: "serif",
                 fontSize: "1.4em",
@@ -196,7 +196,7 @@ export default function Home(props) {
             <br />
             <br />
             <NavLink
-              activeClassName="active1"
+              activeclassname="active1"
               style={{
                 fontFamily: "serif",
                 fontSize: "1.4em",
@@ -209,7 +209,7 @@ export default function Home(props) {
             <br />
             <br />
             <NavLink
-              activeClassName="active1"
+              activeclassname="active1"
               style={{
                 fontFamily: "serif",
                 fontSize: "1.4em",
@@ -222,7 +222,7 @@ export default function Home(props) {
             <br />
             <br />
             <NavLink
-              activeClassName="active1"
+              activeclassname="active1"
               style={{
                 fontFamily: "serif",
                 fontSize: "1.4em",
@@ -235,7 +235,7 @@ export default function Home(props) {
             <br />
             <br />
             <h6
-              activeClassName="active1"
+              activeclassname="active1"
               className="extralink"
               style={{
                 fontFamily: "serif",

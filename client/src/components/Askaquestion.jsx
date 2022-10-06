@@ -257,7 +257,7 @@ export default function Askaquestion(props) {
                 <li>
                   Include tags that are crucial to your question only,
                   like&nbsp;
-                  <NavLink activeClassName="active" to="/questionsby/java">
+                  <NavLink activeclassname="active" to="/questionsby/java">
                     java
                   </NavLink>
                 </li>
