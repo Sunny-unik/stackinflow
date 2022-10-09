@@ -4,106 +4,99 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Spinner from "./spinner";
 import Reactpaginate from "react-paginate";
-import Questionbox from "./questionbox";
+import QuestionBox from "./questionBox";
 
 export default function Allquestions() {
-  const [questionlength, setquestionlength] = useState();
-  const [questions, setquestions] = useState([]);
+  const [questionsLength, setquestionsLength] = useState();
+  const [questions, setquestions] = useState();
   const limit = 8;
   let currentpage = { selected: 0 };
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/list-question-length`)
-      .then((res) => {
-        setquestionlength(res.data.data);
-      });
+      .get(`${process.env.REACT_APP_API_URL}/question/list`)
+      .then((res) => setquestionsLength(res.data.data.length))
+      .catch((err) => console.log(err));
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/list-question-bypage?page=${currentpage.selected}&limit=${limit}`
+        `${process.env.REACT_APP_API_URL}/question/onpage?page=${currentpage.selected}&limit=${limit}`
       )
-      .then((res) => {
-        setquestions(res.data.data);
-      });
+      .then((res) => setquestions(res.data.data))
+      .catch((err) => console.log(err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function pagechange(data) {
-    console.log(data);
+  function pageChange(data) {
     currentpage = data;
-    console.log(limit);
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/list-question-bypage?page=${currentpage.selected}&limit=${limit}`
+        `${process.env.REACT_APP_API_URL}/question/onpage?page=${currentpage.selected}&limit=${limit}`
       )
-      .then((res) => {
-        console.log(res.data);
-        setquestions(res.data.data.reverse());
-      });
+      .then((res) => setquestions(res.data.data))
+      .catch((err) => console.log(err));
   }
 
   return (
     <div
-      className="row"
+      className="row p-0"
       style={{ borderLeft: "2px solid lightgrey", minHeight: "80vh" }}
     >
       <div>
-        <h1
-          style={{
-            padding: "0px 1%",
-            margin: ".4rem 0 .4rem 0",
-            fontFamily: "sans-serif"
-          }}
-        >
-          Total {questionlength} Questions Asked
-        </h1>
+        <h1> Total {questionsLength} Questions Asked </h1>
         <hr className="mb-0" />
       </div>
-      <div>
-        {questions &&
-          questions.map((q) => {
-            return (
-              <Questionbox
-                questionid={q._id}
-                likes={q.qlikes.length}
-                questiontitle={q.question}
-                answer={q.answers.length}
-                tags={q.tags}
-                dataaos={"fade-left"}
-                userdname={q.userdname}
-                date={q.date}
-              />
-            );
-          })}
-      </div>
-      <div className="container">
-        <div className="row m-2">
-          {questions && (
-            <div>
-              <div className="pt-3 pb-1">
-                <Reactpaginate
-                  previousLabel={"<<"}
-                  nextLabel={">>"}
-                  breakLabel={"..."}
-                  marginPagesDisplayed={5}
-                  pageCount={Math.floor(Math.ceil(questionlength / limit))}
-                  pageRangeDisplayed={2}
-                  onPageChange={pagechange}
-                  containerClassName={"pagination justify-content-center"}
-                  pageClassName={"page-item"}
-                  pageLinkClassName={"page-link"}
-                  previousClassName={"page-item"}
-                  previousLinkClassName={"page-link"}
-                  nextClassName={"page-item"}
-                  nextLinkClassName={"page-link"}
-                  breakClassName={"page-item"}
-                  breakLinkClassName={"page-link"}
-                  activeClassName={"active"}
-                />
-              </div>
+      {questions && (
+        <>
+          <div>
+            {questions &&
+              questions.map((q) => {
+                return (
+                  <QuestionBox
+                    questionId={q._id}
+                    likesCount={q.qlikes.length}
+                    questionTitle={q.question}
+                    answersCount={q.answers ? q.answers.length : 0}
+                    tags={q.tags}
+                    dataAos={"fade-left"}
+                    userObj={
+                      q.userId ? q.userId : (q.userId = { dname: "404" })
+                    }
+                    date={q.date}
+                  />
+                );
+              })}
+          </div>
+          <div className="container">
+            <div className="row m-2">
+              {questions && (
+                <div>
+                  <div className="pt-3 pb-1">
+                    <Reactpaginate
+                      previousLabel={"<<"}
+                      nextLabel={">>"}
+                      breakLabel={"..."}
+                      marginPagesDisplayed={5}
+                      pageCount={Math.floor(Math.ceil(questionsLength / limit))}
+                      pageRangeDisplayed={2}
+                      onPageChange={pageChange}
+                      containerClassName={"pagination justify-content-center"}
+                      pageClassName={"page-item"}
+                      pageLinkClassName={"page-link"}
+                      previousClassName={"page-item"}
+                      previousLinkClassName={"page-link"}
+                      nextClassName={"page-item"}
+                      nextLinkClassName={"page-link"}
+                      breakClassName={"page-item"}
+                      breakLinkClassName={"page-link"}
+                      activeClassName={"active"}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </div>
+          </div>
+        </>
+      )}
       {!questions && <Spinner />}
     </div>
   );
