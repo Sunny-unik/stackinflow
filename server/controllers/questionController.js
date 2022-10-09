@@ -12,7 +12,7 @@ const questionController = {
   },
 
   questionsPerPage: async (req, res) => {
-    const [limit, page] = [+req.query.limit || 10, +req.query.page || 1];
+    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
     await questionSchema
       .find()
       .limit(limit * 1)
@@ -25,7 +25,7 @@ const questionController = {
 
   questionsSearch: async (req, res) => {
     await questionSchema
-      .find({ question: { $regex: req.body.search, $options: "$i" } })
+      .find({ question: { $regex: req.query.search, $options: "$i" } })
       .select("_id question userId date qlikes tags")
       .populate("userId", "_id dname userlikes")
       .then((questions) => res.send({ data: questions, msg: "success" }))
