@@ -1,22 +1,11 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import handleDate from "../helper/dateHelper";
 import "./css/qls.css";
 
-export default function Questionbox(props) {
-  const [alluser, setalluser] = useState([]);
-  const [qid, setqid] = useState();
-
-  useEffect(() => {
-    setqid(props.questionid);
-    axios.get(`${process.env.REACT_APP_API_URL}/list-user`).then((res) => {
-      setalluser(res.data.data);
-    });
-  }, [props]);
-
+export default function QuestionBox(props) {
   return (
-    <div key={qid} className="rounded card">
+    <div key={props.questionId} className="rounded card">
       <div
         data-aos="fade-up"
         data-aos-duration="400"
@@ -24,7 +13,7 @@ export default function Questionbox(props) {
         style={{ backgroundColor: "#fdf7e2", borderBottom: ".1rem solid grey" }}
       >
         <h4
-          data-aos={props.dataaos}
+          data-aos={props.dataAos}
           data-aos-duration="800"
           data-aos-offset="max-height"
           className="mainqdiv"
@@ -34,9 +23,9 @@ export default function Questionbox(props) {
               textDecorationLine: "none",
               textShadow: ".02em .04em black"
             }}
-            to={`/question/${qid}`}
+            to={`/question/${props.questionId}`}
           >
-            {props.questiontitle}
+            {props.questionTitle}
           </NavLink>
         </h4>
         <div className="d-inline-block">
@@ -45,7 +34,7 @@ export default function Questionbox(props) {
             style={{ textShadow: "0.02em 0.08em black" }}
           >
             {" "}
-            Likes: {props.likes}{" "}
+            Likes: {props.likesCount}{" "}
           </div>
           <div className="qla bg-secondary">
             <NavLink
@@ -54,10 +43,10 @@ export default function Questionbox(props) {
                 textDecoration: "none",
                 textShadow: "0.02em 0.08em black"
               }}
-              to={`/question/${qid}`}
+              to={`/question/${props.questionId}`}
             >
               {" "}
-              Answer: {props.answer}{" "}
+              Answers: {props.answersCount}{" "}
             </NavLink>
           </div>
         </div>
@@ -84,11 +73,9 @@ export default function Questionbox(props) {
           asked by &nbsp;
           <NavLink
             style={{ color: "navy", fontFamily: "SeogUI", fontWeight: "bold" }}
-            to={`/user/${props.userdname}`}
+            to={`/user/${props.userObj.dname}`}
           >
-            {alluser.map((r) => {
-              if (r._id === props.userdname) return r.dname;
-            })}
+            {props.userObj.dname}
           </NavLink>
         </div>
         <div

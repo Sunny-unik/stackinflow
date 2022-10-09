@@ -1,32 +1,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Questionbox from "./questionbox";
+import QuestionBox from "./questionBox";
 
 export default function Searchq(props) {
-  const [searchby, setsearchby] = useState([]);
   const [questions, setquestions] = useState([]);
+  const search = props.location.searchedQuestion;
 
   useEffect(() => {
-    props.location.searchedquestion
-      .split(/[, ]+/)
-      .forEach((e) => setsearchby(searchby.push(e)));
-
-    axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
-      setquestions(
-        res.data.data.reverse().filter((y) => {
-          return (
-            y.question.includes(
-              searchby[0] ||
-                searchby[1] ||
-                searchby[2] ||
-                searchby[3] ||
-                searchby[4]
-            ) === true
-          );
-        })
-      );
-    });
-  }, []);
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/question/search?search=${search}`)
+      .then((res) => setquestions(res.data.data));
+  }, [search]);
 
   return (
     <div className="border" style={{ minHeight: "70vh" }}>
@@ -34,24 +18,22 @@ export default function Searchq(props) {
         className="card p-1 display-5 border"
         style={{ fontFamily: "SeoogUI", textShadow: ".02em .02em blue" }}
       >
-        Questions as your search
+        Questions relates to '{search}'
       </p>
       <div className="w-100 bg-light">
-        {questions.length > 0 ? (
-          questions.map((q) => {
-            return (
-              <Questionbox
-                questionid={q._id}
-                likes={q.qlikes.length}
-                questiontitle={q.question}
-                answer={q.answers.length}
-                tags={q.tags}
-                data_aos={"fade-up"}
-                userdname={q.userdname}
-                date={q.date}
-              />
-            );
-          })
+        {questions.length ? (
+          questions.map((q) => (
+            <QuestionBox
+              questionId={q._id}
+              likesCount={q.qlikes.length}
+              questionTitle={q.question}
+              answersCount={q.answers ? q.answers.length : 0}
+              tags={q.tags}
+              dataAos={"fade-up"}
+              userObj={q.userId ? q.userId : (q.userId = { dname: "404" })}
+              date={q.date}
+            />
+          ))
         ) : (
           <h2 className="text-center text-danger card">!Question not Found</h2>
         )}
