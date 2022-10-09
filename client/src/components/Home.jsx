@@ -1,5 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import React from "react";
 import { Switch, Route, NavLink } from "react-router-dom";
 import Populartags from "./Populartags";
 import Popularusers from "./Popularusers";
@@ -14,243 +14,94 @@ import Editquestion from "./editquestion";
 import About from "./About";
 import Contact from "./Contact";
 import Searchq from "./searchq";
-import {
-  FaHome,
-  FaQuestion,
-  FaQuestionCircle,
-  FaRegistered,
-  FaSignInAlt,
-  FaSignOutAlt,
-  FaTags,
-  FaUsers,
-  FaUserTie,
-  FaWindowClose
-} from "react-icons/fa";
-import { FcMenu } from "react-icons/fc";
-import "./css/home.css";
 
 export default function Home(props) {
   const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  function logout() {
-    dispatch({ type: "LOGOUT_USER" });
-    alert("User successfully logout");
-  }
 
-  useEffect(() => {
-    closeSlideMenu();
-  }, []);
-
-  function openSlideMenu() {
-    document.getElementById("sidemenuopen").style.display = "none";
-    document.getElementById("sidemenuclose").style.display = "block";
-    document.getElementById("hiddennav").style.display = "block";
-  }
-  function closeSlideMenu() {
-    document.getElementById("sidemenuclose").style.display = "none";
-    document.getElementById("sidemenuopen").style.display = "block";
-    document.getElementById("hiddennav").style.display = "none";
-  }
-
-  function sidelink() {
-    if (user) {
-      props.history.push("/askaquestion");
-      closeSlideMenu();
-    } else {
-      alert("User need to login first");
-    }
-  }
+  const sidelink = () => {
+    user
+      ? props.history.push("/askaquestion")
+      : alert("User need to login first");
+  };
 
   return (
-    <div>
-      <button
-        type="button"
-        id="sidemenuopen"
-        className="m-2 fixed-top btn-info rounded"
-        onClick={openSlideMenu}
-      >
-        <FcMenu />{" "}
-      </button>
-      <button
-        type="button"
-        id="sidemenuclose"
-        className="m-2 fixed-top btn-dark rounded"
-        onClick={closeSlideMenu}
-      >
-        <FaWindowClose />{" "}
-      </button>
-      <div id="hiddennav" className="py-2 px-2">
-        <NavLink
-          activeclassname="active1"
-          exact
-          to="/"
-          onClick={closeSlideMenu}
-        >
-          <FaHome /> Home{" "}
-        </NavLink>
-        <br />
-        <br />
-        <NavLink
-          activeclassname="active1"
-          to="/questions"
-          onClick={closeSlideMenu}
-        >
-          <FaQuestionCircle />
-          All Questions{" "}
-        </NavLink>
-        <br />
-        <br />
-        <NavLink
-          activeclassname="active1"
-          to="/populartags"
-          onClick={closeSlideMenu}
-        >
-          <FaTags />
-          Popular Tags
-        </NavLink>
-        <br />
-        <br />
-        <span
-          activeclassname="active1"
-          className="extralink"
-          style={{ fontSize: "inherit", fontFamily: "sans-serif" }}
-          onClick={sidelink}
-        >
-          <FaQuestion />
-          Ask Question
-        </span>
-        <br />
-        <br />
-        <NavLink
-          activeclassname="active1"
-          to="/popularusers"
-          onClick={closeSlideMenu}
-        >
-          <FaUsers /> Popular Users{" "}
-        </NavLink>
-        <br />
-        <br />
-        {!user && (
-          <NavLink
-            activeclassname="active1"
-            onClick={closeSlideMenu}
-            to="/Login"
+    <>
+      <div className="container-lg">
+        <div className="row">
+          <ul id="sideLeftNav" className="col-sm-2 p-0">
+            <li className="nav-link pe-0">
+              <NavLink
+                activeClassName="activeLeftNav"
+                style={{
+                  fontFamily: "serif",
+                  fontSize: "1.4em",
+                  textShadow: "0.02em 0.02em black"
+                }}
+                exact
+                to="/"
+              >
+                Home
+              </NavLink>
+            </li>
+            <li className="nav-link pe-0">
+              <NavLink
+                activeClassName="activeLeftNav"
+                style={{
+                  fontFamily: "serif",
+                  fontSize: "1.4em",
+                  textShadow: "0.02em 0.02em black"
+                }}
+                to="/questions"
+              >
+                All Question
+              </NavLink>
+            </li>
+            <li className="nav-link pe-0">
+              <NavLink
+                activeClassName="activeLeftNav"
+                style={{
+                  fontFamily: "serif",
+                  fontSize: "1.4em",
+                  textShadow: "0.02em 0.02em black"
+                }}
+                to="/populartags"
+              >
+                Popular Tags
+              </NavLink>
+            </li>
+            <li className="nav-link pe-0">
+              <NavLink
+                activeClassName="activeLeftNav"
+                style={{
+                  fontFamily: "serif",
+                  fontSize: "1.4em",
+                  textShadow: "0.02em 0.02em black"
+                }}
+                to="/popularusers"
+              >
+                Popular Users
+              </NavLink>
+            </li>
+            <li className="nav-link pe-0">
+              <h6
+                activeClassName="activeLeftNav"
+                className="extraLink"
+                style={{
+                  fontFamily: "serif",
+                  textShadow: "0.02em 0.02em black",
+                  fontSize: "1.4rem"
+                }}
+                onClick={sidelink}
+              >
+                Ask Question
+              </h6>
+            </li>
+          </ul>
+          <div
+            className="col-sm-10 p-0 overflow-hidden border border-primary"
+            id="mainSection"
           >
-            <FaSignInAlt />
-            LogIn
-          </NavLink>
-        )}
-        {!user && <br />}
-        {!user && <br />}
-        {!user && (
-          <NavLink
-            activeclassname="active1"
-            to="/Signup"
-            onClick={closeSlideMenu}
-          >
-            <FaRegistered />
-            SignUp
-          </NavLink>
-        )}
-        {user && (
-          <NavLink
-            activeclassname="active1"
-            to="/Profile"
-            onClick={closeSlideMenu}
-          >
-            <FaUserTie />
-            Profile
-          </NavLink>
-        )}
-        <br />
-        <br />
-        {user && (
-          <span
-            activeclassname="active1"
-            style={{ fontSize: "inherit", fontFamily: "sans-serif" }}
-            className="extralink"
-            onClick={logout}
-          >
-            <FaSignOutAlt />
-            LogOut
-          </span>
-        )}
-        <br />
-        <br />
-      </div>
-      <div className="container-md" style={{ marginBottom: "0px" }}>
-        <div className="row p-0">
-          <div id="sidenavbar" className="col-sm-2 px-0 mx-0 mr-1 pt-3 ">
-            <NavLink
-              activeclassname="active1"
-              style={{
-                fontFamily: "serif",
-                fontSize: "1.4em",
-                textShadow: "0.02em 0.02em black"
-              }}
-              exact
-              to="/"
-            >
-              Home
-            </NavLink>
-            <br />
-            <br />
-            <NavLink
-              activeclassname="active1"
-              style={{
-                fontFamily: "serif",
-                fontSize: "1.4em",
-                textShadow: "0.02em 0.02em black"
-              }}
-              to="/questions"
-            >
-              All Question
-            </NavLink>
-            <br />
-            <br />
-            <NavLink
-              activeclassname="active1"
-              style={{
-                fontFamily: "serif",
-                fontSize: "1.4em",
-                textShadow: "0.02em 0.02em black"
-              }}
-              to="/populartags"
-            >
-              Popular Tags
-            </NavLink>
-            <br />
-            <br />
-            <NavLink
-              activeclassname="active1"
-              style={{
-                fontFamily: "serif",
-                fontSize: "1.4em",
-                textShadow: "0.02em 0.02em black"
-              }}
-              to="/popularusers"
-            >
-              Popular Users
-            </NavLink>
-            <br />
-            <br />
-            <h6
-              activeclassname="active1"
-              className="extralink"
-              style={{
-                fontFamily: "serif",
-                textShadow: "0.02em 0.02em black",
-                fontSize: "1.4rem"
-              }}
-              onClick={sidelink}
-            >
-              Ask Question
-            </h6>
-            <br />
-            <br />
-          </div>
-          <div className="topmain m-0 col-sm-10 p-2 overflow-hidden border border-primary">
-            <Switch className="p-0">
+            <Switch>
               <Route path="/questions" component={Allquestions} />
               <Route path="/populartags" component={Populartags} />
               <Route path="/popularusers" component={Popularusers} />
@@ -268,6 +119,6 @@ export default function Home(props) {
         </div>
       </div>
       <Footer />
-    </div>
+    </>
   );
 }

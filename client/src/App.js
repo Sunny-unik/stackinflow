@@ -1,161 +1,127 @@
 import "./App.css";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   NavLink
 } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import {
+  FaHamburger,
   FaRegistered,
-  FaSearch,
   FaSignInAlt,
   FaSignOutAlt,
+  FaTerminal,
   FaUserTie
 } from "react-icons/fa";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
 import Signup from "./components/Signup";
+import SearchBox from "./components/searchBox";
+import CanvasNav from "./components/canvasNav";
 
-function App() {
-  const [questions, setquestions] = useState();
-  const [questionsearch, setquestionsearch] = useState("");
+export default function App() {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
-  function logout() {
-    dispatch({ type: "LOGOUT_USER" });
-  }
-
-  function inputhandler(params) {
-    params.target.name === "questionsearch" &&
-      setquestionsearch(params.target.value);
-  }
-
-  useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
-      console.log(res.data.data);
-      setquestions(res.data.data);
-    });
-  }, []);
+  const logout = () => dispatch({ type: "LOGOUT_USER" });
 
   return (
-    <Router className="w-100">
-      <nav
-        className="navbar navbar-expand-sm bg-dark sticky-top"
-        style={{ width: "100% !important" }}
-      >
-        <div className="container">
-          <ul className="navbar-nav w-100 ">
-            <li className="navbar-header col-md-2 text-center">
-              <NavLink
-                className="nabar-brand"
-                style={{
-                  textDecoration: "none",
-                  fontSize: "1.4rem",
-                  fontFamily: "Fantasy"
-                }}
-                activeclassname="active"
-                exact
-                to="/"
-              >
-                <i>Stackinflow</i>
-              </NavLink>
-            </li>
-            <li className="nav-item col-md-8 text-center">
-              <div className="input-group" onClick={inputhandler}>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Search Question"
-                  name="questionsearch"
-                  value={questionsearch}
-                  onChange={(e) => inputhandler(e)}
-                  id="questionsearch"
-                  list="qsearch"
-                />
-                <datalist id="qsearch" style={{ maxHeight: "50vh !important" }}>
-                  {questions &&
-                    questions.map((i) => {
-                      return <option>{i.question}</option>;
-                    })}
-                </datalist>
-                <div className="input-group-btn" id="hidebtn">
-                  <NavLink
-                    to={{
-                      pathname: `/search/${questionsearch}`,
-                      searchedquestion: questionsearch.replace(" ", ",")
-                    }}
-                  >
-                    <button
-                      className="btn btn-default bg-primary"
-                      type="button"
-                    >
-                      <FaSearch />
-                    </button>
+    <Router>
+      <nav className="navbar navbar-expand-sm navbar-primary bg-dark sticky-top">
+        <div className="container-lg">
+          <button
+            class="btn btn-dark d-md-none"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#smMenu"
+          >
+            <FaHamburger color="white" />
+          </button>
+          <NavLink
+            className="navbar-brand"
+            style={{ fontSize: "1.6rem", fontWeight: "700" }}
+            activeclassname="activeTopNav"
+            exact
+            to="/"
+          >
+            <i>Stackinflow</i>
+          </NavLink>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#topNavbar"
+          >
+            <span class="navbar-toggler-icon">
+              <FaTerminal color="white" />
+            </span>
+          </button>
+          <div className="collapse navbar-collapse" id="topNavbar">
+            <SearchBox />
+            <ul className="navbar-nav me-4 ms-4 text-center">
+              {!user && (
+                <li className="nav-link me-1 ms-1">
+                  <NavLink activeClassName="activeTopNav" to="/Login">
+                    <FaSignInAlt />
+                    LogIn
                   </NavLink>
-                </div>
-              </div>
-            </li>
-            {!user && (
-              <li className="navshrink nav-item col-sm-1 text-center">
-                <NavLink
-                  className="nav-link"
-                  activeclassname="active"
-                  to="/Login"
-                  style={{ fontFamily: "fantasy" }}
-                >
-                  <FaSignInAlt />
-                  LogIn
-                </NavLink>
-              </li>
-            )}
-            {!user && (
-              <li className="nav-item navshrink col-sm-1 text-center">
-                <NavLink
-                  className="nav-link"
-                  activeclassname="active"
-                  to="/Signup"
-                  style={{ fontFamily: "fantasy" }}
-                >
-                  <FaRegistered />
-                  SignIn
-                </NavLink>
-              </li>
-            )}
-            {user && (
-              <li className="nav-item col-sm-1 navshrink text-center">
-                <NavLink
-                  className="nav-link"
-                  activeclassname="active"
-                  to="/Profile"
-                  style={{ fontFamily: "fantasy" }}
-                >
-                  <FaUserTie />
-                  Profile
-                </NavLink>
-              </li>
-            )}
-            {user && (
-              <li className="nav-item col-sm-1 text-center navshrink">
-                <NavLink
-                  className="nav-link"
-                  activeclassname="active"
-                  to="/Login"
-                  onClick={logout}
-                  style={{ fontFamily: "fantasy" }}
-                >
-                  <FaSignOutAlt />
-                  LogOut
-                </NavLink>
-              </li>
-            )}
-          </ul>
+                </li>
+              )}
+              {!user && (
+                <li className="nav-link me-1 ms-1">
+                  <NavLink
+                    activeClassName="activeTopNav"
+                    to="/Signup"
+                    style={{ fontFamily: "Monaco" }}
+                  >
+                    <FaRegistered />
+                    SignIn
+                  </NavLink>
+                </li>
+              )}
+              {user && (
+                <li className="nav-link me-1 ms-1">
+                  <NavLink
+                    activeClassName="activeTopNav"
+                    to="/Profile"
+                    style={{ fontFamily: "Monaco" }}
+                  >
+                    <FaUserTie />
+                    Profile
+                  </NavLink>
+                </li>
+              )}
+              {user && (
+                <li className="nav-link me-1 ms-1">
+                  <NavLink
+                    activeClassName="activeTopNav"
+                    to="/Login"
+                    onClick={logout}
+                    style={{ fontFamily: "Monaco" }}
+                  >
+                    <FaSignOutAlt />
+                    LogOut
+                  </NavLink>
+                </li>
+              )}
+            </ul>
+          </div>
         </div>
       </nav>
+      <div class="offcanvas offcanvas-start w-75" id="smMenu">
+        <div class="offcanvas-header p-2 mt-1">
+          <button
+            type="button"
+            class="btn-close btn-close-dark"
+            data-bs-dismiss="offcanvas"
+          ></button>
+        </div>
+        <div class="offcanvas-body p-0">
+          <CanvasNav />
+        </div>
+      </div>
       <Switch>
         <Route path="/Login" component={Login} />
         <Route path="/Signup" component={Signup} />
@@ -165,4 +131,3 @@ function App() {
     </Router>
   );
 }
-export default App;
