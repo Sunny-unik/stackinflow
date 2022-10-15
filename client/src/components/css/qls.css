@@ -15,7 +15,6 @@
 }
 #createotp {
   margin-top: 2%;
-  display: none;
 }
 #createemail,
 #createdname,
@@ -66,9 +65,6 @@
   background-color: #1e90ff;
 }
 /* Login css */
-.forgotpasslink {
-  cursor: pointer;
-}
 .logincon {
   margin: 0px !important;
   margin-top: 2% !important;
@@ -79,12 +75,6 @@
 }
 #logindetail {
   box-shadow: 2% black !important;
-}
-#loginotp {
-  display: none;
-}
-#loginpass {
-  display: none;
 }
 #email,
 #password,
@@ -172,15 +162,17 @@
   color: whitesmoke;
   background-color: #4392e2;
 }
-.forgotpasslink {
+.forgotPasswordLink {
   color: #0e73d8;
   text-align: center;
   margin: 2%;
   font-weight: 700;
   font-size: 1.8rem;
-  font-family: 'Franklin Gothic Medium', 'poppins', 'Arial Narrow', Arial, sans-serif;
+  cursor: pointer;
+  font-family: "Franklin Gothic Medium", "poppins", "Arial Narrow", Arial,
+    sans-serif;
 }
-.forgotpasslink:hover {
+.forgotPasswordLink:hover {
   color: navy;
 }
 /* question css */
@@ -262,7 +254,7 @@ a {
   display: inline-block;
   margin: 6px;
   font-family: cursive;
-  font-weight: '600';
+  font-weight: "600";
   /* background-color: rgb(167, 241, 217); */
   color: #f1f1f1;
   border-radius: 2rem;

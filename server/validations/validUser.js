@@ -2,12 +2,6 @@ const yup = require("yup");
 
 const schemaProvider = {
   GET: {
-    "/login": {
-      schema: yup.object().shape({
-        email: yup.string().min(4).required(),
-        password: yup.string().min(8).max(16).required()
-      })
-    },
     "/dname": {
       schema: yup.object().shape({
         dname: yup.string().min(4).required(),
@@ -19,11 +13,6 @@ const schemaProvider = {
         email: yup.string().min(5).required(),
         id: yup.string().required()
       })
-    },
-    "/otp-mail": {
-      schema: yup.object().shape({
-        email: yup.string().min(4).required()
-      })
     }
   },
   POST: {
@@ -32,6 +21,17 @@ const schemaProvider = {
         email: yup.string().min(5).max(50).required(),
         name: yup.string().min(2).max(46).required(),
         dname: yup.string().min(4).max(16).required(),
+        password: yup.string().min(8).max(16).required()
+      })
+    },
+    "/otp-mail": {
+      schema: yup.object().shape({
+        email: yup.string().min(4).required()
+      })
+    },
+    "/login": {
+      schema: yup.object().shape({
+        email: yup.string().min(4).required(),
         password: yup.string().min(8).max(16).required()
       })
     }

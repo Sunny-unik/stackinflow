@@ -51,22 +51,26 @@ const userController = {
   },
 
   sendOtpEmail: async (req, res) => {
-    const otp = Math.floor(Math.random() * 1000000 + 1);
+    const otp = Math.floor(Math.random() * 1000000 + 1).toString();
     await userSchema
       .findOne({ $or: [{ email: req.body.email }, { dname: req.body.email }] })
-      .select(
-        "_id name dname userlikes email about address gitlink title twitter weblink profile"
-      )
+      .select("_id email password")
       .then((user) => {
-        sendMail(
-          process.env.APP_ID,
-          process.env.APP_PASSWORD,
-          user.email,
-          "Welcome to stackinflow",
-          `Your One Time Password is - <h3>${otp}</h3><br>
-        <h6>We hope you find our service cool.</h6>`
-        );
-        res.send({ data: user, msg: "Otp sent" });
+        if (user) {
+          sendMail(
+            process.env.APP_ID,
+            process.env.APP_PASSWORD,
+            user.email,
+            "Welcome to stackinflow",
+            `Your One Time Password is - <h3>${otp}</h3><br>
+          <h6>We hope you find our service cool.</h6>`
+          );
+          res.send({
+            data: user,
+            otp: otp.length < 6 ? otp + "1" : otp,
+            msg: "Otp sent"
+          });
+        } else res.send({ data: null, msg: "User not found" });
       })
       .catch((err) => res.send(err));
   },
