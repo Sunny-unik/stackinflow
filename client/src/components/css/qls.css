@@ -110,57 +110,36 @@
   background-color: black;
   margin-bottom: 25px;
 }
-.loginbtn {
+.loginBtn {
   background-color: black;
   color: white;
   padding: 16px 20px;
-  margin: 5px 0 0px 0;
-  border-radius: 7px;
+  margin: 5px 0 0 0;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   width: 100%;
   opacity: 0.9;
 }
-.submitnpass {
-  background-color: black;
-  color: white;
-  padding: 16px 20px;
-  margin: 5px 0 0px 0;
-  border-radius: 7px;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  opacity: 0.9;
-}
-.submitnpass:hover,
-.submitnpass:focus {
-  opacity: 1;
-  background-color: #5bca45;
-  color: black;
-  font-weight: 900;
-}
-.cancellogbtn {
-  color: black;
-  padding: 16px 20px;
-  margin: 5px 0 0px 0;
-  border-radius: 7px;
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
-  opacity: 0.9;
-}
-.loginbtn:hover,
-.loginbtn:focus {
+.loginBtn:hover,
+.loginBtn:focus {
   opacity: 1;
   color: #ddd;
   background-color: #1e90ff;
   font-weight: 900;
 }
-.cancellogbtn:hover,
-.cancellogbtn:focus {
-  opacity: 1;
-  color: whitesmoke;
-  background-color: #4392e2;
+.updateBtn:hover,
+.updateBtn:focus {
+  background-color: #48cb2e;
+  color: black;
+}
+.cancelBtn {
+  background-color: #0e73d8;
+}
+.cancelBtn:hover,
+.cancelBtn:focus {
+  background-color: #914a21;
+  color: black;
 }
 .forgotPasswordLink {
   color: #0e73d8;
