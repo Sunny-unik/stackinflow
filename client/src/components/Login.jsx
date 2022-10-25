@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { checkLogin } from "../action/useraction";
+import { checkLogin } from "../action/userAction";
 import { useDispatch, useSelector } from "react-redux";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -24,7 +24,7 @@ export default function Login(props) {
   }, [reduxUser, path]);
 
   const dispatch = useDispatch();
-  const checkauth = () => dispatch(checkLogin({ email, password }));
+  const checkAuth = () => dispatch(checkLogin({ email, password }));
 
   function sendOtp() {
     if (email.trim() === "") {
@@ -133,7 +133,7 @@ export default function Login(props) {
                 <button
                   type="button"
                   className="loginBtn"
-                  onClick={() => checkauth()}
+                  onClick={() => checkAuth()}
                 >
                   Log In
                 </button>

@@ -1,12 +1,8 @@
 import "./App.css";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  NavLink
-} from "react-router-dom";
+import { BrowserRouter, Switch, Route, NavLink } from "react-router-dom";
+import { authenticateUser } from "./action/userAction";
 import {
   FaHamburger,
   FaRegistered,
@@ -23,16 +19,27 @@ import SearchBox from "./components/searchBox";
 import CanvasNav from "./components/canvasNav";
 
 export default function App() {
-  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const logout = () => dispatch({ type: "LOGOUT_USER" });
+  const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const localToken = localStorage.getItem("stackinflowToken");
+    if (!!localToken) dispatch(authenticateUser(localToken));
+    console.count("appRender");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem("stackinflowToken");
+    dispatch({ type: "LOGOUT_USER" });
+  };
 
   return (
-    <Router>
-      <nav className="navbar navbar-expand-sm navbar-primary bg-dark sticky-top">
+    <BrowserRouter>
+      <nav className="p-0 navbar navbar-expand-sm navbar-primary bg-dark sticky-top">
         <div className="container-lg">
           <button
-            class="btn btn-dark d-md-none"
+            className="btn btn-dark d-md-none"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#smMenu"
@@ -42,19 +49,19 @@ export default function App() {
           <NavLink
             className="navbar-brand"
             style={{ fontSize: "1.6rem", fontWeight: "700" }}
-            activeclassname="activeTopNav"
+            activeClassName="activeTopNav"
             exact
             to="/"
           >
             <i>Stackinflow</i>
           </NavLink>
           <button
-            class="navbar-toggler"
+            className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#topNavbar"
           >
-            <span class="navbar-toggler-icon">
+            <span className="navbar-toggler-icon">
               <FaTerminal color="white" />
             </span>
           </button>
@@ -63,7 +70,7 @@ export default function App() {
             <ul className="navbar-nav me-4 ms-4 text-center">
               {!user && (
                 <li className="nav-link me-1 ms-1">
-                  <NavLink activeClassName="activeTopNav" to="/Login">
+                  <NavLink activeClassName="activeTopNav" to="/login">
                     <FaSignInAlt />
                     LogIn
                   </NavLink>
@@ -73,7 +80,7 @@ export default function App() {
                 <li className="nav-link me-1 ms-1">
                   <NavLink
                     activeClassName="activeTopNav"
-                    to="/Signup"
+                    to="/signup"
                     style={{ fontFamily: "Monaco" }}
                   >
                     <FaRegistered />
@@ -85,7 +92,7 @@ export default function App() {
                 <li className="nav-link me-1 ms-1">
                   <NavLink
                     activeClassName="activeTopNav"
-                    to="/Profile"
+                    to="/profile"
                     style={{ fontFamily: "Monaco" }}
                   >
                     <FaUserTie />
@@ -97,7 +104,7 @@ export default function App() {
                 <li className="nav-link me-1 ms-1">
                   <NavLink
                     activeClassName="activeTopNav"
-                    to="/Login"
+                    to="/login"
                     onClick={logout}
                     style={{ fontFamily: "Monaco" }}
                   >
@@ -110,24 +117,24 @@ export default function App() {
           </div>
         </div>
       </nav>
-      <div class="offcanvas offcanvas-start w-75" id="smMenu">
-        <div class="offcanvas-header p-2 mt-1">
+      <div className="offcanvas offcanvas-start w-75" id="smMenu">
+        <div className="offcanvas-header p-2 mt-1">
           <button
             type="button"
-            class="btn-close btn-close-dark"
+            className="btn-close btn-close-dark"
             data-bs-dismiss="offcanvas"
           ></button>
         </div>
-        <div class="offcanvas-body p-0">
+        <div className="offcanvas-body p-0">
           <CanvasNav />
         </div>
       </div>
       <Switch>
-        <Route path="/Login" component={Login} />
-        <Route path="/Signup" component={Signup} />
-        <Route path="/Profile" component={Profile} />
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
+        <Route path="/profile" component={Profile} />
         <Route path="/" component={Home} />
       </Switch>
-    </Router>
+    </BrowserRouter>
   );
 }

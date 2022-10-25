@@ -3,7 +3,7 @@ import { TbArrowBackUp } from "react-icons/tb";
 
 export default function ForgotPassword({ originalOtp, goto }) {
   const [otp, setotp] = useState("");
-
+  console.log(originalOtp);
   const otpPassword = () => {
     if (otp === originalOtp) {
       alert("you have to create new password");
@@ -56,7 +56,7 @@ export default function ForgotPassword({ originalOtp, goto }) {
           required
         />
         <hr className="signuphr" />
-        <button type="reset" className="loginbtn" onClick={otpPassword}>
+        <button type="reset" className="loginBtn" onClick={otpPassword}>
           Submit
         </button>
       </form>

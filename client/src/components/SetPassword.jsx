@@ -22,7 +22,10 @@ export default function SetPassword({ id, password, goto }) {
           newPassword: newPassword,
           oldPassword: password
         })
-        .then((res) => (alert(res.data.msg), goto()))
+        .then((res) => {
+          alert(res.data.msg);
+          goto();
+        })
         .catch((err) => console.log(err));
     } else {
       alert(
@@ -111,7 +114,7 @@ export default function SetPassword({ id, password, goto }) {
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
           <button
             type="button"
-            className="btn btn-warning cancellogbtn"
+            className="loginBtn cancelBtn"
             style={{
               fontFamily: "monospace",
               fontSize: "large",
@@ -124,7 +127,7 @@ export default function SetPassword({ id, password, goto }) {
           </button>
           <button
             type="button"
-            className="submitnpass"
+            className="loginBtn updateBtn"
             style={{
               fontFamily: "monospace",
               fontSize: "large",
