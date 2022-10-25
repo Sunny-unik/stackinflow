@@ -6,13 +6,9 @@
   width: 28%;
   border-radius: 20px;
 }
-.activeTopNav {
-  background-image: linear-gradient(
-    to bottom,
-    rgba(50, 300, 200, 0.1),
-    #ffc0cb3a
-  );
-  color: blue !important;
+.activeTopNav:not(.navbar-brand) {
+  background-image: linear-gradient(to top, rgba(50, 300, 200, 0.1), #ecd3d710);
+  color: blue;
   border-radius: 5px;
 }
 .activeLeftNav {
@@ -72,4 +68,8 @@
   #sideLeftNav {
     display: none;
   }
+}
+/* tags */
+#tagButton:hover {
+  transform: scale(1.2);
 }
