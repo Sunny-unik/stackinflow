@@ -11,7 +11,7 @@ export default function Popularusers(props) {
   const [searchuser, setsearchuser] = useState(null);
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/list-user`).then((res) => {
+    axios.get(`${process.env.REACT_APP_API_URL}/user/list`).then((res) => {
       setusers(
         res.data.data
           .sort((a, b) => {

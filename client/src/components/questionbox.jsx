@@ -52,21 +52,20 @@ export default function QuestionBox(props) {
         </div>
         <div className="maintagdiv mx-2">
           {props.tags.map((o) => {
-            if (o !== "" && " ")
-              return (
-                <NavLink
-                  style={{
-                    color: "white",
-                    fontFamily: "monospace",
-                    padding: ".2rem",
-                    textDecorationLine: "none"
-                  }}
-                  className="m-1 rounded bg-dark"
-                  to={`/questionsby/${o}`}
-                >
-                  {o.replace(",", "")}
-                </NavLink>
-              );
+            return (
+              <NavLink
+                style={{
+                  color: "white",
+                  fontFamily: "monospace",
+                  padding: ".2rem",
+                  textDecorationLine: "none"
+                }}
+                className="m-1 rounded bg-dark"
+                to={`/questionsBy/${o}`}
+              >
+                {o.replace(",", "")}
+              </NavLink>
+            );
           })}
         </div>
         <div className="maindnamediv">

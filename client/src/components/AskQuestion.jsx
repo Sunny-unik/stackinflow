@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 
-export default function Askaquestion(props) {
+export default function AskQuestion(props) {
   const user = useSelector((state) => state.user);
   const userdname = useSelector((state) => state.user._id);
   const userpoints = useSelector((state) => state.user.userlikes);
@@ -11,9 +11,6 @@ export default function Askaquestion(props) {
   const [question, setaskq] = useState("");
   const [questiondetail, setaskqd] = useState("");
   const [asktag, setasktag] = useState("");
-  const [date, setdate] = useState(Date);
-  const [qlikes, setqlikes] = useState([]);
-  const [answers, setanswers] = useState([]);
 
   function setquestion(e) {
     e.target.name === "askq" && setaskq(e.target.value);
@@ -24,17 +21,15 @@ export default function Askaquestion(props) {
   useEffect(() => {
     if (user === null) {
       alert("User not found, for ask question you have to login first");
-      props.history.push("/Login");
+      props.history.push("/login");
     } else if (userdname === null) {
       alert("User not found, for ask question you have to login first");
-      props.history.push("/Login");
+      props.history.push("/login");
     } else {
       axios
-        .get(`${process.env.REACT_APP_API_URL}/list-question`)
-        .then((res) => {
-          console.log(res.data.data);
-          setallquestions(res.data.data);
-        });
+        .get(`${process.env.REACT_APP_API_URL}/question/list`)
+        .then((res) => setallquestions(res.data.data))
+        .catch((err) => console.log(err));
     }
   }, []);
 
@@ -88,16 +83,7 @@ export default function Askaquestion(props) {
     } else if (tags[4] === "" || !regQuestion.test(tags[0])) {
       alert(tags[4] + "- tag is not valid");
     } else {
-      setdate(Date);
-      const createq = {
-        qlikes,
-        question,
-        tags,
-        userdname,
-        date,
-        answers,
-        questiondetail
-      };
+      const createq = { question, tags, userdname, questiondetail };
       axios
         .post(`${process.env.REACT_APP_API_URL}/create-question`, createq)
         .then((res) => {
@@ -107,9 +93,8 @@ export default function Askaquestion(props) {
             const uid = { userdname, userpoint };
             axios
               .post(`${process.env.REACT_APP_API_URL}/update-user-point`, uid)
-              .then((res) => {
-                console.log(res.data.data);
-              });
+              .then((res) => console.log(res.data.data))
+              .catch((err) => console.log(err));
           }
         });
     }
@@ -126,7 +111,7 @@ export default function Askaquestion(props) {
               className="col-sm-12 col-md-7 card bg-white p-3 mb-md-4 d-inline-block mx-md-4"
               style={{ height: "inherit" }}
             >
-              <label for="askq">
+              <label htmlFor="askq">
                 <b>Enter your question title</b>
               </label>
               <br />
@@ -148,7 +133,7 @@ export default function Askaquestion(props) {
               />
               <br />
               <br />
-              <label for="askqd">
+              <label htmlFor="askqd">
                 <b>Describe your question</b>
               </label>
               <br />
@@ -171,7 +156,7 @@ export default function Askaquestion(props) {
               ></textarea>
               <br />
               <br />
-              <label for="asktag">
+              <label htmlFor="asktag">
                 <b>Enter tags related to questions</b>
               </label>
               <br />
@@ -255,9 +240,8 @@ export default function Askaquestion(props) {
                   about…"
                 </li>
                 <li>
-                  Include tags that are crucial to your question only,
-                  like&nbsp;
-                  <NavLink activeclassname="active" to="/questionsby/java">
+                  Include tags that are crucial to your question only, like{" "}
+                  <NavLink activeClassName="active" to="/questionsBy/java">
                     java
                   </NavLink>
                 </li>

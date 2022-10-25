@@ -48,9 +48,10 @@ export default function Allquestions() {
       {questions && (
         <>
           <div>
-            {questions &&
-              questions.map((q) => {
-                return (
+            {questions.map((q) => {
+              console.log(q);
+              return (
+                <div key={q._id}>
                   <QuestionBox
                     questionId={q._id}
                     likesCount={q.qlikes.length}
@@ -63,8 +64,9 @@ export default function Allquestions() {
                     }
                     date={q.date}
                   />
-                );
-              })}
+                </div>
+              );
+            })}
           </div>
           <div className="container">
             <div className="row m-2">

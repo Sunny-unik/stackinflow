@@ -23,16 +23,18 @@ export default function Searchq(props) {
       <div className="w-100 bg-light">
         {questions.length ? (
           questions.map((q) => (
-            <QuestionBox
-              questionId={q._id}
-              likesCount={q.qlikes.length}
-              questionTitle={q.question}
-              answersCount={q.answers ? q.answers.length : 0}
-              tags={q.tags}
-              dataAos={"fade-up"}
-              userObj={q.userId ? q.userId : (q.userId = { dname: "404" })}
-              date={q.date}
-            />
+            <div key={q._id}>
+              <QuestionBox
+                questionId={q._id}
+                likesCount={q.qlikes.length}
+                questionTitle={q.question}
+                answersCount={q.answers ? q.answers.length : 0}
+                tags={q.tags}
+                dataAos={"fade-up"}
+                userObj={q.userId ? q.userId : (q.userId = { dname: "404" })}
+                date={q.date}
+              />
+            </div>
           ))
         ) : (
           <h2 className="text-center text-danger card">!Question not Found</h2>

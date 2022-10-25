@@ -1,19 +1,8 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import {
-  FaHome,
-  FaQuestionCircle,
-  FaRegistered,
-  FaSignInAlt,
-  FaTags,
-  FaUsers,
-  FaWindowClose
-} from "react-icons/fa";
-import { FcMenu } from "react-icons/fc";
-import { useEffect } from "react";
+import { emailRegex, passwordRegex } from "../helper/RegexHelper";
 
 export default function Signup(props) {
   const [email, setemail] = useState("");
@@ -22,14 +11,6 @@ export default function Signup(props) {
   const [password, setpassword] = useState("");
   const [otp, setotp] = useState("");
   const [randomotp, setrandomotp] = useState("");
-  const [title, settitle] = useState("");
-  const [about, setabout] = useState("");
-  const [weblink, setweblink] = useState("");
-  const [gitlink, setgitlink] = useState("");
-  const [twitter, settwitter] = useState("");
-  const [address, setaddress] = useState("");
-
-  useEffect(() => closeSlideMenu(), []);
 
   function setvalue(e) {
     e.target.name === "cemail" && setemail(e.target.value);
@@ -59,27 +40,21 @@ export default function Signup(props) {
 
   function hidereg() {
     let isValid = true;
-    const emailregex =
-      // eslint-disable-next-line no-useless-escape
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!emailregex.test(email)) {
-      alert("Email is not valid");
+    if (!emailRegex.test(email)) {
       isValid = false;
+      alert("Email is not valid");
     }
-    if (name === "" || name == null || name === " ") {
+    if (name.trim().length <= 2 || name.trim().length >= 46 || !name.trim()) {
       isValid = false;
       alert("please enter your name");
     }
-    if (dname === "" || dname == null || dname === " ") {
+    if (name.trim().length <= 4 || name.trim().length >= 16 || !name.trim()) {
       isValid = false;
       alert("please enter username");
     }
-    const passregex =
-      // eslint-disable-next-line no-useless-escape
-      /(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/;
-    if (!passregex.test(password)) {
+    if (!passwordRegex.test(password)) {
       alert(
-        "Password should have 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character and be at least 8 characters long"
+        "Password should have 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character and number of letters must in between 8 to 16"
       );
       isValid = false;
     }
@@ -109,12 +84,6 @@ export default function Signup(props) {
       name,
       dname,
       password,
-      title,
-      about,
-      weblink,
-      gitlink,
-      twitter,
-      address,
       userlikes,
       profile
     };
@@ -123,10 +92,10 @@ export default function Signup(props) {
       .then((res) => {
         if (res.data.status === "ok") {
           alert("Registration Successfull");
-          props.history.push("/Login");
+          props.history.push("/login");
         } else {
           alert("! some server error occured try again ");
-          props.history.push("/Signup");
+          props.history.push("/signup");
         }
       });
   }
@@ -136,7 +105,7 @@ export default function Signup(props) {
       create();
     } else {
       alert("! incorrect otp ");
-      props.history.push("/Signup");
+      props.history.push("/signup");
     }
   }
 
@@ -145,90 +114,8 @@ export default function Signup(props) {
     document.getElementById("createdetail").style.display = "block";
   }
 
-  function openSlideMenu() {
-    document.getElementById("sidemenuopen").style.display = "none";
-    document.getElementById("sidemenuclose").style.display = "block";
-    document.getElementById("hiddennav").style.display = "block";
-  }
-  function closeSlideMenu() {
-    document.getElementById("sidemenuclose").style.display = "none";
-    document.getElementById("sidemenuopen").style.display = "block";
-    document.getElementById("hiddennav").style.display = "none";
-  }
-
   return (
     <React.Fragment>
-      <button
-        type="button"
-        id="sidemenuopen"
-        className="m-1 fixed-top btn-info rounded"
-        onClick={openSlideMenu}
-      >
-        <FcMenu />
-      </button>
-      <button
-        type="button"
-        id="sidemenuclose"
-        className="m-1 fixed-top btn-dark rounded"
-        onClick={closeSlideMenu}
-      >
-        <FaWindowClose />
-      </button>
-      <div id="hiddennav" className="py-2 px-2">
-        <NavLink
-          activeClassName="active1"
-          exact
-          to="/"
-          onClick={closeSlideMenu}
-        >
-          <FaHome /> Home{" "}
-        </NavLink>
-        <br />
-        <br />
-        <NavLink
-          activeClassName="active1"
-          to="/questions"
-          onClick={closeSlideMenu}
-        >
-          <FaQuestionCircle /> Questions{" "}
-        </NavLink>
-        <br />
-        <br />
-        <NavLink
-          activeClassName="active1"
-          to="/populartags"
-          onClick={closeSlideMenu}
-        >
-          <FaTags /> Popular Tags{" "}
-        </NavLink>
-        <br />
-        <br />
-        <NavLink
-          activeClassName="active1"
-          to="/popularusers"
-          onClick={closeSlideMenu}
-        >
-          <FaUsers /> Popular Users{" "}
-        </NavLink>
-        <br />
-        <br />
-        <NavLink activeClassName="active1" to="/Login" onClick={closeSlideMenu}>
-          <FaSignInAlt />
-          LogIn
-        </NavLink>
-        <br />
-        <br />
-        <NavLink
-          activeClassName="active1"
-          to="/Signup"
-          onClick={closeSlideMenu}
-        >
-          <FaRegistered />
-          SignUp
-        </NavLink>
-        <br />
-        <br />
-      </div>
       <div className="text-center">
         <div className="container signupcon">
           <div
@@ -249,62 +136,54 @@ export default function Signup(props) {
               <h1>Create an account</h1>
               <p>Please fill this form and get verified for register.</p>
               <hr className="signuphr" />
-              <label for="createemail">
+              <label htmlFor="createemail">
                 <b>Your Email</b>
               </label>
               <input
                 type="email"
                 style={{ fontFamily: "sans-serif" }}
                 value={email}
-                onChange={(e) => {
-                  setvalue(e);
-                }}
+                onChange={(e) => setvalue(e)}
                 minlength="5"
                 placeholder="example@eg.co"
                 name="cemail"
                 id="createemail"
                 required
               />
-              <label for="createname">
+              <label htmlFor="createname">
                 <b>Your Name</b>
               </label>
               <input
                 type="text"
                 style={{ fontFamily: "sans-serif" }}
                 value={name}
-                onChange={(e) => {
-                  setvalue(e);
-                }}
+                onChange={(e) => setvalue(e)}
                 placeholder="firstname lastname"
                 name="cname"
                 id="createname"
                 required
               />
-              <label for="createdname">
+              <label htmlFor="createdname">
                 <b>Display Name</b>
               </label>
               <input
                 type="text"
                 style={{ fontFamily: "sans-serif" }}
                 value={dname}
-                onChange={(e) => {
-                  setvalue(e);
-                }}
+                onChange={(e) => setvalue(e)}
                 placeholder="display_name"
                 name="cdname"
                 id="createdname"
                 required
               />
-              <label for="createpassword">
+              <label htmlFor="createpassword">
                 <b>Password</b>
               </label>
               <input
                 type="password"
                 style={{ fontFamily: "sans-serif" }}
                 value={password}
-                onChange={(e) => {
-                  setvalue(e);
-                }}
+                onChange={(e) => setvalue(e)}
                 minlength="8"
                 maxLength="16"
                 placeholder="password should be strong"
@@ -356,16 +235,14 @@ export default function Signup(props) {
               </button>
               <p>Please fill 6alphanumeric code for create your account.</p>
               <hr className="signuphr" />
-              <label for="otp" className="inputotp">
+              <label htmlFor="otp" className="inputotp">
                 <b>Otp sent on gievn email-address</b>
               </label>
               <input
                 style={{ fontFamily: "sans-serif" }}
                 type="text"
                 value={otp}
-                onChange={(e) => {
-                  setvalue(e);
-                }}
+                onChange={(e) => setvalue(e)}
                 placeholder="Enter Verfication Code"
                 name="otp"
                 id="otp"

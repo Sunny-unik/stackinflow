@@ -6,7 +6,7 @@ export default function SearchBox() {
   const [questionSearch, setquestionSearch] = useState("");
 
   return (
-    <form className="d-flex flex-grow-1">
+    <div className="d-flex flex-grow-1">
       <input
         type="text"
         placeholder="Search Question"
@@ -16,16 +16,16 @@ export default function SearchBox() {
         onChange={(e) => setquestionSearch(e.target.value)}
         id="questionSearch"
       />
-      <button className="btn btn-primary" id="questionSearchBtn">
-        <NavLink
-          to={{
-            pathname: `/search/${questionSearch}`,
-            searchedQuestion: questionSearch
-          }}
-        >
-          <FaSearch color="white" />
-        </NavLink>
-      </button>
-    </form>
+      <NavLink
+        id="questionSearchBtn"
+        className="btn btn-primary"
+        to={{
+          pathname: `/search/${questionSearch}`,
+          searchedQuestion: questionSearch
+        }}
+      >
+        <FaSearch color="white" />
+      </NavLink>
+    </div>
   );
 }

@@ -70,7 +70,7 @@ export default function Contact() {
         style={{ height: "inherit" }}
       >
         <div className="card-header">
-          <label for="ehead">
+          <label htmlFor="ehead">
             <b>Enter your feedback title</b>
           </label>
           <br />
@@ -90,7 +90,7 @@ export default function Contact() {
         </div>
         <br />
         <div className="card-body bg-light">
-          <label for="ebody">
+          <label htmlFor="ebody">
             <b>Include all your reviews in brief</b>
           </label>
           <br />
@@ -111,7 +111,7 @@ export default function Contact() {
         </div>
         <br />
         <div className="card-footer">
-          <label for="efoot">
+          <label htmlFor="efoot">
             <b>Enter footer content or conclusion</b>
           </label>
           <br />

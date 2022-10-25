@@ -2,16 +2,17 @@ import axios from "axios";
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-export default function Editquestion(props) {
+export default function EditQuestion(props) {
   const propLocation = props.location;
-  const [questionid, setquestionid] = useState(propLocation.questionid);
   const [question, setquestiontitle] = useState(propLocation.questiontitle);
   const [questiondetail, setquestiond] = useState(propLocation.questiondetails);
   const [qtags, setqtag] = useState(propLocation.questiontags);
-  const [qlikes, setqlikes] = useState(propLocation.questionlikes);
-  const [date, setqdate] = useState(propLocation.questiondate);
-  const [userdname, setquserdname] = useState(propLocation.questionuserdname);
-  const [answers, setqanswer] = useState(propLocation.qanswers);
+
+  const questionid = propLocation.questionid;
+  const qlikes = propLocation.questionlikes;
+  const date = propLocation.questiondate;
+  const userdname = propLocation.questionuserdname;
+  const answers = propLocation.qanswers;
 
   function setquestion(e) {
     e.target.name === "questiontitle" && setquestiontitle(e.target.value);
@@ -32,10 +33,11 @@ export default function Editquestion(props) {
     } else if (qtags === "" || qtags === null || qtags === " ") {
       alert("please enter atleast one tag");
     } else {
-      submitq();
+      submitQuestion();
     }
   }
-  function submitq() {
+
+  function submitQuestion() {
     let tags;
     if (typeof qtags !== "object") {
       tags = qtags.split(",");
@@ -62,9 +64,8 @@ export default function Editquestion(props) {
         .post(`${process.env.REACT_APP_API_URL}/update-question`, createq)
         .then((res) => {
           alert(res.data.data);
-          if (res.data.status === "ok") {
+          res.data.status === "ok" &&
             props.history.push(`/question/${questionid}`);
-          }
         });
     }
   }
@@ -89,7 +90,7 @@ export default function Editquestion(props) {
             className="p-2 col-sm-12 col-md-7 d-md-inline-block border rounded m-2 bg-secondary"
             id="editqmain"
           >
-            <label for="questiontitle" className="m-1 form-label">
+            <label htmlFor="questiontitle" className="m-1 form-label">
               {" "}
               Question Title{" "}
             </label>
@@ -103,7 +104,7 @@ export default function Editquestion(props) {
               required
             />
 
-            <label for="questiondetail" className="m-1 form-label">
+            <label htmlFor="questiondetail" className="m-1 form-label">
               {" "}
               Question Description{" "}
             </label>
@@ -119,7 +120,7 @@ export default function Editquestion(props) {
               required
             ></textarea>
 
-            <label for="questiontag" className="m-1 form-label">
+            <label htmlFor="questiontag" className="m-1 form-label">
               {" "}
               Question Tags{" "}
             </label>
@@ -193,8 +194,8 @@ export default function Editquestion(props) {
                 about…"
               </li>
               <li>
-                Include tags that are crucial to your question only, like&nbsp;
-                <NavLink activeClassName="active" to="/questionsby/java">
+                Include tags that are crucial to your question only, like{" "}
+                <NavLink activeClassName="active" to="/questionsBy/java">
                   java
                 </NavLink>
               </li>

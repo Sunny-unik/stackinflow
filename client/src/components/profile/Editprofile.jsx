@@ -7,7 +7,7 @@ export default function Editprofile(props) {
   useEffect(() => {
     if (user === null) {
       alert("User need to login first");
-      props.history.push("/Login");
+      props.history.push("/login");
     }
   });
 

@@ -3,7 +3,6 @@ import { FcDislike, FcLike, FcLikePlaceholder } from "react-icons/fc";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-import "./css/home.css";
 import "./css/qls.css";
 import Spinner from "./spinner";
 import handleDate from "../helper/dateHelper";
@@ -18,35 +17,32 @@ export default function Question(props) {
   const [answer, setanswer] = useState([]);
   const [postanswer, setpostanswer] = useState();
   const [alikes, setalikes] = useState([]);
+  const [quser, setquser] = useState("");
   const [date, setdate] = useState(Date);
-  const [alluser, setalluser] = useState([]);
   const [statechange, setstatechange] = useState(1);
 
   const user = useSelector((state) => state.user);
-
   const qid = props.match.params.id;
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/question-by-id/?id=` + qid)
+      .get(`${process.env.REACT_APP_API_URL}/question?id=` + qid)
       .then((res) => {
-        setquestion(res.data.data[0].question);
-        setqusername(res.data.data[0].userdname);
-        settag(res.data.data[0].tags);
-        setqdate(res.data.data[0].date);
-        setqlikes(res.data.data[0].qlikes);
-        setanswer(res.data.data[0].answers);
-        setquestiondetail(res.data.data[0].questiondetail);
+        console.log(res.data);
+        setquestion(res.data.data.question);
+        setqusername(res.data.data.userdname);
+        settag(res.data.data.tags);
+        setqdate(res.data.data.date);
+        setqlikes(res.data.data.qlikes);
+        setanswer(res.data.data.answers);
+        setquser(res.data.data.userId);
+        setquestiondetail(res.data.data.questiondetail);
       })
-      .catch((err) => console.log("qd", err));
-    axios.get(`${process.env.REACT_APP_API_URL}/list-user`).then((res) => {
-      setalluser(res.data.data);
-    });
-  }, [statechange, qlikes]);
+      .catch((err) => console.log("In question fetch: ", err));
+  }, []);
 
-  function setposta(e) {
+  const setposta = (e) =>
     e.target.name === "seta" && setpostanswer(e.target.value);
-  }
 
   function listanswer() {
     if (user === null) {
@@ -165,8 +161,8 @@ export default function Question(props) {
             ausernames.forEach((e) => {
               const userdname = e;
               if (user._id !== e) {
-                const auser = alluser.filter((t) => t._id === e);
-                let userpoint = auser[0].userlikes - 10;
+                const auser = undefined;
+                let userpoint = auser.userlikes - 10;
                 if (userpoint < 0) {
                   userpoint = 0;
                 }
@@ -188,7 +184,7 @@ export default function Question(props) {
 
   return question ? (
     <div>
-      <div>
+      <div key={qid}>
         <h2
           className="col-sm-10 text-left"
           style={{
@@ -218,11 +214,9 @@ export default function Question(props) {
         </button>
         <br />
         <div>
-          Asked By&nbsp;
+          Asked By{" "}
           <NavLink style={{ fontFamily: "cursive" }} to={`/user/${qusername}`}>
-            {alluser.map((r) => {
-              if (r._id === qusername) return r.dname;
-            })}
+            {quser}
           </NavLink>{" "}
           {handleDate(qdate) !== 0
             ? "on " + handleDate(qdate) + " day ago"
@@ -268,7 +262,7 @@ export default function Question(props) {
           <NavLink
             className="btn mx-1 btn-outline-primary"
             to={{
-              pathname: `/editquestion/${qid}`,
+              pathname: `/editQuestion/${qid}`,
               questionid: qid,
               questiontitle: question,
               questiondetails: questiondetail,
@@ -286,7 +280,7 @@ export default function Question(props) {
         )}
       </h4>
       <br />
-      {answer !== "" && <h2>&nbsp;Given Answers</h2>}
+      {answer !== "" && <h2> Given Answers</h2>}
       {answer !== "" &&
         answer.map((a) => {
           return (
@@ -323,14 +317,12 @@ export default function Question(props) {
                   {a.alikes ? a.alikes.length : 0}
                 </button>
                 <div className="col-sm-4 mx-2">
-                  Given By&nbsp;
+                  Given By{" "}
                   <NavLink
                     style={{ fontFamily: "cursive" }}
                     to={`/user/${a.uid}`}
                   >
-                    {alluser.map((r) => {
-                      if (r._id === a.uid) return r.dname;
-                    })}
+                    {quser}
                   </NavLink>{" "}
                   <br />{" "}
                   {handleDate(a.date) !== 0
@@ -344,7 +336,7 @@ export default function Question(props) {
         })}
       {answer === "" && (
         <h3 className="text-secondary">
-          <b>&nbsp;No answer given</b>
+          <b> No answer given</b>
         </h3>
       )}
       {answer !== "" && <br />}
@@ -397,20 +389,19 @@ export default function Question(props) {
         className="col-sm-11 px-1"
         style={{ display: "inline-block", margin: "1rem 1rem 1rem 0rem" }}
       >
-        Browse other questions tagged &nbsp;
+        Browse other questions tagged{" "}
         {tag.map((o) => {
           if (o !== "" && " ")
             return (
               <NavLink
                 style={{ fontFamily: "monospace" }}
                 className="btn btn-link btn-outline-dark m-1 rounded"
-                to={`/questionsby/${o}`}
+                to={`/questionsBy/${o}`}
               >
                 {o.replace(",", "")}
               </NavLink>
             );
-        })}
-        &nbsp;
+        })}{" "}
         {user ? (
           <span>
             {" "}
@@ -418,9 +409,9 @@ export default function Question(props) {
             <NavLink
               style={{ fontFamily: "monospace" }}
               className="btn btn-primary ayoq"
-              to={`/Askaquestion`}
+              to={`/AskQuestion`}
             >
-              ask you own question.
+              ask you questions.
             </NavLink>
           </span>
         ) : (

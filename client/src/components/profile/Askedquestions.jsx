@@ -11,10 +11,10 @@ export default function Askedquestions() {
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
-      console.log(res.data.data);
-      setquestion(res.data.data);
-    });
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/question/list`)
+      .then((res) => setquestion(res.data.data))
+      .catch((err) => console.log(err));
   }, []);
 
   const askedquestion = question.filter((un) => un.userdname === user._id);
@@ -71,7 +71,7 @@ export default function Askedquestions() {
                           padding: ".2rem"
                         }}
                         className="rounded-2 bg-dark m-1"
-                        to={`/questionsby/${o}`}
+                        to={`/questionsBy/${o}`}
                       >
                         {o}
                       </NavLink>

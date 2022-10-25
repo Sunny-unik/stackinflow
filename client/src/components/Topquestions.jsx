@@ -155,16 +155,20 @@ export default function Topquestions() {
           <div>
             {questions.map((q) => {
               return (
-                <QuestionBox
-                  questionId={q._id}
-                  likesCount={q.qlikes.length}
-                  questionTitle={q.question}
-                  answersCount={q.answers ? q.answers.length : 0}
-                  tags={q.tags}
-                  dataAos={"fade-up"}
-                  userObj={q.userId ? q.userId : (q.userId = { dname: "404" })}
-                  date={q.date}
-                />
+                <div key={q._id}>
+                  <QuestionBox
+                    questionId={q._id}
+                    likesCount={q.qlikes.length}
+                    questionTitle={q.question}
+                    answersCount={q.answers ? q.answers.length : 0}
+                    tags={q.tags}
+                    dataAos={"fade-up"}
+                    userObj={
+                      q.userId ? q.userId : (q.userId = { dname: "404" })
+                    }
+                    date={q.date}
+                  />
+                </div>
               );
             })}
             {!questions && <Spinner />}

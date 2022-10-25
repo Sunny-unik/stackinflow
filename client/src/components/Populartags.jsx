@@ -7,12 +7,13 @@ import Spinner from "./spinner";
 
 export default function Populartags(props) {
   const [question, setquestion] = useState([]);
-  const [searchtag, setsearchtag] = useState(null);
+  let searchtag = null;
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
-      setquestion(res.data.data);
-    });
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/question/list`)
+      .then((res) => setquestion(res.data.data))
+      .catch((err) => console.log(err));
   }, []);
 
   const alltags = question.map((d) => d.tags);
@@ -46,16 +47,10 @@ export default function Populartags(props) {
         </h4>
         <input
           type="text"
-          placeholder=" Search Tag"
-          style={{
-            paddingLeft: "1%",
-            fontFamily: "monospace",
-            fontWeight: "bold"
-          }}
+          placeholder=" Search Tags"
+          style={{ paddingLeft: "1%", fontFamily: "monospace" }}
           list="searchtag"
-          onChange={(e) => {
-            setsearchtag(e.target.value);
-          }}
+          onChange={(e) => e.target.value}
           value={searchtag}
           name="searcht"
           id="searcht"
@@ -63,19 +58,14 @@ export default function Populartags(props) {
           className="searchtp"
         />
         <datalist id="searchtag">
-          {question &&
-            uniquetags.forEach((y) => {
-              printedtags.push(y);
-            })}
-          {printedtags.map((u) => {
-            return <option>{u}</option>;
-          })}
+          {question && uniquetags.forEach((y) => printedtags.push(y))}
+          {printedtags.map((u) => (
+            <option>{u}</option>
+          ))}
         </datalist>
         <button
           className="searchb"
-          onClick={() => {
-            questionsbytag("notvalid", "search");
-          }}
+          onClick={() => questionsbytag("notvalid", "search")}
           style={{ fontFamily: "Fantasy" }}
         >
           <FcSearch /> Search
@@ -86,19 +76,17 @@ export default function Populartags(props) {
         {question &&
           printedtags.map((t) => {
             return (
-              <div
+              <button
                 data-aos="zoom-in"
                 data-aos-offset="max-height"
                 data-aos-once="true"
                 data-aos-duration="200"
-                style={{ cursor: "pointer" }}
-                className="col-md-2 d-inline-block text-center m-2 p-2 border border-3 border-secondary rounded-3 card-footer"
-                onClick={() => {
-                  questionsbytag(t, "open");
-                }}
+                className="btn btn-light m-2 border border-3 border-secondary"
+                id="tagButton"
+                onClick={() => questionsbytag(t, "open")}
               >
                 {t}
-              </div>
+              </button>
             );
           })}
       </div>

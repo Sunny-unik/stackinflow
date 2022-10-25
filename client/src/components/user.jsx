@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import { FcCollaboration } from "react-icons/fc";
 import { IoLocationSharp } from "react-icons/io5";
-import Questionbox from "./questionbox";
+import QuestionBox from "./questionBox";
 import Spinner from "./spinner";
 
 export default function User(props) {
@@ -38,12 +38,12 @@ export default function User(props) {
         setweblinkbyudn(res.data.data[0].weblink);
         setaddressbyudn(res.data.data[0].address);
       })
-      .catch((res) => {
-        setnotfound(`!User not found`);
-      });
-    axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
-      setquestion(res.data.data);
-    });
+      .catch((res) => setnotfound(`!User not found`));
+
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/question/list`)
+      .then((res) => setquestion(res.data.data))
+      .catch((err) => console.log(err));
   }, []);
 
   const answer = [];
@@ -54,9 +54,7 @@ export default function User(props) {
   });
 
   const questions = [];
-  question.forEach((un) => {
-    if (un.userdname === uid) questions.push(un);
-  });
+  question.forEach((un) => un.userdname === uid && questions.push(un));
 
   const askedquestion = questions.filter((un) => un.userdname === uid);
 
@@ -121,8 +119,7 @@ export default function User(props) {
                     <div>
                       <label style={{ fontFamily: "SeogUI" }}>Address</label>
                       <h4 style={{ fontFamily: "Sans-Serif" }}>
-                        <IoLocationSharp />
-                        &nbsp;{addressbyudn}
+                        <IoLocationSharp /> {addressbyudn}
                       </h4>{" "}
                     </div>
                   )}
@@ -133,16 +130,16 @@ export default function User(props) {
                           <FcCollaboration />
                         </abbr>
                       </a>
-                    )}
-                    &nbsp;&middot;&nbsp;
+                    )}{" "}
+                    &middot;{" "}
                     {gitlinkbyudn && (
                       <a target="_blank" href={gitlinkbyudn} rel="noreferrer">
                         <abbr title={gitlinkbyudn}>
                           <FaGithub />
                         </abbr>
                       </a>
-                    )}
-                    &nbsp;&middot;&nbsp;
+                    )}{" "}
+                    &middot;{" "}
                     {sociallinkbyudn && (
                       <a
                         target="_blank"
@@ -153,8 +150,7 @@ export default function User(props) {
                           <FaTwitter />
                         </abbr>
                       </a>
-                    )}
-                    &nbsp;
+                    )}{" "}
                   </h4>
                   <h4 style={{ fontFamily: "SeogUI", fontWeight: "bold" }}>
                     Total Points : {userlikes != null ? userlikes : 0}{" "}
@@ -192,16 +188,18 @@ export default function User(props) {
               {askedquestion &&
                 askedquestion.map((q) => {
                   return (
-                    <Questionbox
-                      questionid={q._id}
-                      likes={q.qlikes.length}
-                      questiontitle={q.question}
-                      answer={q.answers.length}
-                      tags={q.tags}
-                      data_aos={"fade-up"}
-                      userdname={q.userdname}
-                      date={q.date}
-                    />
+                    <div key={q._id}>
+                      <QuestionBox
+                        questionId={q._id}
+                        likesCount={q.qlikes.length}
+                        questionTitle={q.question}
+                        answersCount={q.answers.length}
+                        tags={q.tags}
+                        dataAos={"fade-up"}
+                        userObj={q.userdname}
+                        date={q.date}
+                      />
+                    </div>
                   );
                 })}
               {!askedquestion && <Spinner />}

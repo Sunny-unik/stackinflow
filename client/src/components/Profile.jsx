@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Switch, Route, NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import axios from "axios";
@@ -9,198 +9,58 @@ import Givenanswer from "./profile/Givenaswer";
 import Editprofile from "./profile/Editprofile";
 import Likedquestions from "./profile/Likedquestions";
 import Footer from "./Footer";
-import {
-  FaGithub,
-  FaHome,
-  FaQuestion,
-  FaQuestionCircle,
-  FaSignOutAlt,
-  FaTags,
-  FaTwitter,
-  FaUsers,
-  FaUserTie,
-  FaWindowClose
-} from "react-icons/fa";
+import { FaGithub, FaTwitter } from "react-icons/fa";
 import { IoLocationSharp } from "react-icons/io5";
-import { FcCollaboration, FcMenu } from "react-icons/fc";
+import { FcCollaboration } from "react-icons/fc";
 
 export default function Profile(props) {
   const user = useSelector((state) => state.user);
-  useEffect(() => {
-    closeSlideMenu();
-    if (user === null) {
-      alert("User need to login first");
-    }
-  });
-  console.log(user);
+  useEffect(() => user === null && alert("User need to login first"));
 
-  const uname = useSelector((state) => state.user.name);
-  const udname = useSelector((state) => state.user.dname);
-  const uemail = useSelector((state) => state.user.email);
-  const utitle = useSelector((state) => state.user.title);
-  const uabout = useSelector((state) => state.user.about);
+  const name = useSelector((state) => state.user.name);
+  const dname = useSelector((state) => state.user.dname);
+  const email = useSelector((state) => state.user.email);
+  const title = useSelector((state) => state.user.title);
+  const about = useSelector((state) => state.user.about);
   const weblink = useSelector((state) => state.user.weblink);
   const gitlink = useSelector((state) => state.user.gitlink);
   const twitter = useSelector((state) => state.user.twitter);
-  const uaddress = useSelector((state) => state.user.address);
+  const address = useSelector((state) => state.user.address);
   const uprofile = useSelector((state) => state.user.profile);
 
   let profile;
   const [uploadPercentage, setuploadPercentage] = useState("");
 
-  const [name, setname] = useState(uname);
-  const [dname, setdname] = useState(udname);
-  const [email, setemail] = useState(uemail);
-  const [title, settitle] = useState(utitle);
-  const [about, setabout] = useState(uabout);
-  const [website, setwebsite] = useState(weblink);
-  const [githublink, setgithublink] = useState(gitlink);
-  const [twitterlink, settwitterlink] = useState(twitter);
-  const [address, setaddress] = useState(uaddress);
-
-  function openSlideMenu() {
-    document.getElementById("sidemenuopen").style.display = "none";
-    document.getElementById("sidemenuclose").style.display = "block";
-    document.getElementById("hiddennav").style.display = "block";
-  }
-  function closeSlideMenu() {
-    document.getElementById("sidemenuclose").style.display = "none";
-    document.getElementById("sidemenuopen").style.display = "block";
-    document.getElementById("hiddennav").style.display = "none";
-  }
-
-  const dispatch = useDispatch();
-  function logout() {
-    dispatch({ type: "LOGOUT_USER" });
-    alert("User successfully logout");
-  }
-
-  function sidelink() {
-    if (user) {
-      props.history.push("/askaquestion");
-      closeSlideMenu();
-    } else {
-      alert("User need to login first");
-    }
-  }
-
-  function setProfile(e) {
-    profile = e.target.files[0];
-    console.log(profile);
-  }
+  const setProfile = (e) => (profile = e.target.files[0]);
 
   function sendvalues() {
-    if (profile !== undefined) {
-      const formData = new FormData();
-      formData.append("obid", user._id);
-      formData.append("profile", profile);
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/update-user`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-          onUploadProgress: function (progressEvent) {
-            console.log("file Uploading Progresss.......");
-            console.log(progressEvent);
-            setuploadPercentage(
-              parseInt(
-                Math.round((progressEvent.loaded / progressEvent.total) * 100)
-              )
-            );
-            //setfileInProgress(progressEvent.fileName)
-          }
-        })
-        .then((res) => {
-          alert(res.data.data);
-        })
-        .catch((res) => {
-          alert("sorry you are not authorised to do this action");
-        });
-    } else {
-      alert("please choose profile");
+    if (!profile) {
+      alert("please select a profile");
+      return false;
     }
+    const formData = new FormData();
+    formData.append("obid", user._id);
+    formData.append("profile", profile);
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/update-user`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: function (progressEvent) {
+          console.log("file Uploading Progresss.......");
+          console.log(progressEvent);
+          setuploadPercentage(
+            parseInt(
+              Math.round((progressEvent.loaded / progressEvent.total) * 100)
+            )
+          );
+          //setfileInProgress(progressEvent.fileName)
+        }
+      })
+      .then((res) => alert(res.data.data))
+      .catch((err) => alert("Operation failed beacuse: ", err));
   }
 
   return (
     <React.Fragment>
-      <button
-        type="button"
-        id="sidemenuopen"
-        className="m-1 fixed-top btn-info rounded"
-        onClick={openSlideMenu}
-      >
-        <FcMenu />
-      </button>
-      <button
-        type="button"
-        id="sidemenuclose"
-        className="m-1 fixed-top btn-dark rounded"
-        onClick={closeSlideMenu}
-      >
-        <FaWindowClose />
-      </button>
-      <div id="hiddennav" className="py-2 px-2">
-        <NavLink
-          activeclassname="active1"
-          exact
-          to="/"
-          onClick={closeSlideMenu}
-        >
-          <FaHome /> Home{" "}
-        </NavLink>
-        <br />
-        <br />
-        <NavLink
-          activeclassname="active1"
-          to="/questions"
-          onClick={closeSlideMenu}
-        >
-          <FaQuestionCircle /> Questions{" "}
-        </NavLink>
-        <br />
-        <br />
-        <NavLink
-          activeclassname="active1"
-          to="/populartags"
-          onClick={closeSlideMenu}
-        >
-          <FaTags /> Popular Tags{" "}
-        </NavLink>
-        <br />
-        <br />
-        <span
-          activeclassname="active1"
-          className="extralink"
-          style={{ fontSize: "inherit", fontFamily: "sans-serif" }}
-          onClick={sidelink}
-        >
-          <FaQuestion /> Ask Question{" "}
-        </span>
-        <br />
-        <br />
-        <NavLink
-          activeclassname="active1"
-          to="/popularusers"
-          onClick={closeSlideMenu}
-        >
-          <FaUsers /> Popular Users{" "}
-        </NavLink>
-        <br />
-        <br />
-        <NavLink
-          activeclassname="active1"
-          to="/Profile"
-          onClick={closeSlideMenu}
-        >
-          <FaUserTie /> Profile{" "}
-        </NavLink>
-        <br />
-        <br />
-        <NavLink activeclassname="active1" onClick={logout} to="/Login">
-          <FaSignOutAlt /> LogOut{" "}
-        </NavLink>
-        <br />
-        <br />
-      </div>
-
       <div className="container">
         <div className="d-md-flex">
           <div className="col-md-5 col-sm-10 text-center col-lg-4 mx-auto proimgdiv">
@@ -276,36 +136,34 @@ export default function Profile(props) {
                 <div>
                   <label style={{ fontFamily: "SeogUI" }}>Address</label>
                   <h4 style={{ fontFamily: "Sans-Serif" }}>
-                    <IoLocationSharp />
-                    &nbsp;{address}
+                    <IoLocationSharp /> {address}
                   </h4>{" "}
                 </div>
               )}
               <h4>
-                {website && (
-                  <a target="_blank" href={website} rel="noreferrer">
-                    <abbr title={website}>
+                {weblink && (
+                  <a target="_blank" href={weblink} rel="noreferrer">
+                    <abbr title={weblink}>
                       <FcCollaboration />
                     </abbr>
                   </a>
-                )}
-                &nbsp;&middot;&nbsp;
-                {githublink && (
-                  <a target="_blank" href={githublink} rel="noreferrer">
-                    <abbr title={githublink}>
+                )}{" "}
+                &middot;{" "}
+                {gitlink && (
+                  <a target="_blank" href={gitlink} rel="noreferrer">
+                    <abbr title={gitlink}>
                       <FaGithub />
                     </abbr>
                   </a>
-                )}
-                &nbsp;&middot;&nbsp;
-                {twitterlink && (
-                  <a target="_blank" href={twitterlink} rel="noreferrer">
-                    <abbr title={twitterlink}>
+                )}{" "}
+                &middot;{" "}
+                {twitter && (
+                  <a target="_blank" href={twitter} rel="noreferrer">
+                    <abbr title={twitter}>
                       <FaTwitter />
                     </abbr>
                   </a>
-                )}
-                &nbsp;
+                )}{" "}
               </h4>
               <h4 style={{ fontFamily: "SeogUI", fontWeight: "bold" }}>
                 Total Points : {user.userlikes === null ? 0 : user.userlikes}{" "}
@@ -338,8 +196,8 @@ export default function Profile(props) {
               <p className="mx-1 my-auto px-1">
                 <NavLink
                   className="btn text-primary rounded p-1"
-                  activeclassname="active"
-                  to="/Profile"
+                  activeClassName="active"
+                  to="/profile"
                   style={{ fontSize: "large" }}
                 >
                   Liked Questions
@@ -348,8 +206,8 @@ export default function Profile(props) {
               <p className="mx-1 my-auto px-1">
                 <NavLink
                   className="btn text-primary rounded p-1"
-                  activeclassname="active"
-                  to="/Profile/editprofile"
+                  activeClassName="active"
+                  to="/profile/editprofile"
                   style={{ fontSize: "large" }}
                 >
                   Edit Profile
@@ -358,8 +216,8 @@ export default function Profile(props) {
               <p className="mx-1 my-auto px-1">
                 <NavLink
                   className="btn text-primary rounded p-1"
-                  activeclassname="active"
-                  to="/Profile/selfquestion"
+                  activeClassName="active"
+                  to="/profile/selfquestion"
                   style={{ fontSize: "large" }}
                 >
                   Asked Questions
@@ -368,8 +226,8 @@ export default function Profile(props) {
               <p className="mx-1 my-auto px-1">
                 <NavLink
                   className="btn text-primary rounded p-1"
-                  activeclassname="active"
-                  to="/Profile/selfanswer"
+                  activeClassName="active"
+                  to="/profile/selfanswer"
                   style={{ fontSize: "large" }}
                 >
                   Given Answers
@@ -380,13 +238,10 @@ export default function Profile(props) {
           <div className="d-flex justify-content-center">
             <div className="col-sm-10">
               <Switch>
-                <Route path="/Profile" exact component={Likedquestions} />
-                <Route path="/Profile/editprofile" component={Editprofile} />
-                <Route
-                  path="/Profile/selfquestion"
-                  component={Askedquestions}
-                />
-                <Route path="/Profile/selfanswer" component={Givenanswer} />
+                <Route path="/profile" exact component={Likedquestions} />
+                <Route path="/profile/editProfile" component={Editprofile} />
+                <Route path="/profile/questions" component={Askedquestions} />
+                <Route path="/profile/answers" component={Givenanswer} />
               </Switch>
             </div>
           </div>

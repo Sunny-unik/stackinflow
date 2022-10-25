@@ -48,7 +48,7 @@ export default function CanvasNav(props) {
             fontSize: "1.4em",
             textShadow: "0.02em 0.02em black"
           }}
-          to="/populartags"
+          to="/popularTags"
         >
           Popular Tags
         </NavLink>
@@ -61,7 +61,7 @@ export default function CanvasNav(props) {
             fontSize: "1.4em",
             textShadow: "0.02em 0.02em black"
           }}
-          to="/popularusers"
+          to="/popularUsers"
         >
           Popular Users
         </NavLink>

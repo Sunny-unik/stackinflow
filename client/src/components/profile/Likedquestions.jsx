@@ -10,9 +10,10 @@ export default function Likedquestions() {
   const [question, setquestion] = useState([]);
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
-      setquestion(res.data.data);
-    });
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/question/list`)
+      .then((res) => setquestion(res.data.data))
+      .catch((err) => console.log(err));
   }, []);
 
   const userliked = [];
@@ -61,7 +62,7 @@ export default function Likedquestions() {
                       padding: ".2rem"
                     }}
                     className="m-1 rounded-2 bg-dark"
-                    to={`/questionsby/${o}`}
+                    to={`/questionsBy/${o}`}
                   >
                     {o}
                   </NavLink>
@@ -72,7 +73,7 @@ export default function Likedquestions() {
               className="maindnamediv"
               style={{ fontSize: ".9rem", fontFamily: "cursive" }}
             >
-              asked by &nbsp;
+              asked by&nbsp;
               <NavLink
                 style={{ color: "navy", fontFamily: "cursive" }}
                 to={`/user/${g.userdname}`}

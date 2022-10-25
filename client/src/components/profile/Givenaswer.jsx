@@ -10,10 +10,10 @@ export default function Givenaswer() {
   const uid = useSelector((state) => state.user._id);
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/list-question`).then((res) => {
-      console.log(res.data.data);
-      setquestion(res.data.data);
-    });
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/question/list`)
+      .then((res) => setquestion(res.data.data))
+      .catch((err) => console.log(err));
   }, []);
 
   const answer = [];

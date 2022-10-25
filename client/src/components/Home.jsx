@@ -3,17 +3,17 @@ import React from "react";
 import { Switch, Route, NavLink } from "react-router-dom";
 import Populartags from "./Populartags";
 import Popularusers from "./Popularusers";
-import Askaquestion from "./Askaquestion";
+import AskQuestion from "./AskQuestion";
 import Allquestions from "./Allquestions";
 import Topquestions from "./Topquestions";
-import Question from "./question";
+import Question from "./OpenedQuestion";
 import Footer from "./Footer";
-import User from "./user";
-import Questionsbytags from "./questionsbytags";
-import Editquestion from "./editquestion";
+import User from "./User";
+import QuestionsByTag from "./QuestionsByTag";
+import EditQuestion from "./EditQuestion";
 import About from "./About";
 import Contact from "./Contact";
-import Searchq from "./searchq";
+import Searchq from "./Searchq";
 
 export default function Home(props) {
   const user = useSelector((state) => state.user);
@@ -21,7 +21,7 @@ export default function Home(props) {
   const sidelink = () => {
     user
       ? props.history.push("/askaquestion")
-      : alert("User need to login first");
+      : alert("You need to login first");
   };
 
   return (
@@ -64,7 +64,7 @@ export default function Home(props) {
                   fontSize: "1.4em",
                   textShadow: "0.02em 0.02em black"
                 }}
-                to="/populartags"
+                to="/popularTags"
               >
                 Popular Tags
               </NavLink>
@@ -77,7 +77,7 @@ export default function Home(props) {
                   fontSize: "1.4em",
                   textShadow: "0.02em 0.02em black"
                 }}
-                to="/popularusers"
+                to="/popularUsers"
               >
                 Popular Users
               </NavLink>
@@ -103,17 +103,17 @@ export default function Home(props) {
           >
             <Switch>
               <Route path="/questions" component={Allquestions} />
-              <Route path="/populartags" component={Populartags} />
-              <Route path="/popularusers" component={Popularusers} />
-              <Route path="/question/:id" component={Question} />
-              <Route path="/editquestion/:qid" component={Editquestion} />
+              <Route path="/popularTags" component={Populartags} />
+              <Route path="/popularUsers" component={Popularusers} />
+              <Route path="/question/:qid" component={Question} />
+              <Route path="/editQuestion/:qid" component={EditQuestion} />
               <Route path="/user/:_id" component={User} />
-              <Route path="/questionsby/:t" component={Questionsbytags} />
-              <Route path="/askaquestion" component={Askaquestion} />
+              <Route path="/questionsBy/:tag" component={QuestionsByTag} />
+              <Route path="/askQuestion" component={AskQuestion} />
               <Route path="/" exact component={Topquestions} />
               <Route path="/about" component={About} />
               <Route path="/feedback" component={Contact} />
-              <Route path="/search/:questionsearch" component={Searchq} />
+              <Route path="/search/:questionSearch" component={Searchq} />
             </Switch>
           </div>
         </div>
