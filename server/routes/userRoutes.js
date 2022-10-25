@@ -10,7 +10,8 @@ const {
   userById,
   createUser,
   checkLogin,
-  updateUserPoint
+  updateUserPoint,
+  authenticate
 } = require("../controllers/userController");
 const validUser = require("../validations/validUser");
 
@@ -18,9 +19,10 @@ const router = express.Router();
 
 router.get("/list", listUser);
 router.get("/", userById);
-router.post("/login", validUser(), checkLogin);
+router.get("/authenticate", authenticate);
 router.get("/dname", validUser(), validDname);
 router.get("/email", validUser(), validEmail);
+router.post("/login", validUser(), checkLogin);
 router.post("/otp-mail", validUser(), sendOtpEmail);
 router.put("/points", validUser(), updateUserPoint);
 router.put("/", validUser(), updateUserDetails);

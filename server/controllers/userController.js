@@ -2,13 +2,17 @@ const sendMail = require("../helpers/mailer");
 const userSchema = require("../models/userSchema");
 const upload = require("../helpers/multerConfig");
 const fs = require("fs");
+const { sign, verify } = require("jsonwebtoken");
 
 const userController = {
   checkLogin: async (req, res) => {
     const checkPassword = (user) => {
       if (user.password === req.body.password) {
         user.password = undefined;
-        return user;
+        const token = sign({ dname: user.dname }, "verySecretCode", {
+          expiresIn: "7d"
+        });
+        return [user, token];
       }
     };
 
@@ -18,9 +22,32 @@ const userController = {
         let filterData;
         if (!user) return res.send({ msg: "user not found" });
         else filterData = checkPassword(user);
-        filterData
-          ? res.send({ data: filterData, msg: "Credentials Matched" })
+        filterData.length
+          ? res.send({
+              data: filterData[0],
+              token: filterData[1],
+              msg: "Credentials Matched"
+            })
           : res.send({ msg: "incorrect password" });
+      })
+      .catch((err) => res.send(err));
+  },
+
+  authenticate: async (req, res) => {
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      const decode = verify(token, "verySecretCode");
+      req.decoded = decode;
+    } catch (error) {
+      res.send("token expired");
+      return false;
+    }
+
+    await userSchema
+      .findOne({ dname: req.decoded.dname })
+      .then((result) => {
+        result.password = undefined;
+        res.send({ status: "ok", data: result });
       })
       .catch((err) => res.send(err));
   },
@@ -57,14 +84,14 @@ const userController = {
       .select("_id email password")
       .then((user) => {
         if (user) {
-          sendMail(
-            process.env.APP_ID,
-            process.env.APP_PASSWORD,
-            user.email,
-            "Welcome to stackinflow",
-            `Your One Time Password is - <h3>${otp}</h3><br>
-          <h6>We hope you find our service cool.</h6>`
-          );
+          // sendMail(
+          //   process.env.APP_ID,
+          //   process.env.APP_PASSWORD,
+          //   user.email,
+          //   "Welcome to stackinflow",
+          //   `Your One Time Password is - <h3>${otp}</h3><br>
+          //   <h6>We hope you find our service cool.</h6>`
+          // );
           res.send({
             data: user,
             otp: otp.length < 6 ? otp + "1" : otp,
@@ -179,7 +206,7 @@ const userController = {
   listUser: async (req, res) => {
     await userSchema
       .find()
-      .select("_id name dname userlikes")
+      .select("_id name dname userlikes password")
       .then((users) => res.send({ msg: users.length, data: users }))
       .catch((err) => res.send(err));
   }
