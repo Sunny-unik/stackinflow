@@ -79,7 +79,7 @@ export default function User(props) {
                     src={
                       profilebyudn
                         ? `${process.env.REACT_APP_API_URL}/${profilebyudn}`
-                        : "../assets/img/download.jpg"
+                        : "../assets/img/profile.jpg"
                     }
                     alt="user profile"
                   />

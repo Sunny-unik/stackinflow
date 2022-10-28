@@ -107,7 +107,7 @@ export default function Popularusers(props) {
                         src={
                           p.profile
                             ? `${process.env.REACT_APP_API_URL}/${p.profile}`
-                            : "assets/img/download.jpg"
+                            : "assets/img/profile.jpg"
                         }
                         alt="user profile"
                       />

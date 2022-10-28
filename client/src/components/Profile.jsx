@@ -83,7 +83,7 @@ export default function Profile() {
                 src={
                   uprofile
                     ? `${process.env.REACT_APP_API_URL}/${uprofile}`
-                    : "assets/img/download.jpg"
+                    : "assets/img/profile.jpg"
                 }
                 alt="user profile"
               />
