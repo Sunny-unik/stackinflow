@@ -25,9 +25,7 @@ export default function App() {
   useEffect(() => {
     const localToken = localStorage.getItem("stackinflowToken");
     if (!!localToken) dispatch(authenticateUser(localToken));
-    console.count("appRender");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const logout = () => {
     localStorage.removeItem("stackinflowToken");

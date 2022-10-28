@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Switch, Route, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import AOS from "aos";
@@ -13,25 +13,30 @@ import { FaGithub, FaTwitter } from "react-icons/fa";
 import { IoLocationSharp } from "react-icons/io5";
 import { FcCollaboration } from "react-icons/fc";
 
-export default function Profile(props) {
+export default function Profile() {
   const user = useSelector((state) => state.user);
-  useEffect(() => user === null && alert("User need to login first"));
 
-  const name = useSelector((state) => state.user.name);
-  const dname = useSelector((state) => state.user.dname);
-  const email = useSelector((state) => state.user.email);
-  const title = useSelector((state) => state.user.title);
-  const about = useSelector((state) => state.user.about);
-  const weblink = useSelector((state) => state.user.weblink);
-  const gitlink = useSelector((state) => state.user.gitlink);
-  const twitter = useSelector((state) => state.user.twitter);
-  const address = useSelector((state) => state.user.address);
-  const uprofile = useSelector((state) => state.user.profile);
+  if (!user && !localStorage.getItem("stackinflowToken"))
+    window.location.pathname = "/login";
 
-  let profile;
+  const {
+    _id: userId,
+    name,
+    dname,
+    email,
+    title,
+    about,
+    weblink,
+    gitlink,
+    twitter,
+    address,
+    userlikes,
+    uprofile
+  } = user ? user : [null];
+
   const [uploadPercentage, setuploadPercentage] = useState("");
-
-  const setProfile = (e) => (profile = e.target.files[0]);
+  let profile;
+  const uploadProfile = (e) => (profile = e.target.files[0]);
 
   function sendvalues() {
     if (!profile) {
@@ -39,7 +44,7 @@ export default function Profile(props) {
       return false;
     }
     const formData = new FormData();
-    formData.append("obid", user._id);
+    formData.append("uid", userId);
     formData.append("profile", profile);
     axios
       .post(`${process.env.REACT_APP_API_URL}/update-user`, formData, {
@@ -86,7 +91,7 @@ export default function Profile(props) {
                 type="file"
                 className="btn btn-primary col-sm-12 my-2"
                 accept="image/png,image/jpg,image/jpeg"
-                onChange={(e) => setProfile(e)}
+                onChange={(e) => uploadProfile(e)}
               />
               {uploadPercentage} {uploadPercentage && "% uploaded"}
               <div className="w-100 m-0 p-0 text-center">
@@ -166,7 +171,7 @@ export default function Profile(props) {
                 )}{" "}
               </h4>
               <h4 style={{ fontFamily: "SeogUI", fontWeight: "bold" }}>
-                Total Points : {user.userlikes === null ? 0 : user.userlikes}{" "}
+                Total Points: {user && (userlikes === null ? 0 : userlikes)}
               </h4>
               <br />
             </div>
@@ -178,74 +183,76 @@ export default function Profile(props) {
               <label>
                 <h1>About </h1>
               </label>
-              <h3>{about}</h3>{" "}
+              <h3>{about} </h3>
             </div>
           )}
         </div>
       </div>
       <br />
       <div>
-        <div className="row w-100 m-auto">
-          <div className="d-flex flex-xs-column flex-md-row justify-content-center content py-2 bg-dark rounded">
-            <div
-              data-aos="zoom-out"
-              data-aos-once="true"
-              data-aos-duration="600"
-              className="d-flex flex-sm-column flex-md-row text-center"
-            >
-              <p className="mx-1 my-auto px-1">
-                <NavLink
-                  className="btn text-primary rounded p-1"
-                  activeClassName="active"
-                  to="/profile"
-                  style={{ fontSize: "large" }}
-                >
-                  Liked Questions
-                </NavLink>
-              </p>
-              <p className="mx-1 my-auto px-1">
-                <NavLink
-                  className="btn text-primary rounded p-1"
-                  activeClassName="active"
-                  to="/profile/editprofile"
-                  style={{ fontSize: "large" }}
-                >
-                  Edit Profile
-                </NavLink>
-              </p>
-              <p className="mx-1 my-auto px-1">
-                <NavLink
-                  className="btn text-primary rounded p-1"
-                  activeClassName="active"
-                  to="/profile/selfquestion"
-                  style={{ fontSize: "large" }}
-                >
-                  Asked Questions
-                </NavLink>
-              </p>
-              <p className="mx-1 my-auto px-1">
-                <NavLink
-                  className="btn text-primary rounded p-1"
-                  activeClassName="active"
-                  to="/profile/selfanswer"
-                  style={{ fontSize: "large" }}
-                >
-                  Given Answers
-                </NavLink>
-              </p>
+        {user && (
+          <div className="row w-100 m-auto">
+            <div className="d-flex flex-xs-column flex-md-row justify-content-center content py-2 bg-dark rounded">
+              <div
+                data-aos="zoom-out"
+                data-aos-once="true"
+                data-aos-duration="600"
+                className="d-flex flex-sm-column flex-md-row text-center"
+              >
+                <p className="mx-1 my-auto px-1">
+                  <NavLink
+                    className="btn text-primary rounded p-1"
+                    activeClassName="active"
+                    to="/profile"
+                    style={{ fontSize: "large" }}
+                  >
+                    Liked Questions
+                  </NavLink>
+                </p>
+                <p className="mx-1 my-auto px-1">
+                  <NavLink
+                    className="btn text-primary rounded p-1"
+                    activeClassName="active"
+                    to="/profile/editprofile"
+                    style={{ fontSize: "large" }}
+                  >
+                    Edit Profile
+                  </NavLink>
+                </p>
+                <p className="mx-1 my-auto px-1">
+                  <NavLink
+                    className="btn text-primary rounded p-1"
+                    activeClassName="active"
+                    to="/profile/selfquestion"
+                    style={{ fontSize: "large" }}
+                  >
+                    Asked Questions
+                  </NavLink>
+                </p>
+                <p className="mx-1 my-auto px-1">
+                  <NavLink
+                    className="btn text-primary rounded p-1"
+                    activeClassName="active"
+                    to="/profile/selfanswer"
+                    style={{ fontSize: "large" }}
+                  >
+                    Given Answers
+                  </NavLink>
+                </p>
+              </div>
+            </div>
+            <div className="d-flex justify-content-center">
+              <div className="col-sm-10">
+                <Switch>
+                  <Route path="/profile" exact component={Likedquestions} />
+                  <Route path="/profile/editProfile" component={Editprofile} />
+                  <Route path="/profile/questions" component={Askedquestions} />
+                  <Route path="/profile/answers" component={Givenanswer} />
+                </Switch>
+              </div>
             </div>
           </div>
-          <div className="d-flex justify-content-center">
-            <div className="col-sm-10">
-              <Switch>
-                <Route path="/profile" exact component={Likedquestions} />
-                <Route path="/profile/editProfile" component={Editprofile} />
-                <Route path="/profile/questions" component={Askedquestions} />
-                <Route path="/profile/answers" component={Givenanswer} />
-              </Switch>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
       <Footer />
     </React.Fragment>
