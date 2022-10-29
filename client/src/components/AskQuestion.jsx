@@ -2,66 +2,42 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
+import { tagRegex } from "../helper/RegexHelper";
 
 export default function AskQuestion(props) {
-  const user = useSelector((state) => state.user);
-  const userdname = useSelector((state) => state.user._id);
-  const userpoints = useSelector((state) => state.user.userlikes);
   const [allquestions, setallquestions] = useState([]);
-  const [question, setaskq] = useState("");
-  const [questiondetail, setaskqd] = useState("");
+  const [askq, setaskq] = useState("");
+  const [askqd, setaskqd] = useState("");
   const [asktag, setasktag] = useState("");
-
-  function setquestion(e) {
-    e.target.name === "askq" && setaskq(e.target.value);
-    e.target.name === "askqd" && setaskqd(e.target.value);
-    e.target.name === "askt" && setasktag(e.target.value.replace(" ", ","));
-  }
+  const user = useSelector((state) => state.user);
+  const { _id, userlikes } = user ? user : [null];
 
   useEffect(() => {
-    if (user === null) {
+    if (user === null && !localStorage.getItem("stackinflowToken")) {
       alert("User not found, for ask question you have to login first");
       props.history.push("/login");
-    } else if (userdname === null) {
-      alert("User not found, for ask question you have to login first");
-      props.history.push("/login");
-    } else {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/question/list`)
-        .then((res) => setallquestions(res.data.data))
-        .catch((err) => console.log(err));
+      return false;
     }
-  }, []);
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/question/list`)
+      .then((res) => setallquestions(res.data.data.map((e) => e.question)))
+      .catch((err) => console.log(err));
+  }, [user, props.history]);
 
-  const regQuestion = /^[a-zA-Z ]+$/;
   function validateq() {
-    console.log(asktag);
-    // eslint-disable-next-line
-    if (question === "" || question === null || question === " ") {
+    if (!askq.trim().length || !askq) {
       alert("question title is missing");
-    } else if (
-      questiondetail === "" ||
-      questiondetail === null ||
-      questiondetail === " "
-    ) {
-      alert("question body is missing");
-    } else if (asktag === "" || asktag === null || asktag === " ") {
+    } else if (!askqd.trim().length || !askqd) {
+      alert("question description is missing");
+    } else if (!asktag.trim().length || !asktag) {
       alert("please enter atleast one tag");
-    } else if (!regQuestion.test(question)) {
-      alert(
-        "Question is not in valid format, in question title you cannot put symbols"
-      );
-    } else {
-      validateq2();
-    }
+    } else validateq2();
   }
 
   function validateq2() {
     let isvalid = true;
-    allquestions.forEach((i) => {
-      if (question === i.question) isvalid = false;
-    });
-    if (isvalid === true) submitq();
+    if (allquestions.includes(askq)) isvalid = false;
+    if (isvalid) submitq();
     else alert("This question is already asked by any other user");
   }
 
@@ -72,25 +48,30 @@ export default function AskQuestion(props) {
       alert("!For create your question you must use atleast 1 tags in it.");
     } else if (tags.length > 5) {
       alert("!You can not put more than 5 tags in your question.");
-    } else if (tags[0] === "" || !regQuestion.test(tags[0])) {
+    } else if (tags[0] === "" || !tagRegex.test(tags[0])) {
       alert(tags[0] + "- tag is not valid");
-    } else if (tags[1] === "" || !regQuestion.test(tags[1])) {
+    } else if (tags[1] === "" || !tagRegex.test(tags[1])) {
       alert(tags[1] + "- tag is not valid");
-    } else if (tags[2] === "" || !regQuestion.test(tags[0])) {
+    } else if (tags[2] === "" || !tagRegex.test(tags[0])) {
       alert(tags[2] + "- tag is not valid");
-    } else if (tags[3] === "" || !regQuestion.test(tags[0])) {
+    } else if (tags[3] === "" || !tagRegex.test(tags[0])) {
       alert(tags[3] + "- tag is not valid");
-    } else if (tags[4] === "" || !regQuestion.test(tags[0])) {
+    } else if (tags[4] === "" || !tagRegex.test(tags[0])) {
       alert(tags[4] + "- tag is not valid");
     } else {
-      const createq = { question, tags, userdname, questiondetail };
+      const createq = {
+        question: askq,
+        tags,
+        userdname: _id,
+        questiondetail: askqd
+      };
       axios
         .post(`${process.env.REACT_APP_API_URL}/create-question`, createq)
         .then((res) => {
           alert(res.data.data);
           if (res.data.status === "ok") {
-            const userpoint = userpoints + 5;
-            const uid = { userdname, userpoint };
+            const userpoint = userlikes + 5;
+            const uid = { userdname: _id, userpoint };
             axios
               .post(`${process.env.REACT_APP_API_URL}/update-user-point`, uid)
               .then((res) => console.log(res.data.data))
@@ -105,7 +86,6 @@ export default function AskQuestion(props) {
       {user && (
         <div className="ask m-0 mb-1">
           <h1 className="p-2"> Ask a public question </h1>
-          <br />
           <div className="d-md-flex">
             <form
               className="col-sm-12 col-md-7 card bg-white p-3 mb-md-4 d-inline-block mx-md-4"
@@ -120,33 +100,28 @@ export default function AskQuestion(props) {
                 person
               </label>
               <input
+                className="mb-3 mt-1"
                 type="text"
-                value={question}
-                onChange={(e) => {
-                  setquestion(e);
-                }}
+                value={askq}
+                onChange={(e) => setaskq(e.target.value)}
                 placeholder="Enter your question title"
                 name="askq"
                 id="askq"
                 required
                 style={{ width: "90%" }}
               />
-              <br />
-              <br />
               <label htmlFor="askqd">
                 <b>Describe your question</b>
               </label>
-              <br />
               <label>
                 Include all the information someone would need to answer your
                 question
               </label>
               <textarea
+                className="mb-3 mt-1"
                 type="text"
-                value={questiondetail}
-                onChange={(e) => {
-                  setquestion(e);
-                }}
+                value={askqd}
+                onChange={(e) => setaskqd(e.target.value)}
                 placeholder="Describe your question"
                 name="askqd"
                 id="askqd"
@@ -154,33 +129,27 @@ export default function AskQuestion(props) {
                 rows="7"
                 style={{ width: "90%" }}
               ></textarea>
-              <br />
-              <br />
               <label htmlFor="asktag">
                 <b>Enter tags related to questions</b>
               </label>
-              <br />
               <label>
                 Add up to 5 tags to describe what your question is about
               </label>
               <input
+                className="mb-3 mt-1"
                 type="text"
                 value={asktag}
-                onChange={(e) => {
-                  setquestion(e);
-                }}
+                onChange={(e) => setasktag(e.target.value.replaceAll(" ", ","))}
                 placeholder="Enter tags related to question"
                 name="askt"
                 id="asktag"
                 required
                 style={{ width: "90%" }}
               />
-              <br /> <br />
-              <br />
               <button
                 type="reset"
                 onClick={validateq}
-                className="submitquestion btn btn-primary m-2 form-btn"
+                className="submitFormBtn btn btn-primary"
                 style={{
                   borderRadius: ".2em",
                   boxShadow: " .08em .2em #888888"
@@ -188,13 +157,11 @@ export default function AskQuestion(props) {
               >
                 Publish Question
               </button>
-              <style jsx>{`
-                .submitquestion:hover {
+              <style>{`
+                .submitFormBtn:hover {
                   color: pink !important;
                 }
-              `}</style>
-              <style jsx>{`
-                .submitquestion:focus {
+                .submitFormBtn:focus {
                   color: pink !important;
                 }
               `}</style>
@@ -241,9 +208,7 @@ export default function AskQuestion(props) {
                 </li>
                 <li>
                   Include tags that are crucial to your question only, like{" "}
-                  <NavLink activeClassName="active" to="/questionsBy/java">
-                    java
-                  </NavLink>
+                  <NavLink to="/questionsBy/java">java</NavLink>
                 </li>
                 <li>
                   Only include version numbers, like c#-4.0, when absolutely

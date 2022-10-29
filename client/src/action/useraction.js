@@ -33,9 +33,12 @@ function authenticateUser(token) {
         if (res.data.status === "ok") {
           dispatch({ type: "LOGIN_USER", payload: res.data.data });
         } else if (res.data === "token expired") {
-          console.log(res.data);
-          if (window.location.pathname.includes("/profile"))
+          if (
+            window.location.pathname.includes("/profile") ||
+            window.location.pathname.includes("/askquestion")
+          )
             window.location.pathname = "/login";
+          console.log(res.data);
           localStorage.removeItem("stackinflowToken");
         } else {
           alert("Credential are not correct");
