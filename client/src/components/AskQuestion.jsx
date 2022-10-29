@@ -3,12 +3,13 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { tagRegex } from "../helper/RegexHelper";
+import Toast from "./Toast";
 
 export default function AskQuestion(props) {
-  const [allquestions, setallquestions] = useState([]);
   const [askq, setaskq] = useState("");
   const [askqd, setaskqd] = useState("");
   const [asktag, setasktag] = useState("");
+  const [errors, seterrors] = useState([]);
   const user = useSelector((state) => state.user);
   const { _id, userlikes } = user ? user : [null];
 
@@ -18,71 +19,69 @@ export default function AskQuestion(props) {
       props.history.push("/login");
       return false;
     }
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/question/list`)
-      .then((res) => setallquestions(res.data.data.map((e) => e.question)))
-      .catch((err) => console.log(err));
   }, [user, props.history]);
 
-  function validateq() {
-    if (!askq.trim().length || !askq) {
-      alert("question title is missing");
-    } else if (!askqd.trim().length || !askqd) {
-      alert("question description is missing");
-    } else if (!asktag.trim().length || !asktag) {
-      alert("please enter atleast one tag");
-    } else validateq2();
-  }
+  const validQuestion = (title, description, tags) => {
+    // valid tags which doesn't includes symbol & empty space at any position
+    const validTags = tags.filter((el) => tagRegex.test(el.trim()));
+    seterrors([]);
 
-  function validateq2() {
-    let isvalid = true;
-    if (allquestions.includes(askq)) isvalid = false;
-    if (isvalid) submitq();
-    else alert("This question is already asked by any other user");
-  }
+    if (!title.trim().length || !title)
+      errors.push("question title is missing");
+    if (!description.trim().length || !description)
+      errors.push("question description is missing");
+    if (tags.length > 0 && tags.length < 6)
+      errors.push("tags length must be in between 1 to 5.");
+    if (validTags.length !== tags.length)
+      errors.push("tags can't includes empty space & symbols");
 
-  function submitq() {
-    const tags = asktag.split(",");
-    // alert(regQuestion)
-    if (tags.length < 1) {
-      alert("!For create your question you must use atleast 1 tags in it.");
-    } else if (tags.length > 5) {
-      alert("!You can not put more than 5 tags in your question.");
-    } else if (tags[0] === "" || !tagRegex.test(tags[0])) {
-      alert(tags[0] + "- tag is not valid");
-    } else if (tags[1] === "" || !tagRegex.test(tags[1])) {
-      alert(tags[1] + "- tag is not valid");
-    } else if (tags[2] === "" || !tagRegex.test(tags[0])) {
-      alert(tags[2] + "- tag is not valid");
-    } else if (tags[3] === "" || !tagRegex.test(tags[0])) {
-      alert(tags[3] + "- tag is not valid");
-    } else if (tags[4] === "" || !tagRegex.test(tags[0])) {
-      alert(tags[4] + "- tag is not valid");
-    } else {
-      const createq = {
-        question: askq,
-        tags,
-        userdname: _id,
-        questiondetail: askqd
-      };
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/create-question`, createq)
-        .then((res) => {
-          alert(res.data.data);
-          if (res.data.status === "ok") {
-            const userpoint = userlikes + 5;
-            const uid = { userdname: _id, userpoint };
-            axios
-              .post(`${process.env.REACT_APP_API_URL}/update-user-point`, uid)
-              .then((res) => console.log(res.data.data))
-              .catch((err) => console.log(err));
-          }
-        });
-    }
-  }
+    seterrors([...errors]);
+    return errors.length === 0;
+  };
+
+  const postQuestion = () => {
+    const validQuestion = {
+      question: askq,
+      tags: asktag.split(","),
+      userdname: _id,
+      questiondetail: askqd
+    };
+    console.log(validQuestion);
+    // axios
+    //   .post(`${process.env.REACT_APP_API_URL}/create-question`, createq)
+    //   .then((res) => {
+    //     alert(res.data.data);
+    //     if (res.data.status === "ok") {
+    //       const userpoint = userlikes + 5;
+    //       const uid = { userdname: _id, userpoint };
+    //       axios
+    //         .post(`${process.env.REACT_APP_API_URL}/update-user-point`, uid)
+    //         .then((res) => console.log(res.data.data))
+    //         .catch((err) => console.log(err));
+    //     }
+    //   });
+  };
 
   return (
     <div className="bg-light" style={{ borderLeft: "2px solid lightgrey" }}>
+      {!!errors.length && (
+        <div className="position-fixed end-0 p-3" style={{ zIndex: 99999 }}>
+          {errors.map((err, i) => {
+            setTimeout(
+              () => document.querySelector(".askQToast" + i)?.remove(),
+              5000
+            );
+            return (
+              <Toast
+                key={"askQToast" + i}
+                toastClass={"askQToast" + i}
+                title={"Validation Error"}
+                brief={err}
+              />
+            );
+          })}
+        </div>
+      )}
       {user && (
         <div className="ask m-0 mb-1">
           <h1 className="p-2"> Ask a public question </h1>
@@ -94,10 +93,8 @@ export default function AskQuestion(props) {
               <label htmlFor="askq">
                 <b>Enter your question title</b>
               </label>
-              <br />
               <label>
-                Be specific and imagine you’re asking a question to another
-                person
+                Be specific & imagine you’re asking a question to another person
               </label>
               <input
                 className="mb-3 mt-1"
@@ -148,7 +145,10 @@ export default function AskQuestion(props) {
               />
               <button
                 type="reset"
-                onClick={validateq}
+                onClick={() => {
+                  validQuestion(askq, askqd, asktag.split(",")) &&
+                    postQuestion();
+                }}
                 className="submitFormBtn btn btn-primary"
                 style={{
                   borderRadius: ".2em",
