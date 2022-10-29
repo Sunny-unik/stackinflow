@@ -8,8 +8,9 @@ export default function AskQuestion(props) {
   const [askq, setaskq] = useState("");
   const [askqd, setaskqd] = useState("");
   const [asktag, setasktag] = useState("");
+  const [loader, setLoader] = useState(false);
   const user = useSelector((state) => state.user);
-  const { _id, userlikes } = user ? user : [null];
+  const { _id: userId, userlikes } = user ? user : [null];
 
   useEffect(() => {
     if (user === null && !localStorage.getItem("stackinflowToken")) {
@@ -28,23 +29,41 @@ export default function AskQuestion(props) {
       errors.push("question title is missing");
     if (!description.trim().length || !description)
       errors.push("question description is missing");
-    if (tags.length > 0 && tags.length < 6)
+    if (tags.length < 0 || tags.length > 5)
       errors.push("tags length must be in between 1 to 5");
     if (validTags.length !== tags.length)
       errors.push("tags can't includes empty space & symbols");
 
-    !!errors.length && alert(errors.join(",\n"));
-    return !!errors.length;
+    if (!!errors.length) {
+      alert(errors.join(",\n"));
+      setLoader(false);
+    }
+    return !errors.length;
   };
 
-  const postQuestion = () => {
+  const postQuestion = async () => {
+    let validTitle = true;
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/question/search?search=${askq}`)
+      .then((res) => !!res.data.data.length && (validTitle = false))
+      .catch((err) => {
+        validTitle = false;
+        console.log(err);
+      });
+    if (!validTitle) {
+      alert("This question is already asked by someone else");
+      setLoader(false);
+      return false;
+    }
+
     const validQuestion = {
       question: askq,
       tags: asktag.split(","),
-      userdname: _id,
+      userdname: userId,
       questiondetail: askqd
     };
     console.log(validQuestion);
+    setLoader(false);
     // axios
     //   .post(`${process.env.REACT_APP_API_URL}/create-question`, createq)
     //   .then((res) => {
@@ -126,6 +145,7 @@ export default function AskQuestion(props) {
               <button
                 type="reset"
                 onClick={() => {
+                  setLoader(true);
                   validQuestion(askq, askqd, asktag.split(",")) &&
                     postQuestion();
                 }}
@@ -135,7 +155,15 @@ export default function AskQuestion(props) {
                   boxShadow: " .08em .2em #888888"
                 }}
               >
-                Publish Question
+                Publish Question{" "}
+                {loader && (
+                  <div
+                    class="spinner-border spinner-border-sm ml-1"
+                    role="status"
+                  >
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                )}
               </button>
               <style>{`
                 .submitFormBtn:hover {
