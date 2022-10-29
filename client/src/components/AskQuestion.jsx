@@ -3,13 +3,11 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { tagRegex } from "../helper/RegexHelper";
-import Toast from "./Toast";
 
 export default function AskQuestion(props) {
   const [askq, setaskq] = useState("");
   const [askqd, setaskqd] = useState("");
   const [asktag, setasktag] = useState("");
-  const [errors, seterrors] = useState([]);
   const user = useSelector((state) => state.user);
   const { _id, userlikes } = user ? user : [null];
 
@@ -22,21 +20,21 @@ export default function AskQuestion(props) {
   }, [user, props.history]);
 
   const validQuestion = (title, description, tags) => {
+    const errors = [];
     // valid tags which doesn't includes symbol & empty space at any position
     const validTags = tags.filter((el) => tagRegex.test(el.trim()));
-    seterrors([]);
 
     if (!title.trim().length || !title)
       errors.push("question title is missing");
     if (!description.trim().length || !description)
       errors.push("question description is missing");
     if (tags.length > 0 && tags.length < 6)
-      errors.push("tags length must be in between 1 to 5.");
+      errors.push("tags length must be in between 1 to 5");
     if (validTags.length !== tags.length)
       errors.push("tags can't includes empty space & symbols");
 
-    seterrors([...errors]);
-    return errors.length === 0;
+    !!errors.length && alert(errors.join(",\n"));
+    return !!errors.length;
   };
 
   const postQuestion = () => {
@@ -64,24 +62,6 @@ export default function AskQuestion(props) {
 
   return (
     <div className="bg-light" style={{ borderLeft: "2px solid lightgrey" }}>
-      {!!errors.length && (
-        <div className="position-fixed end-0 p-3" style={{ zIndex: 99999 }}>
-          {errors.map((err, i) => {
-            setTimeout(
-              () => document.querySelector(".askQToast" + i)?.remove(),
-              5000
-            );
-            return (
-              <Toast
-                key={"askQToast" + i}
-                toastClass={"askQToast" + i}
-                title={"Validation Error"}
-                brief={err}
-              />
-            );
-          })}
-        </div>
-      )}
       {user && (
         <div className="ask m-0 mb-1">
           <h1 className="p-2"> Ask a public question </h1>

@@ -1,5 +1,4 @@
 import axios from "axios";
-import showErrors from "../helper/showErrors";
 
 function checkLogin(credentials) {
   return (dispatch) => {
@@ -8,7 +7,7 @@ function checkLogin(credentials) {
       .post(`${process.env.REACT_APP_API_URL}/user/login`, credentials)
       .then((res) => {
         dispatch({ type: "LOADING_FALSE" });
-        if (res.data.errors) showErrors(res.data.errors);
+        if (res.data.errors) alert(res.data.errors.join(",\n"));
         else if (res.data.msg === "Credentials Matched") {
           localStorage.setItem("stackinflowToken", res.data.token);
           dispatch({ type: "LOGIN_USER", payload: res.data.data });
