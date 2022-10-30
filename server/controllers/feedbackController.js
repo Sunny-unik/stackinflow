@@ -8,24 +8,16 @@ const feedbackController = {
     feedback
       .save()
       .then((result) => {
+        sendMail(
+          process.env.APP_ID,
+          process.env.APP_PASSWORD,
+          req.query.userEmail,
+          "Thanks for submit your feedback",
+          `<h2>stackinflow</h2><br>
+          <h4> Your Feedback Sent SuccessFull </h4><br>
+          <h6>We hope you find our service cool.</h6><br>`
+        );
         res.send({ data: result, msg: "Your feedback submitted" });
-        userSchema
-          .findOne({ _id: result.userId.valueOf() })
-          .select("_id email")
-          .then((userData) => {
-            sendMail(
-              process.env.APP_ID,
-              process.env.APP_PASSWORD,
-              userData.email,
-              "Thanks for submit your feedback",
-              `<h2>stackinflow</h2><br>
-              <h4> Feedback Sent SuccessFull </h4><br>
-              <h6>We hope you find our service cool.</h6><br>`
-            );
-          })
-          .catch((err) =>
-            console.log("Error on feedback recieved mail: ", err)
-          );
       })
       .catch((err) => res.send(err));
   },
