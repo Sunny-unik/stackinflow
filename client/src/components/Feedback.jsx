@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-export default function Contact() {
+export default function Feedback() {
   const user = useSelector((state) => state.user);
   const [Feedbackhead, setemailhead] = useState("");
   const [Feedbackbody, setemailbody] = useState("");
@@ -133,18 +133,16 @@ export default function Contact() {
         <button
           type="reset"
           onClick={submitfeedback}
-          className="float-end submitquestion btn btn-primary m-2 form-btn"
+          className="float-end submitFormBtn btn btn-primary m-2 "
           style={{ borderRadius: ".2em", boxShadow: " .08em .2em #888888" }}
         >
           Submit Feedback
         </button>
-        <style jsx>{`
-          .submitquestion:hover {
+        <style>{`
+          .submitFormBtn:hover {
             color: pink !important;
           }
-        `}</style>
-        <style jsx>{`
-          .submitquestion:focus {
+          .submitFormBtn:focus {
             color: pink !important;
           }
         `}</style>
