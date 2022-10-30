@@ -20,22 +20,18 @@ export default function Login(props) {
 
   useEffect(() => {
     reduxUser && props.history.push("/");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reduxUser, path]);
+  }, [reduxUser, props.history, path]);
 
   const dispatch = useDispatch();
   const checkAuth = () => dispatch(checkLogin({ email, password }));
 
   function sendOtp() {
-    if (email.trim() === "") {
-      alert("first enter your email or username");
+    if (!email.trim()) {
+      alert("First enter your email or username");
       return false;
     }
-
     axios
-      .post(`${process.env.REACT_APP_API_URL}/user/otp-mail`, {
-        email: email
-      })
+      .post(`${process.env.REACT_APP_API_URL}/user/otp-mail`, { email })
       .then((res) => {
         const response = res.data;
         if (response.errors) alert(response.message);
@@ -46,14 +42,14 @@ export default function Login(props) {
           setid(response.data._id);
           setotp(response.otp);
           setpath("/forgotPassword");
-          alert("otp sent to your email");
+          alert("Otp sent to your email");
         }
       })
       .catch((err) => console.log(err));
   }
 
   const updatePath = () => {
-    email.trim()
+    !!email.trim()
       ? sendOtp()
       : alert("Please first enter your email or username");
   };
