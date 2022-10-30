@@ -2,6 +2,7 @@ export function user(state = null, action) {
   const switchUser = {
     LOGIN_USER: action.payload,
     UPDATE_USER: action.payload,
+    UPDATE_POINTS: { ...state, userlikes: action.payload },
     LOGOUT_USER: null
   };
 

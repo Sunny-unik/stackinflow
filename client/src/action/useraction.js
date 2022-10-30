@@ -13,7 +13,31 @@ function checkLogin(credentials) {
           dispatch({ type: "LOGIN_USER", payload: res.data.data });
         } else alert(res.data.msg);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        dispatch({ type: "LOADING_FALSE" });
+        console.log(err);
+      });
+  };
+}
+
+function updateUserPoints(userId, updatepoint) {
+  return (dispatch) => {
+    dispatch({ type: "LOADING_TRUE" });
+    axios
+      .put(`${process.env.REACT_APP_API_URL}/user/points`, {
+        id: userId,
+        userpoint: updatepoint
+      })
+      .then((res) => {
+        dispatch({ type: "LOADING_FALSE" });
+        console.log(res.data);
+        !!res.data.msg &&
+          dispatch({ type: "UPDATE_POINTS", payload: updatepoint });
+      })
+      .catch((err) => {
+        dispatch({ type: "LOADING_FALSE" });
+        console.log(err);
+      });
   };
 }
 
@@ -43,8 +67,11 @@ function authenticateUser(token) {
           alert("Credential are not correct");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        dispatch({ type: "LOADING_FALSE" });
+        console.log(err);
+      });
   };
 }
 
-export { checkLogin, authenticateUser };
+export { checkLogin, authenticateUser, updateUserPoints };

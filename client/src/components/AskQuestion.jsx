@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { tagRegex } from "../helper/RegexHelper";
+import { updateUserPoints } from "../action/userAction";
 
 export default function AskQuestion(props) {
   const [askq, setaskq] = useState("");
@@ -10,7 +11,7 @@ export default function AskQuestion(props) {
   const [asktag, setasktag] = useState("");
   const [loader, setLoader] = useState(false);
   const user = useSelector((state) => state.user);
-  const { _id: userId, userlikes } = user ? user : [null];
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (user === null && !localStorage.getItem("stackinflowToken")) {
@@ -56,27 +57,22 @@ export default function AskQuestion(props) {
       return false;
     }
 
-    const validQuestion = {
-      question: askq,
-      tags: asktag.split(","),
-      userdname: userId,
-      questiondetail: askqd
-    };
-    console.log(validQuestion);
-    setLoader(false);
-    // axios
-    //   .post(`${process.env.REACT_APP_API_URL}/create-question`, createq)
-    //   .then((res) => {
-    //     alert(res.data.data);
-    //     if (res.data.status === "ok") {
-    //       const userpoint = userlikes + 5;
-    //       const uid = { userdname: _id, userpoint };
-    //       axios
-    //         .post(`${process.env.REACT_APP_API_URL}/update-user-point`, uid)
-    //         .then((res) => console.log(res.data.data))
-    //         .catch((err) => console.log(err));
-    //     }
-    //   });
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/question`, {
+        question: askq,
+        tags: asktag.split(","),
+        userId: user?._id,
+        questiondetail: askqd
+      })
+      .then((res) => {
+        const updatepoint = user?.userlikes + 10;
+        setLoader(false);
+        if (!!res.data.msg) dispatch(updateUserPoints(user?._id, updatepoint));
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.log(err);
+      });
   };
 
   return (
@@ -158,10 +154,10 @@ export default function AskQuestion(props) {
                 Publish Question{" "}
                 {loader && (
                   <div
-                    class="spinner-border spinner-border-sm ml-1"
+                    className="spinner-border spinner-border-sm ml-1"
                     role="status"
                   >
-                    <span class="visually-hidden">Loading...</span>
+                    <span className="visually-hidden">Loading...</span>
                   </div>
                 )}
               </button>
