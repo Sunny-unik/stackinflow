@@ -144,7 +144,7 @@ export default function Signup(props) {
                 style={{ fontFamily: "sans-serif" }}
                 value={email}
                 onChange={(e) => setvalue(e)}
-                minlength="5"
+                minLength="5"
                 placeholder="example@eg.co"
                 name="cemail"
                 id="createemail"
@@ -184,7 +184,7 @@ export default function Signup(props) {
                 style={{ fontFamily: "sans-serif" }}
                 value={password}
                 onChange={(e) => setvalue(e)}
-                minlength="8"
+                minLength="8"
                 maxLength="16"
                 placeholder="password should be strong"
                 name="cpassword"

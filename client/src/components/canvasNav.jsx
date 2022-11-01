@@ -7,7 +7,7 @@ export default function CanvasNav(props) {
 
   const sidelink = () => {
     user
-      ? props.history.push("/askaquestion")
+      ? props.history.push("/askquestion")
       : alert("User need to login first");
   };
 
@@ -15,7 +15,6 @@ export default function CanvasNav(props) {
     <ul id="canvasNav" className="p-1">
       <li className="mt-2 p-1">
         <NavLink
-          activeClassName="activeLeftNav"
           style={{
             fontFamily: "serif",
             fontSize: "1.4em",
@@ -29,7 +28,6 @@ export default function CanvasNav(props) {
       </li>
       <li className="mt-2 p-1">
         <NavLink
-          activeClassName="activeLeftNav"
           style={{
             fontFamily: "serif",
             fontSize: "1.4em",
@@ -42,7 +40,6 @@ export default function CanvasNav(props) {
       </li>
       <li className="mt-2 p-1">
         <NavLink
-          activeClassName="activeLeftNav"
           style={{
             fontFamily: "serif",
             fontSize: "1.4em",
@@ -55,7 +52,6 @@ export default function CanvasNav(props) {
       </li>
       <li className="mt-2 p-1">
         <NavLink
-          activeClassName="activeLeftNav"
           style={{
             fontFamily: "serif",
             fontSize: "1.4em",
@@ -68,7 +64,6 @@ export default function CanvasNav(props) {
       </li>
       <li className="mt-2 p-1">
         <h6
-          activeClassName="activeLeftNav"
           className="extraLink"
           style={{
             fontFamily: "serif",

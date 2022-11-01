@@ -6,12 +6,14 @@
   width: 28%;
   border-radius: 20px;
 }
-.activeTopNav:not(.navbar-brand) {
+.activeTopNav {
   background-image: linear-gradient(to top, rgba(50, 300, 200, 0.1), #ecd3d710);
   color: blue;
   border-radius: 5px;
 }
-.activeLeftNav {
+#sideLeftNav a.active,
+#canvasNav a.active,
+.extraLink.active {
   background-image: linear-gradient(
     to right,
     rgba(50, 300, 200, 0.1),

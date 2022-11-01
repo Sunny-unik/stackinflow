@@ -19,6 +19,14 @@ export default function AskQuestion(props) {
       props.history.push("/login");
       return false;
     }
+    document
+      .querySelectorAll(".extraLink")
+      .forEach((elem) => elem?.classList.add("active"));
+    return () => {
+      document
+        .querySelectorAll(".extraLink")
+        .forEach((elem) => elem?.classList.remove("active"));
+    };
   }, [user, props.history]);
 
   const validQuestion = (title, description, tags) => {

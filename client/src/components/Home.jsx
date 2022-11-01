@@ -10,9 +10,9 @@ import Question from "./OpenedQuestion";
 import Footer from "./Footer";
 import User from "./User";
 import QuestionsByTag from "./QuestionsByTag";
-import EditQuestion from "./EditQuestion";
+import EditQuestion from "./editquestion";
 import About from "./About";
-import Contact from "./Contact";
+import Feedback from "./Feedback";
 import Searchq from "./Searchq";
 
 export default function Home(props) {
@@ -20,7 +20,7 @@ export default function Home(props) {
 
   const sidelink = () => {
     user
-      ? props.history.push("/askaquestion")
+      ? props.history.push("/askquestion")
       : alert("You need to login first");
   };
 
@@ -31,7 +31,6 @@ export default function Home(props) {
           <ul id="sideLeftNav" className="col-sm-2 p-0">
             <li className="nav-link pe-0">
               <NavLink
-                activeClassName="activeLeftNav"
                 style={{
                   fontFamily: "serif",
                   fontSize: "1.4em",
@@ -45,7 +44,6 @@ export default function Home(props) {
             </li>
             <li className="nav-link pe-0">
               <NavLink
-                activeClassName="activeLeftNav"
                 style={{
                   fontFamily: "serif",
                   fontSize: "1.4em",
@@ -58,7 +56,6 @@ export default function Home(props) {
             </li>
             <li className="nav-link pe-0">
               <NavLink
-                activeClassName="activeLeftNav"
                 style={{
                   fontFamily: "serif",
                   fontSize: "1.4em",
@@ -71,7 +68,6 @@ export default function Home(props) {
             </li>
             <li className="nav-link pe-0">
               <NavLink
-                activeClassName="activeLeftNav"
                 style={{
                   fontFamily: "serif",
                   fontSize: "1.4em",
@@ -84,7 +80,6 @@ export default function Home(props) {
             </li>
             <li className="nav-link pe-0">
               <h6
-                activeClassName="activeLeftNav"
                 className="extraLink"
                 style={{
                   fontFamily: "serif",
@@ -112,7 +107,7 @@ export default function Home(props) {
               <Route path="/askQuestion" component={AskQuestion} />
               <Route path="/" exact component={Topquestions} />
               <Route path="/about" component={About} />
-              <Route path="/feedback" component={Contact} />
+              <Route path="/feedback" component={Feedback} />
               <Route path="/search/:questionSearch" component={Searchq} />
             </Switch>
           </div>

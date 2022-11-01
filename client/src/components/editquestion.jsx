@@ -195,9 +195,7 @@ export default function EditQuestion(props) {
               </li>
               <li>
                 Include tags that are crucial to your question only, like{" "}
-                <NavLink activeClassName="active" to="/questionsBy/java">
-                  java
-                </NavLink>
+                <NavLink to="/questionsBy/java">java</NavLink>
               </li>
               <li>
                 Only include version numbers, like c#-4.0, when absolutely

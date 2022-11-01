@@ -47,7 +47,6 @@ export default function App() {
           <NavLink
             className="navbar-brand"
             style={{ fontSize: "1.6rem", fontWeight: "700" }}
-            activeClassName="activeTopNav"
             exact
             to="/"
           >
@@ -115,7 +114,7 @@ export default function App() {
           </div>
         </div>
       </nav>
-      <div className="offcanvas offcanvas-start w-75" id="smMenu">
+      <div className="offcanvas offcanvas-start w-50" id="smMenu">
         <div className="offcanvas-header p-2 mt-1">
           <button
             type="button"
