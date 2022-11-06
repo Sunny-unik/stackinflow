@@ -1,21 +1,18 @@
 const yup = require("yup");
 
 const schemaProvider = {
-  GET: {
+  GET: {},
+  POST: {
     "/dname": {
       schema: yup.object().shape({
-        dname: yup.string().min(4).required(),
-        id: yup.string().required()
+        dname: yup.string().min(4).required()
       })
     },
     "/email": {
       schema: yup.object().shape({
-        email: yup.string().min(5).required(),
-        id: yup.string().required()
+        email: yup.string().min(5).required()
       })
-    }
-  },
-  POST: {
+    },
     "/": {
       schema: yup.object().shape({
         email: yup.string().min(5).max(50).required(),

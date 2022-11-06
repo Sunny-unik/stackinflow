@@ -33,6 +33,15 @@ const userController = {
       .catch((err) => res.send(err));
   },
 
+  sendOtp: (req, res) => {
+    const randomNum = Math.floor(Math.random() * 1000000).toString();
+    const otp =
+      randomNum.length < 6
+        ? randomNum + Math.floor(Math.random() * 10).toString()
+        : randomNum;
+    res.send({ otp: otp });
+  },
+
   authenticate: async (req, res) => {
     try {
       const token = req.headers.authorization.split(" ")[1];
@@ -53,21 +62,19 @@ const userController = {
   },
 
   validEmail: async (req, res) => {
+    const userId = req.body?.id;
     await userSchema
-      .findOne({
-        $and: [{ email: req.body.email }, { _id: { $ne: req.body.id } }]
-      })
+      .findOne({ $and: [{ email: req.body.email }, { _id: { $ne: userId } }] })
       .select("email")
       .then((result) => res.send(result ?? "valid email"))
       .catch((err) => res.send(err));
   },
 
   validDname: async (req, res) => {
+    const userId = req.body?.id;
     let isDnameValid;
     await userSchema
-      .findOne({
-        $and: [{ dname: req.body.dname }, { _id: { $ne: req.body.id } }]
-      })
+      .findOne({ $and: [{ dname: req.body.dname }, { _id: { $ne: userId } }] })
       .select("dname")
       .then((result) => {
         isDnameValid = result ?? "valid dname";
@@ -78,7 +85,11 @@ const userController = {
   },
 
   sendOtpEmail: async (req, res) => {
-    const otp = Math.floor(Math.random() * 1000000 + 1).toString();
+    const randomNum = Math.floor(Math.random() * 1000000).toString();
+    const otp =
+      randomNum.length < 6
+        ? randomNum + Math.floor(Math.random() * 10).toString()
+        : randomNum;
     await userSchema
       .findOne({ $or: [{ email: req.body.email }, { dname: req.body.email }] })
       .select("_id email password")

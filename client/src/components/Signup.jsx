@@ -3,258 +3,142 @@ import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { emailRegex, passwordRegex } from "../helper/RegexHelper";
+import ConfirmEmail from "./ConfirmEmail";
 
 export default function Signup(props) {
   const [email, setemail] = useState("");
   const [name, setname] = useState("");
   const [dname, setdname] = useState("");
   const [password, setpassword] = useState("");
-  const [otp, setotp] = useState("");
-  const [randomotp, setrandomotp] = useState("");
+  const [isSignup, setisSignup] = useState(true);
 
-  function setvalue(e) {
-    e.target.name === "cemail" && setemail(e.target.value);
-    e.target.name === "cname" && setname(e.target.value);
-    e.target.name === "cdname" && setdname(e.target.value);
-    e.target.name === "cpassword" && setpassword(e.target.value);
-    e.target.name === "otp" && setotp(e.target.value);
-  }
+  const validateUserDetails = () => {
+    const errors = [];
 
-  function unikemail() {
-    const em = { email };
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/valid-email`, em)
-      .then((res) => {
-        res.data.status === "ok" ? unikdname() : alert(res.data.data);
-      });
-  }
-
-  function unikdname() {
-    const dn = { dname };
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/valid-dname`, dn)
-      .then((res) => {
-        res.data.status === "ok" ? hidereg() : alert(res.data.data);
-      });
-  }
-
-  function hidereg() {
-    let isValid = true;
-    if (!emailRegex.test(email)) {
-      isValid = false;
-      alert("Email is not valid");
-    }
-    if (name.trim().length <= 2 || name.trim().length >= 46 || !name.trim()) {
-      isValid = false;
-      alert("please enter your name");
-    }
-    if (name.trim().length <= 4 || name.trim().length >= 16 || !name.trim()) {
-      isValid = false;
-      alert("please enter username");
-    }
-    if (!passwordRegex.test(password)) {
-      alert(
+    if (!emailRegex.test(email)) errors.push("Email is not valid");
+    if (name.trim().length <= 2 || name.trim().length >= 46 || !name.trim())
+      errors.push("please enter your name");
+    if (
+      dname.trim().length < 4 ||
+      dname.trim().length > 16 ||
+      dname.includes(" ")
+    )
+      errors.push("username length must between 4to16 & can't include spaces");
+    if (!passwordRegex.test(password) || password.length > 16)
+      errors.push(
         "Password should have 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character and number of letters must in between 8 to 16"
       );
-      isValid = false;
-    }
-    if (isValid === true) {
-      const random = Math.floor(Math.random() * 1000000 + 1);
-      setrandomotp(random);
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/send-user-otp`, {
-          email,
-          otp: random
-        })
-        .then((res) => {
-          if (res.data.status === "ok") {
-            alert("otp sent to your email");
-            document.getElementById("createdetail").style.display = "none";
-            document.getElementById("createotp").style.display = "block";
-          } else alert("some server error occured");
-        });
-    }
-  }
 
-  function create() {
-    const userlikes = 0;
-    const profile = null;
-    const s = {
-      email,
-      name,
-      dname,
-      password,
-      userlikes,
-      profile
-    };
+    errors.length ? alert(errors.join(",\n")) : uniqueEmail();
+  };
+
+  const uniqueEmail = () => {
     axios
-      .post(`${process.env.REACT_APP_API_URL}/create-user`, s)
+      .post(`${process.env.REACT_APP_API_URL}/user/email`, { email })
       .then((res) => {
-        if (res.data.status === "ok") {
-          alert("Registration Successfull");
-          props.history.push("/login");
-        } else {
-          alert("! some server error occured try again ");
-          props.history.push("/signup");
-        }
+        if (res.data === "valid email") uniqueDname();
+        else alert("Entered email is already registered");
       });
-  }
+  };
 
-  function otpcheck() {
-    if (otp === randomotp) {
-      create();
-    } else {
-      alert("! incorrect otp ");
-      props.history.push("/signup");
-    }
-  }
+  const uniqueDname = () => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/user/dname`, { dname })
+      .then((res) => {
+        if (res.data === "valid dname") verifyEmail();
+        else alert("Entered username is already registered");
+      });
+  };
 
-  function goreg() {
-    document.getElementById("createotp").style.display = "none";
-    document.getElementById("createdetail").style.display = "block";
-  }
+  const verifyEmail = () => setisSignup(false);
 
   return (
     <React.Fragment>
       <div className="text-center">
         <div className="container signupcon">
-          <div
-            data-aos="flip-right"
-            data-aos-once="true"
-            data-aos-duration="500"
-            className="col-md-8 col-lg-4 "
-            id="createdetail"
-          >
-            <form
-              style={{
-                padding: "3%",
-                margin: "4px 0",
-                borderRadius: "2%",
-                boxShadow: "3px 4px 3px 3px #888888"
-              }}
+          {isSignup ? (
+            <div
+              data-aos="flip-right"
+              data-aos-once="true"
+              data-aos-duration="500"
+              className="col-md-8 col-lg-4 "
+              id="createdetail"
             >
-              <h1>Create an account</h1>
-              <p>Please fill this form and get verified for register.</p>
-              <hr className="signuphr" />
-              <label htmlFor="createemail">
-                <b>Your Email</b>
-              </label>
-              <input
-                type="email"
-                style={{ fontFamily: "sans-serif" }}
-                value={email}
-                onChange={(e) => setvalue(e)}
-                minLength="5"
-                placeholder="example@eg.co"
-                name="cemail"
-                id="createemail"
-                required
-              />
-              <label htmlFor="createname">
-                <b>Your Name</b>
-              </label>
-              <input
-                type="text"
-                style={{ fontFamily: "sans-serif" }}
-                value={name}
-                onChange={(e) => setvalue(e)}
-                placeholder="firstname lastname"
-                name="cname"
-                id="createname"
-                required
-              />
-              <label htmlFor="createdname">
-                <b>Display Name</b>
-              </label>
-              <input
-                type="text"
-                style={{ fontFamily: "sans-serif" }}
-                value={dname}
-                onChange={(e) => setvalue(e)}
-                placeholder="display_name"
-                name="cdname"
-                id="createdname"
-                required
-              />
-              <label htmlFor="createpassword">
-                <b>Password</b>
-              </label>
-              <input
-                type="password"
-                style={{ fontFamily: "sans-serif" }}
-                value={password}
-                onChange={(e) => setvalue(e)}
-                minLength="8"
-                maxLength="16"
-                placeholder="password should be strong"
-                name="cpassword"
-                id="createpassword"
-                required
-              />
-              <hr className="signuphr" />
-              <button type="button" className="registerbtn" onClick={unikemail}>
-                {" "}
-                Sign Up{" "}
-              </button>
-            </form>
-          </div>
-          <div
-            data-aos="flip-right"
-            data-aos-once="true"
-            data-aos-duration="1000"
-            className="col-md-5 col-lg-4"
-            id="createotp"
-          >
-            <form
-              className="d-inline-block"
-              style={{
-                padding: "3%",
-                margin: "4px 0",
-                borderRadius: "2%",
-                boxShadow: "3px 4px 3px 2px #888888"
-              }}
-            >
-              <h1 style={{ display: "inline-block", width: "82%" }}>
-                Confirm Email
-              </h1>
-              <button
-                type="button"
-                onClick={goreg}
-                className="border btn btn-warning float-end"
+              <form
                 style={{
-                  fontWeight: "600",
-                  fontFamily: "sans-serif",
-                  padding: "2% 1%",
-                  margin: "0",
-                  borderRadius: "10%",
-                  boxShadow: "2px 3px 2px 3px #888888"
+                  padding: "3%",
+                  margin: "4px 0",
+                  borderRadius: "2%",
+                  boxShadow: "3px 4px 3px 3px #888888"
                 }}
               >
-                {" "}
-                Go Back{" "}
-              </button>
-              <p>Please fill 6alphanumeric code for create your account.</p>
-              <hr className="signuphr" />
-              <label htmlFor="otp" className="inputotp">
-                <b>Otp sent on gievn email-address</b>
-              </label>
-              <input
-                style={{ fontFamily: "sans-serif" }}
-                type="text"
-                value={otp}
-                onChange={(e) => setvalue(e)}
-                placeholder="Enter Verfication Code"
-                name="otp"
-                id="otp"
-                required
-              />
-              <hr className="signuphr" />
-              <button type="button" className="registerbtn" onClick={otpcheck}>
-                {" "}
-                Submit{" "}
-              </button>
-            </form>
-          </div>
+                <h1>Create an account</h1>
+                <p>Please fill this form and get verified for register.</p>
+                <hr className="signuphr" />
+                <label htmlFor="createemail">Your Email</label>
+                <input
+                  type="email"
+                  style={{ fontFamily: "sans-serif" }}
+                  value={email}
+                  onChange={(e) => setemail(e.target.value)}
+                  minLength="5"
+                  placeholder="example@eg.co"
+                  name="cemail"
+                  id="createemail"
+                  required
+                />
+                <label htmlFor="createname">Your Name</label>
+                <input
+                  type="text"
+                  style={{ fontFamily: "sans-serif" }}
+                  value={name}
+                  onChange={(e) => setname(e.target.value)}
+                  placeholder="firstname lastname"
+                  name="cname"
+                  id="createname"
+                  required
+                />
+                <label htmlFor="createdname">Display Name</label>
+                <input
+                  type="text"
+                  style={{ fontFamily: "sans-serif" }}
+                  value={dname}
+                  onChange={(e) => setdname(e.target.value)}
+                  placeholder="display_name"
+                  name="cdname"
+                  id="createdname"
+                  required
+                />
+                <label htmlFor="createpassword">Password</label>
+                <input
+                  type="password"
+                  style={{ fontFamily: "sans-serif" }}
+                  value={password}
+                  onChange={(e) => setpassword(e.target.value)}
+                  minLength="8"
+                  maxLength="16"
+                  placeholder="password should be strong"
+                  name="cpassword"
+                  id="createpassword"
+                  required
+                />
+                <hr className="signuphr" />
+                <button
+                  type="button"
+                  className="registerbtn"
+                  onClick={validateUserDetails}
+                >
+                  Sign Up
+                </button>
+              </form>
+            </div>
+          ) : (
+            <ConfirmEmail
+              history={props.history}
+              setisSignup={setisSignup}
+              userInfo={{ email, name, dname, password }}
+            />
+          )}
         </div>
       </div>
     </React.Fragment>
