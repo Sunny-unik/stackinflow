@@ -4,8 +4,8 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "./css/qls.css";
-import Spinner from "./spinner";
-import handleDate from "../helper/dateHelper";
+import Spinner from "../spinner";
+import handleDate from "../../helper/dateHelper";
 
 export default function Question(props) {
   const [question, setquestion] = useState("");

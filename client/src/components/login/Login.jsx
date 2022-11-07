@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { checkLogin } from "../action/userAction";
+import { checkLogin } from "../../action/userAction";
 import { useDispatch, useSelector } from "react-redux";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import ForgotPassword from "./forgotPassword";
-import SetPassword from "./setPassword";
+import ForgotPassword from "./ForgotPassword";
+import SetPassword from "../setPassword";
 import axios from "axios";
 
 export default function Login(props) {

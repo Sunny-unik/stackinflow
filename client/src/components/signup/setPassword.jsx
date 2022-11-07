@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import { passwordRegex } from "../helper/RegexHelper";
+import { passwordRegex } from "../../helper/RegexHelper";
 
 export default function SetPassword({ id, password, goto }) {
   const [newPassword, setnewPassword] = useState("");

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import Spinner from "./spinner";
-import QuestionBox from "./questionBox";
+import Spinner from "../spinner";
+import QuestionBox from "../questionBox";
 import "./css/spinner.css";
 
 export default function Topquestions() {
