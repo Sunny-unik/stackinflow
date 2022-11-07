@@ -21,7 +21,7 @@ export default function ConfirmEmail(props) {
         alert("! some server error occured try again later");
         callback(true);
       });
-  }, []);
+  }, [callback]);
 
   const otpcheck = () =>
     otp === randomOtp.current ? createAccount() : incorrectOtp();

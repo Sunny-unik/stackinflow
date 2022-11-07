@@ -15,11 +15,11 @@ export default function Question(props) {
   const [qlikes, setqlikes] = useState([]);
   const [answers, setanswers] = useState([]);
   const [postanswer, setpostanswer] = useState();
-  const [alikes, setalikes] = useState([]);
+  // const [alikes, setalikes] = useState([]);
+  const alikes = [];
   const [quser, setquser] = useState("");
   const [date, setdate] = useState(Date);
   const [statechange, setstatechange] = useState(1);
-
   const user = useSelector((state) => state.user);
   const qid = props.match.params.qid;
 
@@ -37,7 +37,7 @@ export default function Question(props) {
         setquestiondetail(res.data.data.questiondetail);
       })
       .catch((err) => console.log("In question fetch: ", err));
-  }, []);
+  }, [qid]);
 
   const setposta = (e) =>
     e.target.name === "seta" && setpostanswer(e.target.value);
@@ -234,7 +234,7 @@ export default function Question(props) {
           type="button"
           onClick={() => {
             navigator.clipboard.writeText(
-              `https://stackinflow.netlify.app/question/${qid}`
+              `${process.env.REACT_APP_API_URL}/question/${qid}`
             );
           }}
         >
@@ -399,6 +399,7 @@ export default function Question(props) {
                 {o.replace(",", "")}
               </NavLink>
             );
+          else return "";
         })}{" "}
         {user ? (
           <span>

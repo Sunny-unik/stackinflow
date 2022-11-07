@@ -39,13 +39,16 @@ export default function User(props) {
         setweblinkbyudn(res.data.data?.weblink);
         setaddressbyudn(res.data.data?.address);
       })
-      .catch((res) => setnotfound(`!User not found`));
+      .catch((err) => {
+        setnotfound(`!User not found`);
+        console.log(err);
+      });
 
     axios
       .get(`${process.env.REACT_APP_API_URL}/question/list`)
       .then((res) => setquestion(res.data.data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [uid]);
 
   const answer = [];
   question.forEach((un) => {

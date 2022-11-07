@@ -11,7 +11,7 @@ export default function Editprofile(props) {
     }
   });
 
-  const objid = useSelector((state) => state.user._id);
+  const obid = useSelector((state) => state.user._id);
   const udname = useSelector((state) => state.user.dname);
   const uname = useSelector((state) => state.user.name);
   const utitle = useSelector((state) => state.user.title);
@@ -21,7 +21,6 @@ export default function Editprofile(props) {
   const utwitter = useSelector((state) => state.user.twitter);
   const uaddress = useSelector((state) => state.user.address);
 
-  const [obid, setobid] = useState(objid);
   const [dname, setdname] = useState(udname);
   const [name, setname] = useState(uname);
   const [title, settitle] = useState(utitle);
