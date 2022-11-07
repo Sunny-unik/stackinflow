@@ -43,7 +43,7 @@ const questionController = {
       })
       .populate("userId", "_id dname userlikes")
       .then((question) => res.send({ data: question, msg: "success" }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(400).send(err));
   },
 
   createQuestion: async (req, res) => {

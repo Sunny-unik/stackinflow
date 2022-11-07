@@ -9,12 +9,11 @@ import handleDate from "../helper/dateHelper";
 
 export default function Question(props) {
   const [question, setquestion] = useState("");
-  const [qusername, setqusername] = useState("");
   const [questiondetail, setquestiondetail] = useState("");
   const [tag, settag] = useState([]);
   const [qdate, setqdate] = useState();
   const [qlikes, setqlikes] = useState([]);
-  const [answer, setanswer] = useState([]);
+  const [answers, setanswers] = useState([]);
   const [postanswer, setpostanswer] = useState();
   const [alikes, setalikes] = useState([]);
   const [quser, setquser] = useState("");
@@ -22,7 +21,7 @@ export default function Question(props) {
   const [statechange, setstatechange] = useState(1);
 
   const user = useSelector((state) => state.user);
-  const qid = props.match.params.id;
+  const qid = props.match.params.qid;
 
   useEffect(() => {
     axios
@@ -30,11 +29,10 @@ export default function Question(props) {
       .then((res) => {
         console.log(res.data);
         setquestion(res.data.data.question);
-        setqusername(res.data.data.userdname);
         settag(res.data.data.tags);
         setqdate(res.data.data.date);
         setqlikes(res.data.data.qlikes);
-        setanswer(res.data.data.answers);
+        setanswers(res.data.data.answers);
         setquser(res.data.data.userId);
         setquestiondetail(res.data.data.questiondetail);
       })
@@ -50,7 +48,7 @@ export default function Question(props) {
     } else {
       if (postanswer.length > 10) {
         const a = [];
-        answer.forEach((o) => a.push(o.answer));
+        answers.forEach((o) => a.push(o.answer));
         if (a.includes(postanswer) !== true) {
           setdate(Date);
           const uid = user._id;
@@ -64,18 +62,18 @@ export default function Question(props) {
                 if (userpoint < 0) {
                   userpoint = 0;
                 }
-                if (user._id !== qusername) {
-                  const userdname = user._id;
-                  const uid = { userdname, userpoint };
-                  axios
-                    .post(
-                      `${process.env.REACT_APP_API_URL}/update-user-point`,
-                      uid
-                    )
-                    .then((res) => {
-                      console.log(res.data.data);
-                    });
-                }
+                // if (user._id !== qusername) {
+                //   const userdname = user._id;
+                //   const uid = { userdname, userpoint };
+                //   axios
+                //     .post(
+                //       `${process.env.REACT_APP_API_URL}/update-user-point`,
+                //       uid
+                //     )
+                //     .then((res) => {
+                //       console.log(res.data.data);
+                //     });
+                // }
               }
             });
           document.getElementById("thanksforanswer").style.display = "block";
@@ -140,7 +138,7 @@ export default function Question(props) {
 
   let amain;
   let qd = questiondetail.replace(/(?:\r\n|\r|\n)/g, "<br/>");
-  const ausernames = answer.map((a) => a.uid);
+  const ausernames = answers.map((a) => a.uid);
 
   function deleteHandler() {
     const deleteQues = { qid };
@@ -215,8 +213,8 @@ export default function Question(props) {
         <br />
         <div>
           Asked By{" "}
-          <NavLink style={{ fontFamily: "cursive" }} to={`/user/${qusername}`}>
-            {quser}
+          <NavLink style={{ fontFamily: "cursive" }} to={`/user/${quser?._id}`}>
+            {quser?.dname}
           </NavLink>{" "}
           {handleDate(qdate) !== 0
             ? "on " + handleDate(qdate) + " day ago"
@@ -242,7 +240,7 @@ export default function Question(props) {
         >
           Copy Link
         </button>
-        {user != null && user._id === qusername ? (
+        {user != null && user._id === quser?._id ? (
           <button
             type="button"
             onClick={() => {
@@ -258,7 +256,7 @@ export default function Question(props) {
         ) : (
           <div></div>
         )}
-        {user != null && user._id === qusername ? (
+        {user != null && user._id === quser?._id ? (
           <NavLink
             className="btn mx-1 btn-outline-primary"
             to={{
@@ -269,8 +267,8 @@ export default function Question(props) {
               questiontags: tag,
               questionlikes: qlikes,
               questiondate: qdate,
-              quserdname: qusername,
-              qanswers: answer
+              quser: quser,
+              qanswers: answers
             }}
           >
             Edit Question{" "}
@@ -280,9 +278,9 @@ export default function Question(props) {
         )}
       </h4>
       <br />
-      {answer !== "" && <h2> Given Answers</h2>}
-      {answer !== "" &&
-        answer.map((a) => {
+      {answers !== "" && <h2> Given Answers</h2>}
+      {answers !== "" &&
+        answers.map((a) => {
           return (
             <div className="m-2 mb-0" key={a.uid}>
               <div className="answersec">
@@ -322,7 +320,7 @@ export default function Question(props) {
                     style={{ fontFamily: "cursive" }}
                     to={`/user/${a.uid}`}
                   >
-                    {quser}
+                    {a.uid}
                   </NavLink>{" "}
                   <br />{" "}
                   {handleDate(a.date) !== 0
@@ -334,12 +332,12 @@ export default function Question(props) {
             </div>
           );
         })}
-      {answer === "" && (
+      {answers === "" && (
         <h3 className="text-secondary">
           <b> No answer given</b>
         </h3>
       )}
-      {answer !== "" && <br />}
+      {answers !== "" && <br />}
       <h2 className="m-2 mb-0">Your Answer</h2>
       <form>
         <div className="col-sm-11 ">
