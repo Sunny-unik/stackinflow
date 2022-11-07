@@ -24,19 +24,20 @@ export default function User(props) {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/user-by-userdname/?_id=` + uid)
+      .get(`${process.env.REACT_APP_API_URL}/user/?id=` + uid)
       .then((res) => {
-        setuserbyudn(res.data.data[0]);
-        setuserlikes(res.data.data[0].userlikes);
-        setnamebyudn(res.data.data[0].name);
-        setdnamebyudn(res.data.data[0].dname);
-        setaboutbyudn(res.data.data[0].about);
-        settilebyudn(res.data.data[0].title);
-        setprofilebyudn(res.data.data[0].profile);
-        setgitlinkbyudn(res.data.data[0].gitlink);
-        setsociallinkbyudn(res.data.data[0].twitter);
-        setweblinkbyudn(res.data.data[0].weblink);
-        setaddressbyudn(res.data.data[0].address);
+        console.log(res.data);
+        setuserbyudn(res.data.data);
+        setuserlikes(res.data.data?.userlikes);
+        setnamebyudn(res.data.data?.name);
+        setdnamebyudn(res.data.data?.dname);
+        setaboutbyudn(res.data.data?.about);
+        settilebyudn(res.data.data?.title);
+        setprofilebyudn(res.data.data?.profile);
+        setgitlinkbyudn(res.data.data?.gitlink);
+        setsociallinkbyudn(res.data.data?.twitter);
+        setweblinkbyudn(res.data.data?.weblink);
+        setaddressbyudn(res.data.data?.address);
       })
       .catch((res) => setnotfound(`!User not found`));
 

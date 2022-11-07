@@ -206,7 +206,7 @@ const userController = {
 
   userById: async (req, res) => {
     await userSchema
-      .find({ _id: req.query.id })
+      .findOne({ _id: req.query.id })
       .select(
         "_id name dname userlikes email about address gitlink title twitter weblink profile"
       )
