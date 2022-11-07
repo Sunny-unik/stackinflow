@@ -4,7 +4,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Spinner from "../spinner";
 import QuestionBox from "../questionBox";
-import "./css/spinner.css";
+import "../css/spinner.css";
 
 export default function Topquestions() {
   const [questions, setquestions] = useState();

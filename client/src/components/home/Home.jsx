@@ -13,7 +13,7 @@ import QuestionsByTag from "../QuestionsByTag";
 import EditQuestion from "../editquestion";
 import About from "../About";
 import Feedback from "../Feedback";
-import Searchq from "../Searchq";
+import Searchq from "../searchQuestion/Searchq";
 
 export default function Home(props) {
   const user = useSelector((state) => state.user);

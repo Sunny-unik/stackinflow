@@ -3,7 +3,7 @@ import { FcDislike, FcLike, FcLikePlaceholder } from "react-icons/fc";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-import "./css/qls.css";
+import "../css/qls.css";
 import Spinner from "../spinner";
 import handleDate from "../../helper/dateHelper";
 

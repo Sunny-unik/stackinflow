@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { emailRegex, passwordRegex } from "../helper/RegexHelper";
+import { emailRegex, passwordRegex } from "../../helper/RegexHelper";
 import ConfirmEmail from "./ConfirmEmail";
 
 export default function Signup(props) {
