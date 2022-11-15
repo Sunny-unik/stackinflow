@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FcDislike, FcLike, FcLikePlaceholder } from "react-icons/fc";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "../css/qls.css";
 import Spinner from "../spinner";
 import handleDate from "../../helper/dateHelper";
+import LikeButton from "./LikeButton";
+import Answer from "./Answer";
 
 export default function Question(props) {
   const [question, setquestion] = useState("");
@@ -15,11 +16,10 @@ export default function Question(props) {
   const [qlikes, setqlikes] = useState([]);
   const [answers, setanswers] = useState([]);
   const [postanswer, setpostanswer] = useState();
-  // const [alikes, setalikes] = useState([]);
-  const alikes = [];
   const [quser, setquser] = useState("");
   const [date, setdate] = useState(Date);
   const [statechange, setstatechange] = useState(1);
+  const alikes = [];
   const user = useSelector((state) => state.user);
   const qid = props.match.params.qid;
 
@@ -39,10 +39,7 @@ export default function Question(props) {
       .catch((err) => console.log("In question fetch: ", err));
   }, [qid]);
 
-  const setposta = (e) =>
-    e.target.name === "seta" && setpostanswer(e.target.value);
-
-  function listanswer() {
+  const listanswer = () => {
     if (user === null) {
       alert("For submit your answer you need to login first");
     } else {
@@ -85,9 +82,9 @@ export default function Question(props) {
         alert("your answer is to short please explain in detail");
       }
     }
-  }
+  };
 
-  function likeclick() {
+  const questionLikeClick = () => {
     if (!user) {
       alert("for do this action you need to login first");
     } else if (qlikes.includes(user._id) === true) {
@@ -109,38 +106,9 @@ export default function Question(props) {
         .then((res) => console.log(res.data.data));
       setstatechange(statechange + 1 + 1);
     }
-  }
+  };
 
-  function answerlikeadd(al, ad) {
-    if (!user) {
-      alert("for do this action you need to login first");
-    } else if (al.includes(user._id) === true) {
-      const indexforpop = al.indexOf(user._id);
-      al.splice(indexforpop, 1);
-      const removealike = { ad, al, qid };
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/remove-alike`, removealike)
-        .then((res) => {
-          console.log(res.data.data);
-        });
-      setstatechange(statechange + 1 + 1);
-    } else {
-      const uid = user._id;
-      const addqlike = { uid, qid, ad };
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/add-alike`, addqlike)
-        .then((res) => {
-          console.log(res.data.data);
-        });
-      setstatechange(statechange + 1 + 1);
-    }
-  }
-
-  let amain;
-  let qd = questiondetail.replace(/(?:\r\n|\r|\n)/g, "<br/>");
-  const ausernames = answers.map((a) => a.uid);
-
-  function deleteHandler() {
+  const deleteQuestion = () => {
     const deleteQues = { qid };
     axios
       .post(`${process.env.REACT_APP_API_URL}/delete-question`, deleteQues)
@@ -178,87 +146,60 @@ export default function Question(props) {
           props.history.push("/");
         }
       });
-  }
+  };
+
+  let qd = questiondetail.replace(/(?:\r\n|\r|\n)/g, "<br/>");
+  const ausernames = answers.map((a) => a.uid);
 
   return question ? (
     <div>
-      <div key={qid}>
-        <h2
-          className="col-sm-10 text-left"
-          style={{
-            fontFamily: "sans-serif",
-            textShadow: ".01em .02em yellow",
-            display: "inline-block"
-          }}
-        >
-          Q. {question}
-        </h2>
-        <button
-          type="reset"
-          className="col-sm-1 btn btn-light likebtn"
-          onClick={() => likeclick()}
-          style={{ height: "min-content", width: "min-content" }}
-        >
-          {user ? (
-            qlikes.toString().includes(user._id) === true ? (
-              <FcLike />
-            ) : (
-              <FcLikePlaceholder />
-            )
-          ) : (
-            <FcDislike />
-          )}
-          {qlikes ? (qlikes.length !== undefined ? qlikes.length : "0") : "0"}
-        </button>
-        <br />
-        <div>
+      {/* question division */}
+      <div>
+        <div className="d-flex justify-content-between align-item-center">
+          <div className="px-2 h2" style={{ textShadow: ".01em .02em yellow" }}>
+            Q. {question}
+          </div>
+          <LikeButton
+            uid={user?._id}
+            likesCount={qlikes}
+            likeClick={questionLikeClick}
+          />
+        </div>
+        <h5 className="px-2 my-1">
+          {qd.split("<br/>").map((item) => (
+            <p>{item}</p>
+          ))}
+        </h5>
+        <div className="float-end m-1">
           Asked By{" "}
           <NavLink style={{ fontFamily: "cursive" }} to={`/user/${quser?._id}`}>
             {quser?.dname}
-          </NavLink>{" "}
+          </NavLink>
           {handleDate(qdate) !== 0
-            ? "on " + handleDate(qdate) + " day ago"
+            ? " on " + handleDate(qdate) + " day ago"
             : "today"}
           .
         </div>
-        <hr className="col-sm-11" />
-        <h5 className="px-2 " id="hu">
-          {qd.split("<br/>").map(function (item) {
-            return <p>{item}</p>;
-          })}
-        </h5>
       </div>
-      <h4 className="col-sm-11">
-        <button
-          className="btn mx-1 btn-outline-dark float-end mr-"
-          type="button"
-          onClick={() => {
-            navigator.clipboard.writeText(
-              `${process.env.REACT_APP_API_URL}/question/${qid}`
-            );
-          }}
-        >
-          Copy Link
-        </button>
-        {user != null && user._id === quser?._id ? (
+      <hr className="col-sm-12" />
+      {/* delete, edit & copy question link */}
+      <div className="col-sm-12 px-2">
+        {user != null && user?._id === quser?._id && (
           <button
+            className="btn btn-outline-danger"
             type="button"
             onClick={() => {
               if (window.confirm("Are you sure to delete this question?")) {
-                deleteHandler();
+                deleteQuestion();
               }
             }}
-            className="btn mx-2 btn-outline-danger"
           >
-            {" "}
-            Delete Question{" "}
+            Delete Question
           </button>
-        ) : (
-          <div></div>
         )}
-        {user != null && user._id === quser?._id ? (
+        {user != null && user?._id === quser?._id && (
           <NavLink
-            className="btn mx-1 btn-outline-primary"
+            className="btn btn-outline-primary mx-3"
             to={{
               pathname: `/editQuestion/${qid}`,
               questionid: qid,
@@ -271,102 +212,58 @@ export default function Question(props) {
               qanswers: answers
             }}
           >
-            Edit Question{" "}
+            Edit Question
           </NavLink>
-        ) : (
-          <div></div>
         )}
-      </h4>
-      <br />
-      {answers !== "" && <h2> Given Answers</h2>}
-      {answers !== "" &&
-        answers.map((a) => {
-          return (
-            <div className="m-2 mb-0" key={a.uid}>
-              <div className="answersec">
-                <h4 className="col-sm-10 mx-2">
-                  <div style={{ display: "none" }}>
-                    {(amain = a.answer.replace(/(?:\r\n|\r|\n)/g, "\n"))}
-                  </div>
-                  {amain.split("\n").map(function (i) {
-                    return <p>{i}</p>;
-                  })}
-                </h4>
-                <button
-                  type="reset"
-                  className="col-sm-1 float-end mx-4 likebtn"
-                  style={{
-                    height: "min-content",
-                    border: "0",
-                    width: "min-content",
-                    fontSize: "large"
-                  }}
-                  onClick={() => answerlikeadd(a.alikes, a.date)}
-                >
-                  {user ? (
-                    a.alikes.toString().includes(user._id) === true ? (
-                      <FcLike />
-                    ) : (
-                      <FcLikePlaceholder />
-                    )
-                  ) : (
-                    <FcDislike />
-                  )}
-                  {a.alikes ? a.alikes.length : 0}
-                </button>
-                <div className="col-sm-4 mx-2">
-                  Given By{" "}
-                  <NavLink
-                    style={{ fontFamily: "cursive" }}
-                    to={`/user/${a.uid}`}
-                  >
-                    {a.uid}
-                  </NavLink>{" "}
-                  <br />{" "}
-                  {handleDate(a.date) !== 0
-                    ? "on " + handleDate(a.date) + " day ago"
-                    : "today"}
-                  .
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      {answers === "" && (
-        <h3 className="text-secondary">
-          <b> No answer given</b>
+        <button
+          className="btn btn-outline-dark mx-1 float-end"
+          type="button"
+          onClick={() => {
+            navigator.clipboard.writeText(
+              `${process.env.REACT_APP_API_URL}/question/${qid}`
+            );
+          }}
+        >
+          Copy Link
+        </button>
+      </div>
+      {/* list answers or no answer message */}
+      {answers.length ? (
+        <div>
+          <h3 className="p-2"> Given Answers </h3>
+          {answers.map((a) => (
+            <Answer answerObj={a} user={user} answerId={a._id} />
+          ))}
+        </div>
+      ) : (
+        <h3 className="text-secondary px-2">
+          <b>No answer given</b>
         </h3>
       )}
-      {answers !== "" && <br />}
-      <h2 className="m-2 mb-0">Your Answer</h2>
-      <form>
-        <div className="col-sm-11 ">
+      {/* add answer */}
+      <div>
+        <h3 className="m-2 mb-0">Add Your Answer</h3>
+        <div className="col-sm-12 p-2">
           <textarea
-            className="w-100"
-            onChange={(e) => setposta(e)}
-            name="seta"
-            id="seta"
-            style={{
-              height: "30vh",
-              marginBottom: ".6rem",
-              fontSize: "1.4rem"
-            }}
+            className="w-100 "
+            id="setAnswer"
+            onChange={(e) => setpostanswer(e.target.value)}
+            style={{ height: "36vh" }}
           ></textarea>
         </div>
-        <h6 className="col-sm-11">
+        <div className="col-sm-12 p-2">
           <button
             type="reset"
             onClick={listanswer}
-            className="btn float-end btn-success postans rounded-3 mx-1"
-            style={{ marginBottom: "1.5rem", fontSize: "large" }}
+            className="btn btn-success float-end postans"
           >
             Post Answer
           </button>
-        </h6>
-      </form>
-      <br />
+        </div>
+      </div>
+      {/* thanks on post */}
       <div
-        className="col-sm-11 bg-danger mt-3 text-info rounded-3 mx-1"
+        className="col-sm-12 bg-danger m-3 text-info"
         id="thanksforanswer"
         style={{ display: "none" }}
       >
@@ -383,28 +280,25 @@ export default function Question(props) {
         personal experience.
       </div>
       <br />
-      <h3
-        className="col-sm-11 px-1"
-        style={{ display: "inline-block", margin: "1rem 1rem 1rem 0rem" }}
-      >
-        Browse other questions tagged{" "}
+      <div className="col-sm-12 px-2 h3" style={{ margin: "1rem 0rem" }}>
+        Browse other questions tagged {/* attached tag on question's links */}
         {tag.map((o) => {
-          if (o !== "" && " ")
-            return (
-              <NavLink
-                style={{ fontFamily: "monospace" }}
-                className="btn btn-link btn-outline-dark m-1 rounded"
-                to={`/questionsBy/${o}`}
-              >
-                {o.replace(",", "")}
-              </NavLink>
-            );
-          else return "";
-        })}{" "}
+          return o.trim() ? (
+            <NavLink
+              style={{ fontFamily: "monospace" }}
+              className="btn btn-link btn-outline-dark m-1"
+              to={`/questionsBy/${o}`}
+            >
+              {o}
+            </NavLink>
+          ) : (
+            ""
+          );
+        })}
+        {/* askQuestion link if user loged in else login link */}
         {user ? (
           <span>
-            {" "}
-            or{" "}
+            &nbsp;or{" "}
             <NavLink
               style={{ fontFamily: "monospace" }}
               className="btn btn-primary ayoq"
@@ -419,10 +313,10 @@ export default function Question(props) {
             <NavLink className="btn btn-primary" to={"/login"}>
               login
             </NavLink>{" "}
-            first for ask your questions.
+            for ask your questions.
           </span>
         )}
-      </h3>
+      </div>
     </div>
   ) : (
     <Spinner />
