@@ -3,7 +3,7 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "../css/qls.css";
-import Spinner from "../spinner";
+import Spinner from "../Spinner";
 import handleDate from "../../helper/dateHelper";
 import LikeButton from "./LikeButton";
 import Answer from "./Answer";

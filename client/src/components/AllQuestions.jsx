@@ -2,9 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import Spinner from "./spinner";
+import Spinner from "./Spinner";
 import Reactpaginate from "react-paginate";
-import QuestionBox from "./questionBox";
+import QuestionBox from "./QuestionBox";
 
 export default function Allquestions() {
   const [questionsLength, setquestionsLength] = useState();

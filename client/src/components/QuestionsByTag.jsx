@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import QuestionBox from "./questionBox";
+import QuestionBox from "./QuestionBox";
 
 export default function QuestionsByTag(props) {
   const [question, setquestion] = useState([]);

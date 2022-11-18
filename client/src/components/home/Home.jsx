@@ -1,19 +1,19 @@
 import { useSelector } from "react-redux";
 import React from "react";
 import { Switch, Route, NavLink } from "react-router-dom";
-import Populartags from "../Populartags";
-import Popularusers from "../Popularusers";
+import Populartags from "../PopularTags";
+import Popularusers from "../PopularUsers";
 import AskQuestion from "../AskQuestion";
-import Allquestions from "../Allquestions";
-import Topquestions from "../filterQuestion/Topquestions";
+import Allquestions from "../AllQuestions";
+import Topquestions from "../filterQuestion/TopQuestions";
 import Question from "../openQuestion/OpenedQuestion";
 import Footer from "../Footer";
 import User from "../User";
 import QuestionsByTag from "../QuestionsByTag";
-import EditQuestion from "../editquestion";
+import EditQuestion from "../EditQuestion";
 import About from "../About";
 import Feedback from "../Feedback";
-import Searchq from "../searchQuestion/Searchq";
+import Searchq from "../searchQuestion/SearchQuestion";
 
 export default function Home(props) {
   const user = useSelector((state) => state.user);

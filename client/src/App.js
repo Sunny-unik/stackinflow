@@ -15,8 +15,8 @@ import Home from "./components/home/Home";
 import Login from "./components/login/Login";
 import Profile from "./components/profile/Profile";
 import Signup from "./components/signup/Signup";
-import SearchBox from "./components/searchQuestion/searchBox";
-import CanvasNav from "./components/home/canvasNav";
+import SearchBox from "./components/searchQuestion/SearchBox";
+import CanvasNav from "./components/home/CanvasNav";
 
 export default function App() {
   const dispatch = useDispatch();

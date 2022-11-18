@@ -3,7 +3,7 @@ import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { FcSearch } from "react-icons/fc";
-import Spinner from "./spinner";
+import Spinner from "./Spinner";
 import { NavLink } from "react-router-dom";
 
 export default function Popularusers(props) {
