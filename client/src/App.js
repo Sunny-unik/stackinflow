@@ -2,7 +2,7 @@ import "./App.css";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Switch, Route, NavLink } from "react-router-dom";
-import { authenticateUser } from "./action/userAction";
+import { authenticateUser, logoutUser } from "./action/userAction";
 import {
   FaHamburger,
   FaRegistered,
@@ -23,14 +23,10 @@ export default function App() {
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    const localToken = localStorage.getItem("stackinflowToken");
-    if (!!localToken) dispatch(authenticateUser(localToken));
+    dispatch(authenticateUser());
   }, [dispatch]);
 
-  const logout = () => {
-    localStorage.removeItem("stackinflowToken");
-    dispatch({ type: "LOGOUT_USER" });
-  };
+  const logout = () => dispatch(logoutUser);
 
   return (
     <BrowserRouter>

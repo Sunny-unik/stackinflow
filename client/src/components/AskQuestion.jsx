@@ -14,8 +14,8 @@ export default function AskQuestion(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user === null && !localStorage.getItem("stackinflowToken")) {
-      alert("User not found, for ask question you have to login first");
+    if (user === null) {
+      console.log("User not found, for ask question you have to login first");
       props.history.push("/login");
       return false;
     }

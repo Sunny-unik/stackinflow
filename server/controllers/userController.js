@@ -23,11 +23,14 @@ const userController = {
         if (!user) return res.send({ msg: "user not found" });
         else filterData = checkPassword(user);
         filterData.length
-          ? res.send({
-              data: filterData[0],
-              token: filterData[1],
-              msg: "Credentials Matched"
-            })
+          ? res
+              .cookie("stackinflowToken", filterData[1], {
+                sameSite: "strict",
+                path: "/",
+                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+                httpOnly: true
+              })
+              .send({ data: filterData[0], msg: "Credentials Matched" })
           : res.send({ msg: "incorrect password" });
       })
       .catch((err) => res.send(err));
@@ -42,13 +45,18 @@ const userController = {
     res.send({ otp: otp });
   },
 
+  logout: (req, res) => {
+    res.clearCookie("stackinflowToken").send("token cleared");
+  },
+
   authenticate: async (req, res) => {
     try {
-      const token = req.headers.authorization.split(" ")[1];
+      const token = req.cookies.stackinflowToken;
+      if (!token) return res.send("cookie not found");
       const decode = verify(token, "verySecretCode");
       req.decoded = decode;
     } catch (error) {
-      res.send("token expired");
+      res.clearCookie("stackinflowToken").send("token expired");
       return false;
     }
 

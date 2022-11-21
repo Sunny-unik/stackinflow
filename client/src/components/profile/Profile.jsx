@@ -16,8 +16,7 @@ import { FcCollaboration } from "react-icons/fc";
 export default function Profile() {
   const user = useSelector((state) => state.user);
 
-  if (!user && !localStorage.getItem("stackinflowToken"))
-    window.location.pathname = "/login";
+  if (!user) window.location.pathname = "/login";
 
   const {
     _id: userId,
