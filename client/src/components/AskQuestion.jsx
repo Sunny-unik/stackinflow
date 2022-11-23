@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { tagRegex } from "../helper/RegexHelper";
-import { updateUserPoints } from "../action/userAction";
+import { authenticateUser, updateUserPoints } from "../action/userAction";
 
 export default function AskQuestion(props) {
   const [askq, setaskq] = useState("");
@@ -14,9 +14,8 @@ export default function AskQuestion(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user === null) {
-      console.log("User not found, for ask question you have to login first");
-      props.history.push("/login");
+    if (!user) {
+      dispatch(authenticateUser());
       return false;
     }
     document
@@ -27,7 +26,7 @@ export default function AskQuestion(props) {
         .querySelectorAll(".extraLink")
         .forEach((elem) => elem?.classList.remove("active"));
     };
-  }, [user, props.history]);
+  }, [user, props.history, dispatch]);
 
   const validQuestion = (title, description, tags) => {
     const errors = [];

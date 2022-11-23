@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Switch, Route, NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import axios from "axios";
@@ -12,11 +12,15 @@ import Footer from "../Footer";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import { IoLocationSharp } from "react-icons/io5";
 import { FcCollaboration } from "react-icons/fc";
+import { authenticateUser } from "../../action/userAction";
 
-export default function Profile() {
+export default function Profile(props) {
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-  if (!user) window.location.pathname = "/login";
+  useEffect(() => {
+    if (!user) dispatch(authenticateUser());
+  }, [user, props.history, dispatch]);
 
   const {
     _id: userId,
