@@ -79,7 +79,7 @@ export default function Home(props) {
               </NavLink>
             </li>
             <li className="nav-link pe-0">
-              <h6
+              <span
                 className="extraLink"
                 style={{
                   fontFamily: "serif",
@@ -89,7 +89,7 @@ export default function Home(props) {
                 onClick={sidelink}
               >
                 Ask Question
-              </h6>
+              </span>
             </li>
           </ul>
           <div

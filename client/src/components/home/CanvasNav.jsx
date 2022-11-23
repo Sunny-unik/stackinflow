@@ -63,7 +63,7 @@ export default function CanvasNav(props) {
         </NavLink>
       </li>
       <li className="mt-2 p-1">
-        <h6
+        <span
           className="extraLink"
           style={{
             fontFamily: "serif",
@@ -73,7 +73,7 @@ export default function CanvasNav(props) {
           onClick={sidelink}
         >
           Ask Question
-        </h6>
+        </span>
       </li>
     </ul>
   );
