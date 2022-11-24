@@ -8,42 +8,43 @@ import "../css/spinner.css";
 
 export default function Topquestions() {
   const [questions, setquestions] = useState();
-  const [sortBy, setsortBy] = useState("newest");
+  const [sortBy, setsortBy] = useState("mostLiked");
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/question/list`).then((res) => {
-      const data = res.data.data;
-      if (sortBy === "newest") {
-        setquestions(data.reverse());
-      } else if (sortBy === "oldest") {
-        setquestions(data);
-      } else if (sortBy === "mostLiked") {
+    if (sortBy === "newest") {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/question/onpage?limit=${10}`)
+        .then((res) => setquestions(res.data.data));
+    } else if (sortBy === "oldest") {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/question/oldest?limit=${10}`)
+        .then((res) => setquestions(res.data.data));
+    } else if (sortBy === "mostLiked") {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/question/mostLiked?limit=${10}`)
+        .then((res) => setquestions(res.data.data));
+    } else if (sortBy === "notAnswered") {
+      axios.get(`${process.env.REACT_APP_API_URL}/question/list`).then((res) =>
         setquestions(
-          data
-            .sort((a, b) => {
-              return a.qlikes.length - b.qlikes.length;
-            })
-            .reverse()
-        );
-      } else if (sortBy === "notAnswered") {
-        setquestions(
-          data.reverse().filter((a) => {
+          res.data.data.reverse().filter((a) => {
             const answersLength = a.answers ? a.answers.length : 0;
             return answersLength === 0;
           })
-        );
-      } else if (sortBy === "mostAnswered") {
+        )
+      );
+    } else if (sortBy === "mostAnswered") {
+      axios.get(`${process.env.REACT_APP_API_URL}/question/list`).then((res) =>
         setquestions(
-          data
+          res.data.data
             .sort((a, b) => {
               const aLength = a.answers ? a.answers.length : 0;
               const bLength = b.answers ? b.answers.length : 0;
               return aLength - bLength;
             })
             .reverse()
-        );
-      }
-    });
+        )
+      );
+    }
   }, [sortBy]);
 
   return (
@@ -68,15 +69,15 @@ export default function Topquestions() {
                 onChange={(e) => setsortBy(e.target.labels[0].id)}
               />
               <label
-                id="newest"
+                id="mostLiked"
                 className={
-                  sortBy === "newest"
+                  sortBy === "mostLiked"
                     ? "btn btn-outline-primary active"
                     : "btn btn-outline-primary"
                 }
                 htmlFor="btnradio1"
               >
-                Newest
+                Most Liked
               </label>
               <input
                 type="radio"
@@ -104,15 +105,15 @@ export default function Topquestions() {
                 onChange={(e) => setsortBy(e.target.labels[0].id)}
               />
               <label
-                id="mostLiked"
+                id="newest"
                 className={
-                  sortBy === "mostLiked"
+                  sortBy === "newest"
                     ? "btn btn-outline-primary active"
                     : "btn btn-outline-primary"
                 }
                 htmlFor="btnradio3"
               >
-                Most Liked
+                Newest
               </label>
               <input
                 type="radio"

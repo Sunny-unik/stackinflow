@@ -15,10 +15,44 @@ const questionController = {
     const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
     await questionSchema
       .find()
+      .sort({ date: -1 })
       .limit(limit * 1)
       .skip(page * 1 * limit)
       .select("_id question userId date qlikes tags")
       .populate("userId", "_id dname userlikes")
+      .then((questions) => res.send({ data: questions, msg: "success" }))
+      .catch((err) => res.send(err));
+  },
+
+  oldestWithLimit: async (req, res) => {
+    const limit = +req.query.limit || 10;
+    await questionSchema
+      .find()
+      .limit(limit * 1)
+      .select("_id question userId date qlikes tags")
+      .populate("userId", "_id dname userlikes")
+      .then((questions) => res.send({ data: questions, msg: "success" }))
+      .catch((err) => res.send(err));
+  },
+
+  mostLikedWithLimit: async (req, res) => {
+    const limit = +req.query.limit || 10;
+    await questionSchema
+      .aggregate()
+      .addFields({ qlikesCount: { $size: `$qlikes` } })
+      .sort({ qlikesCount: -1 })
+      .limit(limit * 1)
+      .lookup({
+        from: "users",
+        as: "userId",
+        localField: "userId",
+        foreignField: "_id",
+        pipeline: [
+          { $unwind: "$_id" },
+          { $project: { _id: 1, dname: 1, userlikes: 1 } }
+        ]
+      })
+      .unwind("userId")
       .then((questions) => res.send({ data: questions, msg: "success" }))
       .catch((err) => res.send(err));
   },
