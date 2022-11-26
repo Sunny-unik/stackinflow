@@ -10,7 +10,10 @@ const {
   userById,
   createUser,
   checkLogin,
-  updateUserPoint
+  updateUserPoint,
+  authenticate,
+  sendOtp,
+  logout
 } = require("../controllers/userController");
 const validUser = require("../validations/validUser");
 
@@ -18,10 +21,13 @@ const router = express.Router();
 
 router.get("/list", listUser);
 router.get("/", userById);
-router.get("/login", validUser(), checkLogin);
-router.get("/dname", validUser(), validDname);
-router.get("/email", validUser(), validEmail);
-router.get("/otp-mail", validUser(), sendOtpEmail);
+router.get("/authenticate", authenticate);
+router.get("/logout", logout);
+router.get("/send-otp", sendOtp);
+router.post("/dname", validUser(), validDname);
+router.post("/email", validUser(), validEmail);
+router.post("/login", validUser(), checkLogin);
+router.post("/otp-mail", validUser(), sendOtpEmail);
 router.put("/points", validUser(), updateUserPoint);
 router.put("/", validUser(), updateUserDetails);
 router.put("/profile", updateUserProfile);

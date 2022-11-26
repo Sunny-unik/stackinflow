@@ -1,9 +1,4 @@
-.mainnavbar {
-  margin-bottom: 0%;
-  position: sticky;
-  top: 0%;
-  z-index: 1;
-}
+/* popular tags & users search */
 .searchtp {
   /* margin-left: 10px auto ; */
   padding: 0%;
@@ -11,8 +6,21 @@
   width: 28%;
   border-radius: 20px;
 }
-.searchquestion {
-  width: 60% !important;
+.activeTopNav {
+  background-image: linear-gradient(to top, rgba(50, 300, 200, 0.1), #ecd3d710);
+  color: blue;
+  border-radius: 5px;
+}
+#sideLeftNav a.active,
+#canvasNav a.active,
+.extraLink.active {
+  background-image: linear-gradient(
+    to right,
+    rgba(50, 300, 200, 0.1),
+    rgba(50, 400, 150, 5)
+  );
+  font-weight: 600;
+  font-size: x-large;
 }
 .searchb {
   margin: 0%;
@@ -25,17 +33,45 @@
   background-color: aliceblue;
   box-shadow: 1px 1px 1px 2px dodgerblue;
 }
-.mainnavitem:hover {
-  background-color: aliceblue;
+/* in app.js */
+.sticky-top .navbar-nav li {
+  letter-spacing: 1px;
 }
-.mainnavitem:focus-within {
-  background-color: aliceblue;
+.sticky-top .navbar-nav li a {
+  text-decoration: none;
 }
-.cnavbrand:hover {
-  color: aliceblue;
+@media only screen and (max-width: 576px) {
+  .sticky-top .navbar-nav li {
+    margin-top: 5px;
+  }
+  .sticky-top .navbar-nav li a svg {
+    margin-right: 4px;
+  }
+  .sticky-top .navbar-nav li:last-child {
+    margin-bottom: 5px;
+  }
 }
-@media (max-width: 576px) {
-  .navshrink {
+/* home.jsx */
+#sideLeftNav {
+  position: sticky;
+  top: 4.1rem;
+  text-align: right;
+  height: min-content;
+}
+.extraLink {
+  text-decoration: underline;
+  color: dodgerblue;
+}
+.extraLink:hover {
+  cursor: pointer;
+  color: #0054d2;
+}
+@media only screen and (max-width: 576px) {
+  #sideLeftNav {
     display: none;
   }
+}
+/* tags */
+#tagButton:hover {
+  transform: scale(1.2);
 }

@@ -1,10 +1,12 @@
 export function user(state = null, action) {
-  switch (action.type) {
-    case 'LOGIN_USER':
-      return action.payload;
-    case 'LOGOUT_USER':
-      return null;
-    default:
-      return state;
-  }
+  const switchUser = {
+    LOGIN_USER: action.payload,
+    UPDATE_USER: action.payload,
+    UPDATE_POINTS: { ...state, userlikes: action.payload },
+    LOGOUT_USER: null
+  };
+
+  return switchUser.hasOwnProperty(action.type)
+    ? switchUser[action.type]
+    : state;
 }
