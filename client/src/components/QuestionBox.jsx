@@ -5,7 +5,7 @@ import "./css/qls.css";
 
 export default function QuestionBox(props) {
   return (
-    <div key={props.questionId} className="rounded card">
+    <div className="rounded card">
       <div
         data-aos="fade-up"
         data-aos-duration="400"
@@ -33,8 +33,7 @@ export default function QuestionBox(props) {
             className="qla bg-secondary"
             style={{ textShadow: "0.02em 0.08em black" }}
           >
-            {" "}
-            Likes: {props.likesCount}{" "}
+            &nbsp;Likes: {props.likesCount}{" "}
           </div>
           <div className="qla bg-secondary">
             <NavLink
@@ -45,26 +44,27 @@ export default function QuestionBox(props) {
               }}
               to={`/question/${props.questionId}`}
             >
-              {" "}
-              Answers: {props.answersCount}{" "}
+              &nbsp;Answers: {props.answersCount}{" "}
             </NavLink>
           </div>
         </div>
         <div className="maintagdiv mx-2">
           {props.tags.map((o) => {
             return (
-              <NavLink
-                style={{
-                  color: "white",
-                  fontFamily: "monospace",
-                  padding: ".2rem",
-                  textDecorationLine: "none"
-                }}
-                className="m-1 rounded bg-dark"
-                to={`/questionsBy/${o}`}
-              >
-                {o.replace(",", "")}
-              </NavLink>
+              <span key={o}>
+                <NavLink
+                  style={{
+                    color: "white",
+                    fontFamily: "monospace",
+                    padding: ".2rem",
+                    textDecorationLine: "none"
+                  }}
+                  className="m-1 rounded bg-dark"
+                  to={`/questionsBy/${o}`}
+                >
+                  {o.replace(",", "")}
+                </NavLink>
+              </span>
             );
           })}
         </div>
