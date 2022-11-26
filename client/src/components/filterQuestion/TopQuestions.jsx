@@ -14,36 +14,28 @@ export default function Topquestions() {
     if (sortBy === "newest") {
       axios
         .get(`${process.env.REACT_APP_API_URL}/question/onpage?limit=${10}`)
-        .then((res) => setquestions(res.data.data));
+        .then((res) => setquestions(res.data.data))
+        .catch((err) => console.log(err));
     } else if (sortBy === "oldest") {
       axios
         .get(`${process.env.REACT_APP_API_URL}/question/oldest?limit=${10}`)
-        .then((res) => setquestions(res.data.data));
+        .then((res) => setquestions(res.data.data))
+        .catch((err) => console.log(err));
     } else if (sortBy === "mostLiked") {
       axios
         .get(`${process.env.REACT_APP_API_URL}/question/mostLiked?limit=${10}`)
-        .then((res) => setquestions(res.data.data));
+        .then((res) => setquestions(res.data.data))
+        .catch((err) => console.log(err));
     } else if (sortBy === "notAnswered") {
-      axios.get(`${process.env.REACT_APP_API_URL}/question/list`).then((res) =>
-        setquestions(
-          res.data.data.reverse().filter((a) => {
-            const answersLength = a.answers ? a.answers.length : 0;
-            return answersLength === 0;
-          })
-        )
-      );
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/question/answerfilter?type=eq`)
+        .then((res) => setquestions(res.data.data))
+        .catch((err) => console.log(err));
     } else if (sortBy === "mostAnswered") {
-      axios.get(`${process.env.REACT_APP_API_URL}/question/list`).then((res) =>
-        setquestions(
-          res.data.data
-            .sort((a, b) => {
-              const aLength = a.answers ? a.answers.length : 0;
-              const bLength = b.answers ? b.answers.length : 0;
-              return aLength - bLength;
-            })
-            .reverse()
-        )
-      );
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/question/answerfilter?type=ne`)
+        .then((res) => setquestions(res.data.data))
+        .catch((err) => console.log(err));
     }
   }, [sortBy]);
 

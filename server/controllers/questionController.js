@@ -57,6 +57,30 @@ const questionController = {
       .catch((err) => res.send(err));
   },
 
+  filterByAnswerWithLimit: async (req, res) => {
+    const limit = +req.query.limit || 10;
+    const filterType = req.query.type === "ne" ? { $ne: 0 } : { $eq: 0 };
+    await questionSchema
+      .aggregate()
+      .addFields({ answersCount: { $size: `$answers` } })
+      .match({ answersCount: filterType })
+      .sort({ answersCount: -1, date: -1 })
+      .limit(limit * 1)
+      .lookup({
+        from: "users",
+        as: "userId",
+        localField: "userId",
+        foreignField: "_id",
+        pipeline: [
+          { $unwind: "$_id" },
+          { $project: { _id: 1, dname: 1, userlikes: 1 } }
+        ]
+      })
+      .unwind("userId")
+      .then((questions) => res.send({ data: questions, msg: "success" }))
+      .catch((err) => res.send(err));
+  },
+
   questionsSearch: async (req, res) => {
     await questionSchema
       .find({ question: { $regex: req.query.search, $options: "$i" } })
