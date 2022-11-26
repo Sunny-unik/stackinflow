@@ -66,7 +66,6 @@ function authenticateUser(token) {
       })
       .catch((err) => {
         dispatch({ type: "LOADING_FALSE" });
-        window.location.pathname = "/";
         console.log(err);
       });
   };

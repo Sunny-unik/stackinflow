@@ -10,7 +10,8 @@ const {
   questionsSearch,
   questionById,
   oldestWithLimit,
-  mostLikedWithLimit
+  mostLikedWithLimit,
+  addAnswer
 } = require("../controllers/questionController");
 const validQuestion = require("../validations/validQuestion");
 
@@ -25,6 +26,7 @@ router.get("/", questionById);
 router.post("/", validQuestion(), createQuestion);
 router.put("/add-like", validQuestion(), addQlike);
 router.put("/remove-like", validQuestion(), removeQlike);
+router.put("/add-answer", validQuestion(), addAnswer);
 router.delete("/", validQuestion(), deleteQuestion);
 router.put("/", validQuestion(), updateQuestion);
 

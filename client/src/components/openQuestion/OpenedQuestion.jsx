@@ -48,17 +48,27 @@ export default function Question(props) {
         answers.forEach((o) => a.push(o.answer));
         if (a.includes(postanswer) !== true) {
           setdate(Date);
-          const uid = user._id;
+          const userId = user._id;
           const answer = postanswer;
-          const lista = { uid, date, answer, alikes, qid };
+          const answerObj = { userId, answer, qid };
           axios
-            .post(`${process.env.REACT_APP_API_URL}/create-answer`, lista)
+            .post(`${process.env.REACT_APP_API_URL}/answer/`, answerObj)
             .then((res) => {
-              if (res.data.status === "ok") {
-                let userpoint = user.userlikes + 10;
-                if (userpoint < 0) {
-                  userpoint = 0;
-                }
+              const newAnswer = res.data.data;
+              if (res.data.msg === "Answer Submitted") {
+                const answerId = newAnswer._id;
+                axios
+                  .put(`${process.env.REACT_APP_API_URL}/question/add-answer`, {
+                    qid,
+                    answerId
+                  })
+                  .then((res) => {
+                    res.data.data.acknowledged &&
+                      setanswers((answer) => [...answer, newAnswer]);
+                  })
+                  .catch((err) => console.log(err));
+                // let userpoint = user.userlikes + 10;
+                // if (userpoint < 0) userpoint = 0;
                 // if (user._id !== qusername) {
                 //   const userdname = user._id;
                 //   const uid = { userdname, userpoint };
@@ -232,7 +242,7 @@ export default function Question(props) {
         <div>
           <h3 className="p-2"> Given Answers </h3>
           {answers.map((a) => (
-            <Answer answerObj={a} user={user} answerId={a._id} />
+            <Answer key={a._id} answerObj={a} user={user} answerId={a._id} />
           ))}
         </div>
       ) : (
@@ -263,7 +273,7 @@ export default function Question(props) {
       </div>
       {/* thanks on post */}
       <div
-        className="col-sm-12 bg-danger m-3 text-info"
+        className="col-sm-12 bg-danger mb-2 px-2 p-1 mt-5 text-info"
         id="thanksforanswer"
         style={{ display: "none" }}
       >

@@ -23,6 +23,13 @@ const schemaProvider = {
         alikes: yup.array().required()
       })
     }
+  },
+  DELETE: {
+    "/": {
+      schema: yup.object().shape({
+        answerId: yup.string().required()
+      })
+    }
   }
 };
 
