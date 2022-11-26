@@ -141,18 +141,6 @@ const questionController = {
         res.send({ data: result, msg: "Your question updated successfully 😊" })
       )
       .catch((error) => res.send(error));
-  },
-
-  addAnswer: async (req, res) => {
-    await questionSchema
-      .updateOne(
-        { _id: req.body.qid },
-        { $push: { answers: req.body.answerId } }
-      )
-      .then((result) =>
-        res.send({ data: result, msg: "Your question updated successfully 😊" })
-      )
-      .catch((error) => res.send(error));
   }
 };
 

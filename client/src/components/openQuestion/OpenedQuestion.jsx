@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../css/qls.css";
 import Spinner from "../Spinner";
 import handleDate from "../../helper/dateHelper";
 import LikeButton from "./LikeButton";
 import Answer from "./Answer";
+import { updateUserPoints } from "../../action/userAction";
 
 export default function Question(props) {
   const [question, setquestion] = useState("");
@@ -17,10 +18,9 @@ export default function Question(props) {
   const [answers, setanswers] = useState([]);
   const [postanswer, setpostanswer] = useState();
   const [quser, setquser] = useState("");
-  const [date, setdate] = useState(Date);
   const [statechange, setstatechange] = useState(1);
-  const alikes = [];
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const qid = props.match.params.qid;
 
   useEffect(() => {
@@ -47,40 +47,19 @@ export default function Question(props) {
         const a = [];
         answers.forEach((o) => a.push(o.answer));
         if (a.includes(postanswer) !== true) {
-          setdate(Date);
           const userId = user._id;
-          const answer = postanswer;
-          const answerObj = { userId, answer, qid };
+          const answerObj = { userId, answer: postanswer, qid };
           axios
             .post(`${process.env.REACT_APP_API_URL}/answer/`, answerObj)
             .then((res) => {
-              const newAnswer = res.data.data;
               if (res.data.msg === "Answer Submitted") {
-                const answerId = newAnswer._id;
-                axios
-                  .put(`${process.env.REACT_APP_API_URL}/question/add-answer`, {
-                    qid,
-                    answerId
-                  })
-                  .then((res) => {
-                    res.data.data.acknowledged &&
-                      setanswers((answer) => [...answer, newAnswer]);
-                  })
-                  .catch((err) => console.log(err));
-                // let userpoint = user.userlikes + 10;
-                // if (userpoint < 0) userpoint = 0;
-                // if (user._id !== qusername) {
-                //   const userdname = user._id;
-                //   const uid = { userdname, userpoint };
-                //   axios
-                //     .post(
-                //       `${process.env.REACT_APP_API_URL}/update-user-point`,
-                //       uid
-                //     )
-                //     .then((res) => {
-                //       console.log(res.data.data);
-                //     });
-                // }
+                setanswers((answers) => [...answers, res.data.data]);
+                let userpoint = user.userlikes + 10;
+                userpoint < 0 && (userpoint = 0);
+                if (user._id !== quser._id)
+                  dispatch(updateUserPoints(userId, userpoint));
+              } else {
+                alert("post answer failure because of some server side error");
               }
             });
           document.getElementById("thanksforanswer").style.display = "block";
@@ -89,7 +68,7 @@ export default function Question(props) {
           alert("This answer is already posted.");
         }
       } else {
-        alert("your answer is to short please explain in detail");
+        alert("Your answer is too short please explain in detail");
       }
     }
   };

@@ -127,7 +127,12 @@ const userController = {
         { _id: req.body.id },
         { $set: { userlikes: req.body.userpoint } }
       )
-      .then((result) => res.send({ data: result, msg: "User points updated" }))
+      .then((result) => {
+        res.send({
+          data: result,
+          msg: result.modifiedCount ? "User points updated" : "not found"
+        });
+      })
       .catch((err) => res.send(err));
   },
 

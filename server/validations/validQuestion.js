@@ -37,12 +37,6 @@ const schemaProvider = {
         id: yup.string().required(),
         qlikes: yup.array().required()
       })
-    },
-    "/add-answer": {
-      schema: yup.object().shape({
-        qid: yup.string().required(),
-        answerId: yup.string().required()
-      })
     }
   }
 };
