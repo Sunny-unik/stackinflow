@@ -11,6 +11,16 @@ const questionController = {
       .catch((err) => res.send(err));
   },
 
+  countQuestions: async (req, res) => {
+    const key = req.query.key;
+    const value = req.query.value;
+    const query = key && value ? { [key]: value } : {};
+    await questionSchema
+      .countDocuments(query)
+      .then((count) => res.send({ msg: "success", data: count }))
+      .catch((err) => res.send(err));
+  },
+
   questionsPerPage: async (req, res) => {
     const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
     await questionSchema

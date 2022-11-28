@@ -14,8 +14,8 @@ export default function Allquestions() {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/question/list`)
-      .then((res) => setquestionsLength(res.data.data.length))
+      .get(`${process.env.REACT_APP_API_URL}/question/count`)
+      .then((res) => setquestionsLength(res.data.data))
       .catch((err) => console.log(err));
     axios
       .get(
@@ -23,8 +23,7 @@ export default function Allquestions() {
       )
       .then((res) => setquestions(res.data.data))
       .catch((err) => console.log(err));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentpage.selected]);
 
   function pageChange(data) {
     currentpage = data;
