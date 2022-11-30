@@ -10,6 +10,19 @@ const answerController = {
       .then((answers) => res.send({ msg: answers.length, data: answers }))
       .catch((err) => res.send(err));
   },
+  
+  answersPerUser: async (req, res) => {
+    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
+    await answerSchema 
+      .find({userId:req.query.userId})
+      .sort({ date: -1 })
+      .limit(limit * 1)
+      .skip(page * 1 * limit)
+      .select("_id answer userId date alikes qid")
+      .populate("userId", "_id dname userlikes")
+      .then((answers) => res.send({ data: answers, msg: "success" }))
+      .catch((err) => res.send(err));
+  },
 
   createAnswer: async (req, res) => {
     const answerObj = await new answerSchema(req.body);
