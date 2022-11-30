@@ -14,7 +14,20 @@ const questionController = {
   questionsPerUser: async (req, res) => {
     const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
     await questionSchema
-      .find({userId:req.query.userId})
+      .find({ userId: req.query.userId })
+      .sort({ date: -1 })
+      .limit(limit * 1)
+      .skip(page * 1 * limit)
+      .select("_id question userId date qlikes tags")
+      .populate("userId", "_id dname userlikes")
+      .then((questions) => res.send({ data: questions, msg: "success" }))
+      .catch((err) => res.send(err));
+  },
+
+  userLikedQuestions: async (req, res) => {
+    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
+    await questionSchema
+      .find({ qlikes: { $in: req.query.userId } })
       .sort({ date: -1 })
       .limit(limit * 1)
       .skip(page * 1 * limit)
