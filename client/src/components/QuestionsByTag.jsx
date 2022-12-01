@@ -9,10 +9,8 @@ export default function QuestionsByTag(props) {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/question/list`)
-      .then((res) =>
-        setquestions(res.data.data.filter((q) => q.tags.includes(tag)))
-      )
+      .get(`${process.env.REACT_APP_API_URL}/question/bytag?tag=${tag}`)
+      .then((res) => setquestions(res.data.data))
       .catch((err) => console.log(err));
   }, [questions, tag]);
 
