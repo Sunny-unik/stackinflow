@@ -14,7 +14,8 @@ const {
   filterByAnswerWithLimit,
   countQuestions,
   questionsPerUser,
-  userLikedQuestions
+  userLikedQuestions,
+  questionByTag
 } = require("../controllers/questionController");
 const validQuestion = require("../validations/validQuestion");
 
@@ -24,6 +25,7 @@ router.get("/list", listQuestions);
 router.get("/count", countQuestions);
 router.get("/peruser", questionsPerUser);
 router.get("/userliked", userLikedQuestions);
+router.get("/bytag", questionByTag);
 router.get("/onpage", questionsPerPage);
 router.get("/oldest", oldestWithLimit);
 router.get("/mostliked", mostLikedWithLimit);

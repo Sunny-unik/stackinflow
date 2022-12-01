@@ -37,6 +37,19 @@ const questionController = {
       .catch((err) => res.send(err));
   },
 
+  questionByTag: async (req, res) => {
+    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
+    await questionSchema
+      .find({ tags: { $in: req.query.tag } })
+      .sort({ date: -1 })
+      .limit(limit * 1)
+      .skip(page * 1 * limit)
+      .select("_id question userId date qlikes tags")
+      .populate("userId", "_id dname userlikes")
+      .then((questions) => res.send({ data: questions, msg: "success" }))
+      .catch((err) => res.send(err));
+  },
+
   countQuestions: async (req, res) => {
     const key = req.query.key;
     const value = req.query.value;
