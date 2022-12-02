@@ -13,7 +13,8 @@ const {
   updateUserPoint,
   authenticate,
   sendOtp,
-  logout
+  logout,
+  userByLikes
 } = require("../controllers/userController");
 const validUser = require("../validations/validUser");
 
@@ -22,6 +23,7 @@ const router = express.Router();
 router.get("/list", listUser);
 router.get("/", userById);
 router.get("/authenticate", authenticate);
+router.get("/mostliked", userByLikes);
 router.get("/logout", logout);
 router.get("/send-otp", sendOtp);
 router.post("/dname", validUser(), validDname);
