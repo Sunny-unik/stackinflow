@@ -1,11 +1,3 @@
-/* popular tags & users search */
-.searchtp {
-  /* margin-left: 10px auto ; */
-  padding: 0%;
-  height: 3rem;
-  width: 28%;
-  border-radius: 20px;
-}
 .activeTopNav {
   background-image: linear-gradient(to top, rgba(50, 300, 200, 0.1), #ecd3d710);
   color: blue;
@@ -21,17 +13,6 @@
   );
   font-weight: 600;
   font-size: x-large;
-}
-.searchb {
-  margin: 0%;
-  margin-left: 0.5%;
-  padding: 0.5% 1%;
-  height: 45px;
-  border-radius: 10px;
-}
-.searchb:hover {
-  background-color: aliceblue;
-  box-shadow: 1px 1px 1px 2px dodgerblue;
 }
 /* in app.js */
 .sticky-top .navbar-nav li {

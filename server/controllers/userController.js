@@ -242,7 +242,7 @@ const userController = {
       .sort({ userlikes: -1 })
       .limit(limit * 1)
       .skip(page * 1 * limit)
-      .select("_id name dname userlikes")
+      .select("_id name dname userlikes gitlink twitter weblink")
       .then((users) => res.send({ data: users, msg: "success" }))
       .catch((err) => res.send(err));
   }
