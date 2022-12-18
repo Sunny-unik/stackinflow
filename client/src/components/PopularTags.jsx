@@ -44,8 +44,8 @@ export default function Populartags(props) {
           similar questions. Using the right tags makes it easier for others to
           find and answer your question.
         </h4>
-        <div class="row g-3">
-          <div class="col-auto">
+        <div className="row g-3">
+          <div className="col-auto">
             <input
               type="text"
               placeholder="Search Tags"
@@ -87,7 +87,7 @@ export default function Populartags(props) {
                 data-aos-offset="max-height"
                 data-aos-once="true"
                 data-aos-duration="200"
-                className="btn btn-light m-2 border border-3 border-secondary"
+                className="btn btn-light m-2 border d-block border-3 border-secondary"
                 id="tagButton"
                 onClick={() => questionsbytag(t, "open")}
               >

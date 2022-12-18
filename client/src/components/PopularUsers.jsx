@@ -37,8 +37,8 @@ export default function Popularusers(props) {
         <h4 style={{ fontFamily: "Times", width: "95%" }}>
           These all users are arranged in sequence as higher points to lowest.
         </h4>
-        <div class="row g-3">
-          <div class="col-auto">
+        <div className="row g-3">
+          <div className="col-auto">
             <input
               type="text"
               list="usearch"
@@ -73,7 +73,7 @@ export default function Popularusers(props) {
         ) : (
           users.map((p) => (
             <div
-              className="bg-dark d-inline-block card m-md-4 m-3 w-25"
+              className="bg-dark d-block card m-md-4 m-3"
               data-aos="flip-up"
               data-aos-once="true"
               data-aos-duration="500"
