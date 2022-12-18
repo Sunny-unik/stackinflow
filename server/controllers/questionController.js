@@ -73,6 +73,40 @@ const questionController = {
       .catch((err) => res.send(err));
   },
 
+  tagsPerPage: async (req, res) => {
+    const [limit, page, oldTags] = [
+      +req.query.limit || 4,
+      +req.query.page || 0,
+      req.body.oldTags || []
+    ];
+    return await questionSchema
+      .find()
+      .sort({ date: -1 })
+      .limit(limit * 1)
+      .skip(page * 1 * limit)
+      .select("_id tags")
+      .then((questions) => {
+        let newTags = new Set(
+          oldTags.concat(
+            ...questions
+              .map((q) => q.tags)
+              .toString()
+              .split(",")
+          )
+        );
+        newTags = [...newTags];
+        if (newTags.length < 10) {
+          [req.body.oldTags, req.query.limit, req.query.page] = [
+            newTags,
+            limit + 1,
+            page + 1
+          ];
+          questionController.tagsPerPage(req, res);
+        } else res.send({ data: newTags, msg: "success" });
+      })
+      .catch((err) => res.send(err));
+  },
+
   oldestWithLimit: async (req, res) => {
     const limit = +req.query.limit || 10;
     await questionSchema

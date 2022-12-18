@@ -15,7 +15,8 @@ const {
   countQuestions,
   questionsPerUser,
   userLikedQuestions,
-  questionByTag
+  questionByTag,
+  tagsPerPage
 } = require("../controllers/questionController");
 const validQuestion = require("../validations/validQuestion");
 
@@ -24,6 +25,7 @@ const router = express.Router();
 router.get("/list", listQuestions);
 router.get("/count", countQuestions);
 router.get("/peruser", questionsPerUser);
+router.get("/tags", tagsPerPage);
 router.get("/userliked", userLikedQuestions);
 router.get("/bytag", questionByTag);
 router.get("/onpage", questionsPerPage);
