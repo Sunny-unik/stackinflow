@@ -61,7 +61,7 @@ const questionController = {
   },
 
   questionsPerPage: async (req, res) => {
-    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
+    const [limit, page] = [+req.query.limit || 3, +req.query.page || 0];
     await questionSchema
       .find()
       .sort({ date: -1 })
@@ -75,36 +75,42 @@ const questionController = {
 
   tagsPerPage: async (req, res) => {
     const [limit, page, oldTags] = [
-      +req.query.limit || 4,
+      +req.query.limit || 5,
       +req.query.page || 0,
       req.body.oldTags || []
     ];
-    return await questionSchema
-      .find()
+    const tagsLength = req.body.tagsLength || oldTags.length + 10;
+
+    await questionSchema
+      .find({}, { tags: 1 })
       .sort({ date: -1 })
       .limit(limit * 1)
       .skip(page * 1 * limit)
-      .select("_id tags")
-      .then((questions) => {
-        let newTags = new Set(
-          oldTags.concat(
-            ...questions
-              .map((q) => q.tags)
-              .toString()
-              .split(",")
-          )
-        );
+      .then((tagObjects) => {
+        let newTags = new Set([
+          ...oldTags,
+          ...tagObjects
+            .map((q) => q.tags)
+            .toString()
+            .split(",")
+        ]);
         newTags = [...newTags];
-        if (newTags.length < 10) {
-          [req.body.oldTags, req.query.limit, req.query.page] = [
-            newTags,
-            limit + 1,
-            page + 1
-          ];
+        if (
+          newTags.length < tagsLength &&
+          tagObjects[0] &&
+          req.body.questionId != tagObjects[0]._id
+        ) {
+          req.body.oldTags = newTags;
+          req.query.limit = limit + 1;
+          req.query.page = page + 1;
+          req.body.tagsLength = tagsLength;
+          req.body.questionId = !req.body.questionId
+            ? tagObjects[0]._id
+            : req.body.questionId;
           questionController.tagsPerPage(req, res);
         } else res.send({ data: newTags, msg: "success" });
       })
-      .catch((err) => res.send(err));
+      .catch((err) => res.send({ error: err }));
   },
 
   oldestWithLimit: async (req, res) => {
