@@ -1,0 +1,33 @@
+next thing:
+further steps on test.3 branch
+fix openedquestion & tags page [partially fixed]
+lazy load components then things to be switched at server
+
+At test.2 (mid) [fixed]
+- things to be switched at server:
+sorting filtering pagwise at server
+- frontend security updates
+switch at http/cookie from localstorage for save jwt
+- useselector bugs in 
+openedquestion (load redux-user for submit answer) [fixed]
+- at frontend update UI
+openedquestion (divide in different components)
+- route bugs
+signup routes & UI
+
+At test.3 things needed to be done 
+- performance imporvements
+use react.lazy & react suspense component
+
+- things to be switched at server:
+never get all questions
+add pagewise tags & users data
+profile pages data fetch imporvements
+
+- at frontend update UI
+popularUsers UI
+react inifinite-scroll component for popularTags and popularUsers components
+profile pages UI update
+
+* flow for popular tag-
+On 1 page hit starting 4 questions if tags.length > 10 then res.send(tags) else hit 4 more questions then tags.push(newTags) if tags.length > 10 then res.send(tags) else recusrive call
