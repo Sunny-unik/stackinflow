@@ -11,6 +11,55 @@ const questionController = {
       .catch((err) => res.send(err));
   },
 
+  questionsPerUser: async (req, res) => {
+    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
+    await questionSchema
+      .find({ userId: req.query.userId })
+      .sort({ date: -1 })
+      .limit(limit * 1)
+      .skip(page * 1 * limit)
+      .select("_id question userId date qlikes tags")
+      .populate("userId", "_id dname userlikes")
+      .then((questions) => res.send({ data: questions, msg: "success" }))
+      .catch((err) => res.send(err));
+  },
+
+  userLikedQuestions: async (req, res) => {
+    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
+    await questionSchema
+      .find({ qlikes: { $in: req.query.userId } })
+      .sort({ date: -1 })
+      .limit(limit * 1)
+      .skip(page * 1 * limit)
+      .select("_id question userId date qlikes tags")
+      .populate("userId", "_id dname userlikes")
+      .then((questions) => res.send({ data: questions, msg: "success" }))
+      .catch((err) => res.send(err));
+  },
+
+  questionByTag: async (req, res) => {
+    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
+    await questionSchema
+      .find({ tags: { $in: req.query.tag } })
+      .sort({ date: -1 })
+      .limit(limit * 1)
+      .skip(page * 1 * limit)
+      .select("_id question userId date qlikes tags")
+      .populate("userId", "_id dname userlikes")
+      .then((questions) => res.send({ data: questions, msg: "success" }))
+      .catch((err) => res.send(err));
+  },
+
+  countQuestions: async (req, res) => {
+    const key = req.query.key;
+    const value = req.query.value;
+    const query = key && value ? { [key]: value } : {};
+    await questionSchema
+      .countDocuments(query)
+      .then((count) => res.send({ msg: "success", data: count }))
+      .catch((err) => res.send(err));
+  },
+
   questionsPerPage: async (req, res) => {
     const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
     await questionSchema

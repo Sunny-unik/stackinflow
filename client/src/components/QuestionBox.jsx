@@ -3,9 +3,18 @@ import { NavLink } from "react-router-dom";
 import handleDate from "../helper/dateHelper";
 import "./css/qls.css";
 
-export default function QuestionBox(props) {
+export default function QuestionBox({
+  dataAos,
+  questionId,
+  questionTitle,
+  likesCount,
+  answersCount,
+  tags,
+  userObj,
+  date
+}) {
   return (
-    <div key={props.questionId} className="rounded card">
+    <div className="rounded card">
       <div
         data-aos="fade-up"
         data-aos-duration="400"
@@ -13,7 +22,7 @@ export default function QuestionBox(props) {
         style={{ backgroundColor: "#fdf7e2", borderBottom: ".1rem solid grey" }}
       >
         <h4
-          data-aos={props.dataAos}
+          data-aos={dataAos}
           data-aos-duration="800"
           data-aos-offset="max-height"
           className="mainqdiv"
@@ -23,9 +32,9 @@ export default function QuestionBox(props) {
               textDecorationLine: "none",
               textShadow: ".02em .04em black"
             }}
-            to={`/question/${props.questionId}`}
+            to={`/question/${questionId}`}
           >
-            {props.questionTitle}
+            {questionTitle}
           </NavLink>
         </h4>
         <div className="d-inline-block">
@@ -33,8 +42,7 @@ export default function QuestionBox(props) {
             className="qla bg-secondary"
             style={{ textShadow: "0.02em 0.08em black" }}
           >
-            {" "}
-            Likes: {props.likesCount}{" "}
+            &nbsp;Likes: {likesCount}{" "}
           </div>
           <div className="qla bg-secondary">
             <NavLink
@@ -43,28 +51,29 @@ export default function QuestionBox(props) {
                 textDecoration: "none",
                 textShadow: "0.02em 0.08em black"
               }}
-              to={`/question/${props.questionId}`}
+              to={`/question/${questionId}`}
             >
-              {" "}
-              Answers: {props.answersCount}{" "}
+              &nbsp;Answers: {answersCount}{" "}
             </NavLink>
           </div>
         </div>
         <div className="maintagdiv mx-2">
-          {props.tags.map((o) => {
+          {tags.map((o) => {
             return (
-              <NavLink
-                style={{
-                  color: "white",
-                  fontFamily: "monospace",
-                  padding: ".2rem",
-                  textDecorationLine: "none"
-                }}
-                className="m-1 rounded bg-dark"
-                to={`/questionsBy/${o}`}
-              >
-                {o.replace(",", "")}
-              </NavLink>
+              <span key={o}>
+                <NavLink
+                  style={{
+                    color: "white",
+                    fontFamily: "monospace",
+                    padding: ".2rem",
+                    textDecorationLine: "none"
+                  }}
+                  className="m-1 rounded bg-dark"
+                  to={`/questionsBy/${o}`}
+                >
+                  {o.replace(",", "")}
+                </NavLink>
+              </span>
             );
           })}
         </div>
@@ -72,9 +81,9 @@ export default function QuestionBox(props) {
           asked by &nbsp;
           <NavLink
             style={{ color: "navy", fontFamily: "SeogUI", fontWeight: "bold" }}
-            to={`/user/${props.userObj.dname}`}
+            to={`/user/${userObj._id}`}
           >
-            {props.userObj.dname}
+            {userObj.dname}
           </NavLink>
         </div>
         <div
@@ -87,9 +96,7 @@ export default function QuestionBox(props) {
           }}
         >
           posted{" "}
-          {handleDate(props.date) !== 0
-            ? handleDate(props.date) + " day ago"
-            : "today"}
+          {handleDate(date) !== 0 ? handleDate(date) + " day ago" : "today"}
         </div>
       </div>
     </div>

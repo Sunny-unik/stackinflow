@@ -233,6 +233,18 @@ const userController = {
       .select("_id name dname userlikes password")
       .then((users) => res.send({ msg: users.length, data: users }))
       .catch((err) => res.send(err));
+  },
+
+  userByLikes: async (req, res) => {
+    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
+    await userSchema
+      .find()
+      .sort({ userlikes: -1 })
+      .limit(limit * 1)
+      .skip(page * 1 * limit)
+      .select("_id name dname userlikes gitlink twitter weblink")
+      .then((users) => res.send({ data: users, msg: "success" }))
+      .catch((err) => res.send(err));
   }
 };
 
