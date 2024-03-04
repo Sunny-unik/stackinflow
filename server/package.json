@@ -18,13 +18,13 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^6.6.2",
     "multer": "^1.4.3",
     "nodemailer": "^6.6.3",
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^3.1.0"
   }
 }
