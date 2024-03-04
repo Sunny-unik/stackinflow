@@ -13,7 +13,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: "https://astonishing-froyo-77fd08.netlify.app",
+    origin: JSON.parse(process.env.ALLOWED_ORIGINS),
     credentials: true
   })
 );
@@ -26,7 +26,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
-  .then(() => console.log("Databse Connected"));
+  .then(() => console.log("Database Connected"));
 
 mongoose.connection.on("error", (err) => {
   console.log(`Error on connection: `, err);
@@ -38,4 +38,4 @@ app.use("/answer", answerRoutes);
 app.use("/", feedbackRoutes);
 
 const port = process.env.PORT || 4000;
-app.listen(port, () => console.log(`live on http://localhost:${port}`));
+app.listen(port, () => console.log(`Server live on http://localhost:${port}`));
