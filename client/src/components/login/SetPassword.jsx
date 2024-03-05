@@ -4,13 +4,13 @@ import { useState } from "react";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { passwordRegex } from "../../helper/RegexHelper";
 
-export default function SetPassword({ id, password, goto }) {
-  const [newPassword, setnewPassword] = useState("");
-  const [newPasswordType, setnewPasswordType] = useState("password");
-  const [confirmPassword, setconfirmPassword] = useState("");
-  const [confirmPasswordType, setconfirmPasswordType] = useState("password");
+export default function SetPassword({ id, goto }) {
+  const [newPassword, setNewPassword] = useState("");
+  const [newPasswordType, setNewPasswordType] = useState("password");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPasswordType, setConfirmPasswordType] = useState("password");
 
-  function otplogin() {
+  function otpLogin() {
     if (
       newPassword === confirmPassword &&
       confirmPassword.trim().length <= 16 &&
@@ -19,8 +19,7 @@ export default function SetPassword({ id, password, goto }) {
       axios
         .put(`${process.env.REACT_APP_API_URL}/user/password`, {
           id,
-          newPassword: newPassword,
-          oldPassword: password
+          newPassword
         })
         .then((res) => {
           alert(res.data.msg);
@@ -63,7 +62,7 @@ export default function SetPassword({ id, password, goto }) {
             type={newPasswordType}
             value={newPassword}
             style={{ fontFamily: "sans-serif" }}
-            onChange={(e) => setnewPassword(e.target.value)}
+            onChange={(e) => setNewPassword(e.target.value)}
             placeholder="new password"
             name="newpassword"
             id="newpassword"
@@ -72,7 +71,7 @@ export default function SetPassword({ id, password, goto }) {
           <span
             className="btn align-self-center"
             onClick={() =>
-              setnewPasswordType(
+              setNewPasswordType(
                 newPasswordType === "text" ? "password" : "text"
               )
             }
@@ -89,7 +88,7 @@ export default function SetPassword({ id, password, goto }) {
             type={confirmPasswordType}
             value={confirmPassword}
             style={{ fontFamily: "sans-serif" }}
-            onChange={(e) => setconfirmPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="confirm password"
             name="confirmpassword"
             id="confirmpassword"
@@ -98,7 +97,7 @@ export default function SetPassword({ id, password, goto }) {
           <span
             className="btn align-self-center"
             onClick={() =>
-              setconfirmPasswordType(
+              setConfirmPasswordType(
                 confirmPasswordType === "text" ? "password" : "text"
               )
             }
@@ -134,7 +133,7 @@ export default function SetPassword({ id, password, goto }) {
               width: "46%",
               boxShadow: "2px 3px 2px 3px #888888"
             }}
-            onClick={otplogin}
+            onClick={otpLogin}
           >
             Submit
           </button>

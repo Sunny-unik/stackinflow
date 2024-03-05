@@ -3,6 +3,7 @@ const userSchema = require("../models/userSchema");
 const upload = require("../helpers/multerConfig");
 const fs = require("fs");
 const { sign, verify } = require("jsonwebtoken");
+const errorHandler = require("../helpers/ErrorHandler");
 
 const userController = {
   checkLogin: async (req, res) => {
@@ -92,33 +93,63 @@ const userController = {
     return isDnameValid === "valid dname" ? true : false;
   },
 
-  sendOtpEmail: async (req, res) => {
+  forgotPasswordEmail: (req, res) => {
     const randomNum = Math.floor(Math.random() * 1000000).toString();
     const otp =
       randomNum.length < 6
         ? randomNum + Math.floor(Math.random() * 10).toString()
         : randomNum;
-    await userSchema
+    userSchema
       .findOne({ $or: [{ email: req.body.email }, { dname: req.body.email }] })
-      .select("_id email password")
+      .select("_id email")
       .then((user) => {
         if (user) {
-          // sendMail(
-          //   process.env.APP_ID,
-          //   process.env.APP_PASSWORD,
-          //   user.email,
-          //   "Welcome to stackinflow",
-          //   `Your One Time Password is - <h3>${otp}</h3><br>
-          //   <h6>We hope you find our service cool.</h6>`
-          // );
-          res.send({
-            data: user,
-            otp: otp.length < 6 ? otp + "1" : otp,
-            msg: "Otp sent"
-          });
-        } else res.send({ data: null, msg: "User not found" });
+          userSchema
+            .updateOne({ _id: user._id }, { $set: { otp: otp } })
+            .then((data) => {
+              if (!data.acknowledged) throw new Error("Unable to update Otp");
+              sendMail(
+                process.env.APP_ID,
+                process.env.APP_PASSWORD,
+                user.email,
+                "Welcome to stackinflow",
+                `<h1>Your One Time Password is: <b>${otp}</b></h1><br>
+                <h3>We hope you find our service cool.</h3>`
+              )
+                .then(() =>
+                  res.send({
+                    data: user,
+                    message: "Otp sent to your given email address"
+                  })
+                )
+                .catch((error) =>
+                  errorHandler(
+                    error,
+                    "userController.sendForgotOtp.sendMail",
+                    res,
+                    "Unable to sent email at given address please check your email, or try again later"
+                  )
+                );
+            })
+            .catch((error) =>
+              errorHandler(error, "userController.sendForgotOtp.updateOne", res)
+            );
+        } else res.send({ data: null, message: "User not found" });
       })
-      .catch((err) => res.send(err));
+      .catch((error) =>
+        errorHandler(error, "userController.sendForgotOtp.findOne", res)
+      );
+  },
+
+  checkOtp: (req, res) => {
+    const { otp, _id } = req.body;
+    userSchema
+      .updateOne({ $and: [{ _id: _id }, { otp: otp }] }, { $unset: { otp: 1 } })
+      .then((data) => {
+        if (!data.acknowledged) throw new Error("Unable to update Otp");
+        res.send({ data, message: "Otp matched successfully" });
+      })
+      .catch((error) => errorHandler(error, "UserController.checkOtp", res));
   },
 
   updateUserPoint: async (req, res) => {

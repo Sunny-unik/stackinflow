@@ -1,16 +1,20 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { TbArrowBackUp } from "react-icons/tb";
 
-export default function ForgotPassword({ originalOtp, goto }) {
-  const [otp, setotp] = useState("");
-  console.log(originalOtp);
+export default function ForgotPassword({ goto, _id }) {
+  const [otp, setOtp] = useState("");
+
   const otpPassword = () => {
-    if (otp === originalOtp) {
-      alert("you have to create new password");
-      goto("/setPassword");
-      return true;
-    }
-    alert("! incorrect otp ");
+    if (otp.trim().length !== 6) return alert("Otp must be 6 digit number");
+
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/user/check-otp`, { otp, _id })
+      .then(() => {
+        alert("You have to create new password");
+        goto("/setPassword");
+      })
+      .catch((error) => alert(error.message));
   };
 
   return (
@@ -49,7 +53,7 @@ export default function ForgotPassword({ originalOtp, goto }) {
           style={{ fontFamily: "sans-serif" }}
           type="number"
           value={otp}
-          onChange={(e) => setotp(e.target.value)}
+          onChange={(e) => setOtp(e.target.value)}
           placeholder="Enter 6 digit otp"
           name="otplogin"
           id="otplogin"

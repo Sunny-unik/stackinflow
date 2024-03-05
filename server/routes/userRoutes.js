@@ -2,7 +2,7 @@ const express = require("express");
 const {
   validDname,
   validEmail,
-  sendOtpEmail,
+  forgotPasswordEmail,
   updateUserDetails,
   updateUserProfile,
   updatePassword,
@@ -14,7 +14,8 @@ const {
   authenticate,
   sendOtp,
   logout,
-  userByLikes
+  userByLikes,
+  checkOtp
 } = require("../controllers/userController");
 const validUser = require("../validations/validUser");
 
@@ -26,10 +27,11 @@ router.get("/authenticate", authenticate);
 router.get("/mostliked", userByLikes);
 router.get("/logout", logout);
 router.get("/send-otp", sendOtp);
+router.post("/check-otp", checkOtp);
 router.post("/dname", validUser(), validDname);
 router.post("/email", validUser(), validEmail);
 router.post("/login", validUser(), checkLogin);
-router.post("/otp-mail", validUser(), sendOtpEmail);
+router.post("/forgot-password", validUser(), forgotPasswordEmail);
 router.put("/points", validUser(), updateUserPoint);
 router.put("/", validUser(), updateUserDetails);
 router.put("/profile", updateUserProfile);

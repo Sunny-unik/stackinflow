@@ -21,7 +21,7 @@ const schemaProvider = {
         password: yup.string().min(8).max(16).required()
       })
     },
-    "/otp-mail": {
+    "/forgot-password": {
       schema: yup.object().shape({
         email: yup.string().min(4).required()
       })
@@ -56,7 +56,7 @@ const schemaProvider = {
     "/password": {
       schema: yup.object().shape({
         id: yup.string().required(),
-        oldPassword: yup.string().min(8).max(16).required(),
+        oldPassword: yup.string().min(8).max(16),
         newPassword: yup.string().min(8).max(16).required()
       })
     }

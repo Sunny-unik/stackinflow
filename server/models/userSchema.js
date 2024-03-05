@@ -32,7 +32,12 @@ const userSchema = new Schema({
   title: { type: String },
   twitter: { type: String, default: "#" },
   weblink: { type: String, default: "#" },
-  profile: { type: String, default: "" }
+  profile: { type: String, default: "" },
+  otp: {
+    type: String,
+    minLength: [6, "Otp length must be 6"],
+    maxLength: [6, "Otp length must be 6"]
+  }
 });
 
 module.exports = mongoose.model("users", userSchema);

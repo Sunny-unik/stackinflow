@@ -9,13 +9,11 @@ import SetPassword from "./SetPassword";
 import axios from "axios";
 
 export default function Login(props) {
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
-  const [passwordType, setpasswordType] = useState("password");
-  const [path, setpath] = useState("");
-  const [id, setid] = useState("");
-  const [otp, setotp] = useState("");
-  const [oldPassword, setoldPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordType, setPasswordType] = useState("password");
+  const [path, setPath] = useState("");
+  const [id, setId] = useState("");
   const reduxUser = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -25,23 +23,17 @@ export default function Login(props) {
   const dispatch = useDispatch();
   const checkAuth = () => dispatch(checkLogin({ email, password }));
 
-  function sendOtp() {
-    if (!email.trim()) {
-      alert("First enter your email or username");
-      return false;
-    }
+  function sendForgotMail() {
     axios
-      .post(`${process.env.REACT_APP_API_URL}/user/otp-mail`, { email })
+      .post(`${process.env.REACT_APP_API_URL}/user/forgot-password`, { email })
       .then((res) => {
         const response = res.data;
-        if (response.errors) alert(response.message);
-        else if (!response)
+        if (response.errors) alert("Please first enter your email or username");
+        else if (!response.data)
           alert("Entered email or username are not registered");
         else {
-          setoldPassword(response.data.password);
-          setid(response.data._id);
-          setotp(response.otp);
-          setpath("/forgotPassword");
+          setId(response.data._id);
+          setPath("/forgotPassword");
           alert("Otp sent to your email");
         }
       })
@@ -50,7 +42,7 @@ export default function Login(props) {
 
   const updatePath = () => {
     !!email.trim()
-      ? sendOtp()
+      ? sendForgotMail()
       : alert("Please first enter your email or username");
   };
 
@@ -59,9 +51,9 @@ export default function Login(props) {
       <div className="text-center">
         <div className="container logincon">
           {path === "/setPassword" ? (
-            <SetPassword password={oldPassword} id={id} goto={setpath} />
+            <SetPassword id={id} goto={setPath} />
           ) : path === "/forgotPassword" ? (
-            <ForgotPassword originalOtp={otp} goto={setpath} />
+            <ForgotPassword goto={setPath} _id={id} />
           ) : (
             <div
               data-aos="flip-left"
@@ -88,7 +80,7 @@ export default function Login(props) {
                 <input
                   type="text"
                   value={email}
-                  onChange={(e) => setemail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="example@eg.com"
                   name="email"
                   style={{ fontFamily: "sans-serif" }}
@@ -103,7 +95,7 @@ export default function Login(props) {
                     className="form-control"
                     type={passwordType}
                     value={password}
-                    onChange={(e) => setpassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
                     name="password"
                     id="password"
@@ -113,7 +105,7 @@ export default function Login(props) {
                   <span
                     className="btn align-self-center"
                     onClick={() =>
-                      setpasswordType(
+                      setPasswordType(
                         passwordType === "text" ? "password" : "text"
                       )
                     }
