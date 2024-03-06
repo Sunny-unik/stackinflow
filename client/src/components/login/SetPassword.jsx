@@ -3,12 +3,15 @@ import React from "react";
 import { useState } from "react";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { passwordRegex } from "../../helper/RegexHelper";
+import { useDispatch } from "react-redux";
+import setLoading from "../../action/loadingAction";
 
 export default function SetPassword({ id, goto }) {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordType, setNewPasswordType] = useState("password");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordType, setConfirmPasswordType] = useState("password");
+  const dispatch = useDispatch();
 
   function otpLogin() {
     if (
@@ -16,6 +19,7 @@ export default function SetPassword({ id, goto }) {
       confirmPassword.trim().length <= 16 &&
       passwordRegex.test(confirmPassword)
     ) {
+      dispatch(setLoading(true));
       axios
         .put(`${process.env.REACT_APP_API_URL}/user/password`, {
           id,
@@ -25,7 +29,8 @@ export default function SetPassword({ id, goto }) {
           alert(res.data.msg);
           goto();
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
+        .finally(() => dispatch(setLoading(false)));
     } else {
       alert(
         "Password should have 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character and number of letters must in between 8 to 16 and should same in both textbox"
@@ -113,19 +118,6 @@ export default function SetPassword({ id, goto }) {
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
           <button
             type="button"
-            className="loginBtn cancelBtn"
-            style={{
-              fontFamily: "monospace",
-              fontSize: "large",
-              width: "46%",
-              boxShadow: "2px 3px 2px 3px #888888"
-            }}
-            onClick={goto}
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
             className="loginBtn updateBtn"
             style={{
               fontFamily: "monospace",
@@ -136,6 +128,19 @@ export default function SetPassword({ id, goto }) {
             onClick={otpLogin}
           >
             Submit
+          </button>
+          <button
+            type="button"
+            className="loginBtn cancelBtn"
+            style={{
+              fontFamily: "monospace",
+              fontSize: "large",
+              width: "46%",
+              boxShadow: "2px 3px 2px 3px #888888"
+            }}
+            onClick={goto}
+          >
+            Cancel
           </button>
         </div>
       </form>

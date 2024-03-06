@@ -4,6 +4,8 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { emailRegex, passwordRegex } from "../../helper/RegexHelper";
 import ConfirmEmail from "./ConfirmEmail";
+import { useDispatch } from "react-redux";
+import setLoading from "../../action/loadingAction";
 
 export default function Signup(props) {
   const [userId, setUserId] = useState("");
@@ -12,8 +14,10 @@ export default function Signup(props) {
   const [dname, setDname] = useState("");
   const [password, setPassword] = useState("");
   const [inSignup, setInSignup] = useState(true);
+  const dispatch = useDispatch();
 
-  const validateUserDetails = () => {
+  const validateUserDetails = (event) => {
+    event.preventDefault();
     const errors = [];
 
     if (!emailRegex.test(email)) errors.push("Email is not valid");
@@ -34,40 +38,50 @@ export default function Signup(props) {
   };
 
   const uniqueEmail = () => {
+    dispatch(setLoading(true));
     axios
       .post(`${process.env.REACT_APP_API_URL}/user/email`, { email })
-      .then((res) => {
-        if (res.data === "valid email") uniqueDname();
-        else alert("Entered email is already registered");
-      });
+      .then(async (res) => {
+        if (res.data === "valid email") return await uniqueDname();
+        alert("Entered email is already registered");
+      })
+      .catch(serverErrorHandler)
+      .finally(() => dispatch(setLoading(false)));
   };
 
-  const uniqueDname = () => {
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/user/dname`, { dname })
-      .then((res) => {
-        if (res.data === "valid dname") createAccountAndVerify();
-        else alert("Entered username is already registered");
-      });
+  const uniqueDname = async () => {
+    try {
+      const result = await axios.post(
+        `${process.env.REACT_APP_API_URL}/user/dname`,
+        { dname }
+      );
+      if (result.data === "valid dname") await createAccountAndVerify();
+      else alert("Entered username is already registered");
+    } catch (error) {
+      throw error;
+    }
   };
 
-  const createAccountAndVerify = () => {
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/user`, {
+  const createAccountAndVerify = async () => {
+    try {
+      const result = await axios.post(`${process.env.REACT_APP_API_URL}/user`, {
         email,
         name,
         dname,
         password
-      })
-      .then(({ data }) => {
-        if (data.message) {
-          alert(data.message);
-          setUserId(data.data._id);
-          return setInSignup(false);
-        }
-        alert("! Some error occurred on server, try again later");
-      })
-      .catch((err) => console.log(err));
+      });
+      if (result.data.message) {
+        alert(result.data.message);
+        setUserId(result.data.data._id);
+        setInSignup(false);
+      } else serverErrorHandler();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const serverErrorHandler = () => {
+    alert("! Some error occurred on server, try again later");
   };
 
   return (
@@ -89,6 +103,7 @@ export default function Signup(props) {
                   borderRadius: "2%",
                   boxShadow: "3px 4px 3px 3px #888888"
                 }}
+                onSubmit={validateUserDetails}
               >
                 <h1>Create an account</h1>
                 <p>Please fill this form and get verified for register.</p>
@@ -141,13 +156,7 @@ export default function Signup(props) {
                   required
                 />
                 <hr className="signuphr" />
-                <button
-                  type="button"
-                  className="registerbtn"
-                  onClick={validateUserDetails}
-                >
-                  Sign Up
-                </button>
+                <button className="registerbtn">Sign Up</button>
               </form>
             </div>
           ) : (

@@ -69,11 +69,7 @@ const userController = {
   validEmail: (req, res) => {
     userSchema
       .findOne({
-        $and: [
-          { email: req.body.email },
-          { _id: { $ne: userId } },
-          { isVerifiedEmail: true }
-        ]
+        $and: [{ email: req.body.email }, { isVerifiedEmail: true }]
       })
       .select("email")
       .then((result) => res.send(result ?? "valid email"))

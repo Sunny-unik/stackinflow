@@ -1,9 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useRef } from "react";
 import { IoArrowUndoOutline } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import setLoading from "../../action/loadingAction";
 
 export default function ConfirmEmail({ setInSignup, _id, history }) {
   const otp = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     return () => {
@@ -11,10 +14,12 @@ export default function ConfirmEmail({ setInSignup, _id, history }) {
     };
   }, []);
 
-  const otpCheck = () => {
+  const otpCheck = (event) => {
+    event.preventDefault();
     const validOtp = otp.current.value.trim();
     if (validOtp.length !== 6) return alert("Otp must be 6 digit number");
 
+    dispatch(setLoading(true));
     axios
       .post(`${process.env.REACT_APP_API_URL}/user/check-otp`, {
         otp: validOtp,
@@ -28,7 +33,8 @@ export default function ConfirmEmail({ setInSignup, _id, history }) {
       })
       .catch(({ message, response }) => {
         alert(response.status === 400 ? response.data.message : message);
-      });
+      })
+      .finally(() => dispatch(setLoading(false)));
   };
 
   return (
@@ -47,6 +53,7 @@ export default function ConfirmEmail({ setInSignup, _id, history }) {
           borderRadius: "2%",
           boxShadow: "3px 4px 3px 2px #888888"
         }}
+        onSubmit={otpCheck}
       >
         <h1 style={{ display: "inline-block", width: "82%" }}>Confirm Email</h1>
         <button
@@ -78,9 +85,7 @@ export default function ConfirmEmail({ setInSignup, _id, history }) {
           required
         />
         <hr className="signuphr" />
-        <button type="button" className="registerbtn" onClick={otpCheck}>
-          Submit
-        </button>
+        <button className="registerbtn">Submit</button>
       </form>
     </div>
   );

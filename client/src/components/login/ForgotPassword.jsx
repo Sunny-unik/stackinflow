@@ -1,13 +1,19 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import { TbArrowBackUp } from "react-icons/tb";
+import { useDispatch } from "react-redux";
+import setLoading from "../../action/loadingAction";
 
 export default function ForgotPassword({ goto, _id }) {
-  const [otp, setOtp] = useState("");
+  const otpRef = useRef(null);
+  const dispatch = useDispatch();
 
-  const otpPassword = () => {
+  const otpPassword = (event) => {
+    event.preventDefault();
+    const otp = otpRef.current.value;
     if (otp.trim().length !== 6) return alert("Otp must be 6 digit number");
 
+    dispatch(setLoading(true));
     axios
       .post(`${process.env.REACT_APP_API_URL}/user/check-otp`, { otp, _id })
       .then(() => {
@@ -16,7 +22,8 @@ export default function ForgotPassword({ goto, _id }) {
       })
       .catch(({ message, response }) => {
         alert(response.status === 400 ? response.data.message : message);
-      });
+      })
+      .finally(() => dispatch(setLoading(false)));
   };
 
   return (
@@ -35,12 +42,14 @@ export default function ForgotPassword({ goto, _id }) {
           borderRadius: "2%",
           boxShadow: "3px 4px 3px 2px #888888"
         }}
+        onSubmit={otpPassword}
       >
         <h2 style={{ display: "inline-block", width: "82%" }}>
           Forgot Password
         </h2>
         <button
           to="/login"
+          type="button"
           className="btn btn-primary float-end m-1"
           onClick={() => goto()}
         >
@@ -54,17 +63,14 @@ export default function ForgotPassword({ goto, _id }) {
         <input
           style={{ fontFamily: "sans-serif" }}
           type="number"
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
+          ref={otpRef}
           placeholder="Enter 6 digit otp"
           name="otplogin"
           id="otplogin"
           required
         />
         <hr className="signuphr" />
-        <button type="reset" className="loginBtn" onClick={otpPassword}>
-          Submit
-        </button>
+        <button className="loginBtn">Submit</button>
       </form>
     </div>
   );

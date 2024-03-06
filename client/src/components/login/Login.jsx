@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { checkLogin } from "../../action/userAction";
+import setLoading from "../../action/loadingAction";
 import { useDispatch, useSelector } from "react-redux";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -27,6 +28,7 @@ export default function Login(props) {
   };
 
   function sendForgotMail() {
+    dispatch(setLoading(true));
     axios
       .post(`${process.env.REACT_APP_API_URL}/user/forgot-password`, { email })
       .then((res) => {
@@ -40,7 +42,8 @@ export default function Login(props) {
           alert("Otp sent to your email");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => dispatch(setLoading(false)));
   }
 
   const updatePath = () => {
