@@ -19,12 +19,7 @@ const userSchema = new Schema({
     maxLength: [16, "username length must be under 17!"],
     required: true
   },
-  password: {
-    type: String,
-    minLength: [8, "Password length must be between 8 to 16"],
-    maxLength: [16, "Password length must be between 8 to 16"],
-    required: true
-  },
+  password: { type: String, required: true },
   userlikes: { type: Number, default: 0 },
   about: { type: String },
   address: { type: String },

@@ -4,11 +4,13 @@ const upload = require("../helpers/multerConfig");
 const fs = require("fs");
 const { sign, verify } = require("jsonwebtoken");
 const errorHandler = require("../helpers/ErrorHandler");
+const bcrypt = require("bcrypt");
+const { getOtp } = require("../helpers/otpManager");
 
 const userController = {
   checkLogin: async (req, res) => {
-    const checkPassword = (user) => {
-      if (user.password === req.body.password) {
+    const checkPassword = async (user) => {
+      if (await bcrypt.compare(req.body.password, user.password)) {
         user.password = undefined;
         const token = sign({ dname: user.dname }, "verySecretCode", {
           expiresIn: "7d"
@@ -24,11 +26,11 @@ const userController = {
           { $or: [{ email: req.body.email }, { dname: req.body.email }] }
         ]
       })
-      .then((user) => {
+      .then(async (user) => {
         let filterData;
         if (!user) return res.send({ msg: "user not found" });
-        else filterData = checkPassword(user);
-        filterData.length
+        else filterData = await checkPassword(user);
+        filterData && filterData.length
           ? res
               .cookie("stackinflowToken", filterData[1], {
                 sameSite: "strict",
@@ -39,7 +41,9 @@ const userController = {
               .send({ data: filterData[0], msg: "Credentials Matched" })
           : res.send({ msg: "incorrect password" });
       })
-      .catch((err) => res.send(err));
+      .catch((err) =>
+        errorHandler(err, "UserController.checkLogin.findOne", res)
+      );
   },
 
   logout: (req, res) => {
@@ -108,11 +112,7 @@ const userController = {
   },
 
   forgotPasswordEmail: (req, res) => {
-    const randomNum = Math.floor(Math.random() * 1000000).toString();
-    const otp =
-      randomNum.length < 6
-        ? randomNum + Math.floor(Math.random() * 10)
-        : randomNum;
+    const otp = getOtp();
     userSchema
       .findOne({ $or: [{ email: req.body.email }, { dname: req.body.email }] })
       .select("_id email")
@@ -259,11 +259,8 @@ const userController = {
   },
 
   createUser: async (req, res) => {
-    const randomNum = Math.floor(Math.random() * 1000000).toString();
-    req.body.otp =
-      randomNum.length < 6
-        ? randomNum + Math.floor(Math.random() * 10)
-        : randomNum;
+    req.body.otp = getOtp();
+    req.body.password = await bcrypt.hash(req.body.password, 10);
     const user = new userSchema(req.body);
     user
       .save()
