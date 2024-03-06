@@ -21,6 +21,7 @@ import CanvasNav from "./components/home/CanvasNav";
 export default function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const loading = useSelector((state) => state.loading);
 
   useEffect(() => {
     dispatch(authenticateUser());
@@ -30,6 +31,13 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      {loading && (
+        <div className="loading">
+          <div className="uil-ring-css">
+            <div></div>
+          </div>
+        </div>
+      )}
       <nav className="p-0 navbar navbar-expand-sm navbar-primary bg-dark sticky-top">
         <div className="container-lg">
           <button

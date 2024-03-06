@@ -21,7 +21,10 @@ export default function Login(props) {
   }, [reduxUser, props.history, path]);
 
   const dispatch = useDispatch();
-  const checkAuth = () => dispatch(checkLogin({ email, password }));
+  const checkAuth = (event) => {
+    event.preventDefault();
+    dispatch(checkLogin({ email, password }));
+  };
 
   function sendForgotMail() {
     axios
@@ -70,6 +73,7 @@ export default function Login(props) {
                   borderRadius: "2%",
                   boxShadow: "4px 4px 3px 3px #888888"
                 }}
+                onSubmit={checkAuth}
               >
                 <h1>Log In</h1>
                 <p>Please fill log in details for login your account.</p>
@@ -118,13 +122,7 @@ export default function Login(props) {
                   </span>
                 </div>
                 <hr className="signuphr" />
-                <button
-                  type="button"
-                  className="loginBtn"
-                  onClick={() => checkAuth()}
-                >
-                  Log In
-                </button>
+                <button className="loginBtn">Log In</button>
                 <hr className="signuphr" />
                 <p className="forgotPasswordLink" onClick={updatePath}>
                   Forgot Password ?
