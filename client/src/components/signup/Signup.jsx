@@ -6,11 +6,12 @@ import { emailRegex, passwordRegex } from "../../helper/RegexHelper";
 import ConfirmEmail from "./ConfirmEmail";
 
 export default function Signup(props) {
-  const [email, setemail] = useState("");
-  const [name, setname] = useState("");
-  const [dname, setdname] = useState("");
-  const [password, setpassword] = useState("");
-  const [isSignup, setisSignup] = useState(true);
+  const [userId, setUserId] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [dname, setDname] = useState("");
+  const [password, setPassword] = useState("");
+  const [inSignup, setInSignup] = useState(true);
 
   const validateUserDetails = () => {
     const errors = [];
@@ -45,18 +46,35 @@ export default function Signup(props) {
     axios
       .post(`${process.env.REACT_APP_API_URL}/user/dname`, { dname })
       .then((res) => {
-        if (res.data === "valid dname") verifyEmail();
+        if (res.data === "valid dname") createAccountAndVerify();
         else alert("Entered username is already registered");
       });
   };
 
-  const verifyEmail = () => setisSignup(false);
+  const createAccountAndVerify = () => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/user`, {
+        email,
+        name,
+        dname,
+        password
+      })
+      .then(({ data }) => {
+        if (data.message) {
+          alert(data.message);
+          setUserId(data.data._id);
+          return setInSignup(false);
+        }
+        alert("! Some error occurred on server, try again later");
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <React.Fragment>
       <div className="text-center">
         <div className="container signupcon">
-          {isSignup ? (
+          {inSignup ? (
             <div
               data-aos="flip-right"
               data-aos-once="true"
@@ -80,7 +98,7 @@ export default function Signup(props) {
                   type="email"
                   style={{ fontFamily: "sans-serif" }}
                   value={email}
-                  onChange={(e) => setemail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   minLength="5"
                   placeholder="example@eg.co"
                   name="cemail"
@@ -92,7 +110,7 @@ export default function Signup(props) {
                   type="text"
                   style={{ fontFamily: "sans-serif" }}
                   value={name}
-                  onChange={(e) => setname(e.target.value)}
+                  onChange={(e) => setName(e.target.value)}
                   placeholder="firstname lastname"
                   name="cname"
                   id="createname"
@@ -103,7 +121,7 @@ export default function Signup(props) {
                   type="text"
                   style={{ fontFamily: "sans-serif" }}
                   value={dname}
-                  onChange={(e) => setdname(e.target.value)}
+                  onChange={(e) => setDname(e.target.value)}
                   placeholder="display_name"
                   name="cdname"
                   id="createdname"
@@ -114,7 +132,7 @@ export default function Signup(props) {
                   type="password"
                   style={{ fontFamily: "sans-serif" }}
                   value={password}
-                  onChange={(e) => setpassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   minLength="8"
                   maxLength="16"
                   placeholder="password should be strong"
@@ -135,8 +153,8 @@ export default function Signup(props) {
           ) : (
             <ConfirmEmail
               history={props.history}
-              setisSignup={setisSignup}
-              userInfo={{ email, name, dname, password }}
+              setInSignup={setInSignup}
+              _id={userId}
             />
           )}
         </div>

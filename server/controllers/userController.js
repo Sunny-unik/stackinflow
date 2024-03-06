@@ -37,15 +37,6 @@ const userController = {
       .catch((err) => res.send(err));
   },
 
-  sendOtp: (req, res) => {
-    const randomNum = Math.floor(Math.random() * 1000000).toString();
-    const otp =
-      randomNum.length < 6
-        ? randomNum + Math.floor(Math.random() * 10).toString()
-        : randomNum;
-    res.send({ otp: otp });
-  },
-
   logout: (req, res) => {
     res.clearCookie("stackinflowToken").send("token cleared");
   },
@@ -97,7 +88,7 @@ const userController = {
     const randomNum = Math.floor(Math.random() * 1000000).toString();
     const otp =
       randomNum.length < 6
-        ? randomNum + Math.floor(Math.random() * 10).toString()
+        ? randomNum + Math.floor(Math.random() * 10)
         : randomNum;
     userSchema
       .findOne({ $or: [{ email: req.body.email }, { dname: req.body.email }] })
@@ -147,7 +138,11 @@ const userController = {
       .updateOne({ $and: [{ _id: _id }, { otp: otp }] }, { $unset: { otp: 1 } })
       .then((data) => {
         if (!data.acknowledged) throw new Error("Unable to update Otp");
-        res.send({ data, message: "Otp matched successfully" });
+        if (!data.modifiedCount)
+          return res.status(400).send({ data, message: "! Incorrect Otp" });
+        userSchema
+          .updateOne({ _id: _id }, { $set: { isVerifiedEmail: true } })
+          .then(() => res.send({ data, message: "Otp matched successfully" }));
       })
       .catch((error) => errorHandler(error, "UserController.checkOtp", res));
   },
@@ -241,11 +236,47 @@ const userController = {
   },
 
   createUser: async (req, res) => {
-    const user = await new userSchema(req.body);
+    const randomNum = Math.floor(Math.random() * 1000000).toString();
+    req.body.otp =
+      randomNum.length < 6
+        ? randomNum + Math.floor(Math.random() * 10)
+        : randomNum;
+    const user = new userSchema(req.body);
     user
       .save()
-      .then((result) => res.send({ data: result, msg: "Account Registered" }))
-      .catch((err) => res.send(err));
+      .then(({ otp, _id, email }) => {
+        sendMail(
+          process.env.APP_ID,
+          process.env.APP_PASSWORD,
+          user.email,
+          "Welcome to stackinflow",
+          `<h1>Your One Time Password is: <b>${otp}</b></h1><br><h3>We hope you find our service cool.</h3>`
+        )
+          .then((info) => {
+            console.log(info);
+            res.send({
+              data: { _id, email },
+              message:
+                "Account created successfully, please enter otp sent to given mail address for complete verification."
+            });
+          })
+          .catch((error) => {
+            userSchema
+              .deleteOne({ _id: userId })
+              .then((info) => {
+                console.log(info);
+                errorHandler(error, "UserController.createUser.sendMail", res);
+              })
+              .catch(() =>
+                errorHandler(
+                  error,
+                  "UserController.createUser.sendMail.deleteOne",
+                  res
+                )
+              );
+          });
+      })
+      .catch((err) => errorHandler(err, "UserController.createUser", res));
   },
 
   userById: async (req, res) => {

@@ -14,7 +14,9 @@ export default function ForgotPassword({ goto, _id }) {
         alert("You have to create new password");
         goto("/setPassword");
       })
-      .catch((error) => alert(error.message));
+      .catch(({ message, response }) => {
+        alert(response.status === 400 ? response.data.message : message);
+      });
   };
 
   return (

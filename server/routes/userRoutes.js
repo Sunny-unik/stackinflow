@@ -12,7 +12,6 @@ const {
   checkLogin,
   updateUserPoint,
   authenticate,
-  sendOtp,
   logout,
   userByLikes,
   checkOtp
@@ -26,16 +25,17 @@ router.get("/", userById);
 router.get("/authenticate", authenticate);
 router.get("/mostliked", userByLikes);
 router.get("/logout", logout);
-router.get("/send-otp", sendOtp);
+
+router.post("/", validUser(), createUser);
 router.post("/check-otp", checkOtp);
 router.post("/dname", validUser(), validDname);
 router.post("/email", validUser(), validEmail);
 router.post("/login", validUser(), checkLogin);
 router.post("/forgot-password", validUser(), forgotPasswordEmail);
+
 router.put("/points", validUser(), updateUserPoint);
 router.put("/", validUser(), updateUserDetails);
 router.put("/profile", updateUserProfile);
 router.put("/password", validUser(), updatePassword);
-router.post("/", validUser(), createUser);
 
 module.exports = router;

@@ -37,7 +37,8 @@ const userSchema = new Schema({
     type: String,
     minLength: [6, "Otp length must be 6"],
     maxLength: [6, "Otp length must be 6"]
-  }
+  },
+  isVerifiedEmail: { type: Boolean, default: false }
 });
 
 module.exports = mongoose.model("users", userSchema);

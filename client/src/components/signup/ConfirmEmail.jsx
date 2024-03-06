@@ -1,49 +1,28 @@
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { IoArrowUndoOutline } from "react-icons/io5";
 
-export default function ConfirmEmail(props) {
-  const [otp, setotp] = useState("");
-  const callback = props.setisSignup;
-  const userInfo = props.userInfo;
-  const randomOtp = useRef();
+export default function ConfirmEmail({ setInSignup, _id, history }) {
+  const otp = useRef(null);
 
-  useEffect(() => {
+  const otpCheck = () => {
+    const validOtp = otp.current.value.trim();
+    if (validOtp.length !== 6) return alert("Otp must be 6 digit number");
+
     axios
-      .get(`${process.env.REACT_APP_API_URL}/user/send-otp`)
-      .then((res) => {
-        console.log(res.data.otp);
-        randomOtp.current = res.data.otp;
-        alert("Otp sent to your email");
+      .post(`${process.env.REACT_APP_API_URL}/user/check-otp`, {
+        otp: validOtp,
+        _id
       })
-      .catch((err) => {
-        console.log(err);
-        alert("! some server error occured try again later");
-        callback(true);
+      .then((res) => {
+        if (!res.data.message)
+          return alert("! Some error occurred on server, try again later");
+        history.push("/login");
+        alert("User Verified Successfully");
+      })
+      .catch(({ message, response }) => {
+        alert(response.status === 400 ? response.data.message : message);
       });
-  }, [callback]);
-
-  const otpcheck = () =>
-    otp === randomOtp.current ? createAccount() : incorrectOtp();
-
-  const createAccount = () => {
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/user`, userInfo)
-      .then((res) => {
-        if (res.data.msg) {
-          alert("Registration Successfull");
-          props.history.push("/login");
-        } else {
-          alert("! some server error occured try again later");
-          callback(true);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
-
-  const incorrectOtp = () => {
-    alert("! Incorrect OTP ");
-    callback(true);
   };
 
   return (
@@ -66,7 +45,7 @@ export default function ConfirmEmail(props) {
         <h1 style={{ display: "inline-block", width: "82%" }}>Confirm Email</h1>
         <button
           type="button"
-          onClick={() => callback(true)}
+          onClick={() => setInSignup(true)}
           className="border btn btn-warning float-end p-2 px-3"
           style={{
             fontWeight: "600",
@@ -87,14 +66,13 @@ export default function ConfirmEmail(props) {
         <input
           style={{ fontFamily: "sans-serif" }}
           type="number"
-          value={otp}
-          onChange={(e) => setotp(e.target.value)}
+          ref={otp}
           placeholder="Enter 6 Digit OTP"
           id="otp"
           required
         />
         <hr className="signuphr" />
-        <button type="button" className="registerbtn" onClick={otpcheck}>
+        <button type="button" className="registerbtn" onClick={otpCheck}>
           Submit
         </button>
       </form>
