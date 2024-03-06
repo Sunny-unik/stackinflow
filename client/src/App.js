@@ -32,7 +32,7 @@ export default function App() {
   return (
     <BrowserRouter>
       {loading && (
-        <div className="loading">
+        <div className="overlay-loading">
           <div className="uil-ring-css">
             <div></div>
           </div>

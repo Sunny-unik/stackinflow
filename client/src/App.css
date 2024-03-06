@@ -57,7 +57,7 @@
   transform: scale(1.2);
 }
 /* overlay loading */
-div.loading {
+div.overlay-loading {
   position: fixed;
   top: 0;
   left: 0;
