@@ -18,7 +18,12 @@ const userController = {
     };
 
     await userSchema
-      .findOne({ $or: [{ email: req.body.email }, { dname: req.body.email }] })
+      .findOne({
+        $and: [
+          { isVerifiedEmail: true },
+          { $or: [{ email: req.body.email }, { dname: req.body.email }] }
+        ]
+      })
       .then((user) => {
         let filterData;
         if (!user) return res.send({ msg: "user not found" });
@@ -61,10 +66,15 @@ const userController = {
       .catch((err) => res.send(err));
   },
 
-  validEmail: async (req, res) => {
-    const userId = req.body?.id;
-    await userSchema
-      .findOne({ $and: [{ email: req.body.email }, { _id: { $ne: userId } }] })
+  validEmail: (req, res) => {
+    userSchema
+      .findOne({
+        $and: [
+          { email: req.body.email },
+          { _id: { $ne: userId } },
+          { isVerifiedEmail: true }
+        ]
+      })
       .select("email")
       .then((result) => res.send(result ?? "valid email"))
       .catch((err) => res.send(err));
@@ -74,7 +84,13 @@ const userController = {
     const userId = req.body?.id;
     let isDnameValid;
     await userSchema
-      .findOne({ $and: [{ dname: req.body.dname }, { _id: { $ne: userId } }] })
+      .findOne({
+        $and: [
+          { dname: req.body.dname },
+          { _id: { $ne: userId } },
+          { isVerifiedEmail: true }
+        ]
+      })
       .select("dname")
       .then((result) => {
         isDnameValid = result ?? "valid dname";
@@ -82,6 +98,17 @@ const userController = {
       })
       .catch((err) => res && res.send(err));
     return isDnameValid === "valid dname" ? true : false;
+  },
+
+  removeUnverified: (req, res) => {
+    userSchema
+      .deleteMany({ isVerifiedEmail: false })
+      .then((result) =>
+        res.send({ data: result, message: "Unverified users removed" })
+      )
+      .catch((err) =>
+        errorHandler(err, "UserController.removeUnverified", res)
+      );
   },
 
   forgotPasswordEmail: (req, res) => {

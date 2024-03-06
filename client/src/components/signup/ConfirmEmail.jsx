@@ -1,9 +1,15 @@
 import axios from "axios";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { IoArrowUndoOutline } from "react-icons/io5";
 
 export default function ConfirmEmail({ setInSignup, _id, history }) {
   const otp = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      axios.post(`${process.env.REACT_APP_API_URL}/user/remove-unverified`);
+    };
+  }, []);
 
   const otpCheck = () => {
     const validOtp = otp.current.value.trim();
