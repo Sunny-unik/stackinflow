@@ -12,6 +12,7 @@
   border: none;
   border-radius: 0.5rem;
   background: #f1f1f1;
+  text-align: center;
 }
 
 .otpSubmitBtn {
@@ -30,4 +31,12 @@
   opacity: 1;
   background-color: #1e90ff;
   font-weight: 700;
+}
+
+.otpForm input[type="number"]::-webkit-inner-spin-button,
+.otpForm input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }

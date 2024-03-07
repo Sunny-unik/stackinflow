@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import "./css/otpForm.css";
 
 export default function OtpForm({
-  onSubmit,
+  onSubmitHandle,
   otpLength,
   placeholder,
   inputStyleProps,
@@ -14,7 +14,8 @@ export default function OtpForm({
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onSubmit(otp.join(""));
+    event.stopPropagation();
+    onSubmitHandle(otp.join(""));
   };
 
   const handleChange = (event, index) => {
@@ -48,7 +49,15 @@ export default function OtpForm({
     }
   };
 
-  const handlePaste = (event, index) => console.log(event, index);
+  const handlePaste = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const clipboardText = event.clipboardData.getData("text");
+    if (clipboardText.length !== otpLength) return;
+    if (inputType === "number" && !parseInt(clipboardText)) return;
+    setOtp(clipboardText.split(""));
+  };
 
   return (
     <>
@@ -69,7 +78,7 @@ export default function OtpForm({
               value={value}
               onChange={(e) => handleChange(e, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
-              onPaste={(e) => handlePaste(e, index)}
+              onPaste={(e) => handlePaste(e)}
               onFocus={(e) => e.target.select()}
               required
             />
