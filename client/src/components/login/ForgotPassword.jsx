@@ -1,18 +1,14 @@
+import React from "react";
 import axios from "axios";
-import React, { useRef } from "react";
 import { TbArrowBackUp } from "react-icons/tb";
 import { useDispatch } from "react-redux";
 import setLoading from "../../action/loadingAction";
+import OtpForm from "../OtpForm";
 
 export default function ForgotPassword({ goto, _id }) {
-  const otpRef = useRef(null);
   const dispatch = useDispatch();
 
-  const otpPassword = (event) => {
-    event.preventDefault();
-    const otp = otpRef.current.value;
-    if (otp.trim().length !== 6) return alert("Otp must be 6 digit number");
-
+  const otpCheck = (otp) => {
     dispatch(setLoading(true));
     axios
       .post(`${process.env.REACT_APP_API_URL}/user/check-otp`, { otp, _id })
@@ -21,7 +17,7 @@ export default function ForgotPassword({ goto, _id }) {
         goto("/setPassword");
       })
       .catch(({ message, response }) => {
-        alert(response.status === 400 ? response.data.message : message);
+        alert(response?.status === 400 ? response.data.message : message);
       })
       .finally(() => dispatch(setLoading(false)));
   };
@@ -34,15 +30,14 @@ export default function ForgotPassword({ goto, _id }) {
       className="col-md-5 col-lg-4"
       id="loginotp"
     >
-      <form
-        className="d-inline-block"
+      <div
         style={{
           padding: "3%",
           margin: "4px 0",
           borderRadius: "2%",
           boxShadow: "3px 4px 3px 2px #888888"
         }}
-        onSubmit={otpPassword}
+        onSubmit={otpCheck}
       >
         <h2 style={{ display: "inline-block", width: "82%" }}>
           Forgot Password
@@ -55,23 +50,16 @@ export default function ForgotPassword({ goto, _id }) {
         >
           <TbArrowBackUp />
         </button>
-        <p>Please fill registered email for recover your account.</p>
+        <p>Otp sent on given email-address.</p>
         <hr className="signuphr" />
-        <label htmlFor="otplogin" className="otpemail">
-          <b>Enter One Time Password</b>
-        </label>
-        <input
-          style={{ fontFamily: "sans-serif" }}
-          type="number"
-          ref={otpRef}
-          placeholder="Enter 6 digit otp"
-          name="otplogin"
-          id="otplogin"
-          required
+        <OtpForm
+          onSubmitHandle={otpCheck}
+          otpLength={6}
+          inputType={"number"}
+          labelText="Please fill 6 digit code to verify your account."
         />
         <hr className="signuphr" />
-        <button className="loginBtn">Submit</button>
-      </form>
+      </div>
     </div>
   );
 }

@@ -25,7 +25,7 @@ export default function ConfirmEmail({ setInSignup, _id, history }) {
         alert("User Verified Successfully");
       })
       .catch(({ message, response }) => {
-        alert(response.status === 400 ? response.data.message : message);
+        alert(response?.status === 400 ? response.data.message : message);
       })
       .finally(() => dispatch(setLoading(false)));
   };
@@ -65,7 +65,7 @@ export default function ConfirmEmail({ setInSignup, _id, history }) {
         <p>Otp sent on given email-address.</p>
         <hr className="signuphr" />
         <OtpForm
-          onSubmit={otpCheck}
+          onSubmitHandle={otpCheck}
           otpLength={6}
           inputType={"number"}
           labelText="Please fill 6 digit code to verify your account."
