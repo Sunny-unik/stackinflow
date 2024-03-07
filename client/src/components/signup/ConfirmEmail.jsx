@@ -1,11 +1,11 @@
 import axios from "axios";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { IoArrowUndoOutline } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import setLoading from "../../action/loadingAction";
+import OtpForm from "../OtpForm";
 
 export default function ConfirmEmail({ setInSignup, _id, history }) {
-  const otp = useRef(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -14,17 +14,10 @@ export default function ConfirmEmail({ setInSignup, _id, history }) {
     };
   }, []);
 
-  const otpCheck = (event) => {
-    event.preventDefault();
-    const validOtp = otp.current.value.trim();
-    if (validOtp.length !== 6) return alert("Otp must be 6 digit number");
-
+  const otpCheck = (otp) => {
     dispatch(setLoading(true));
     axios
-      .post(`${process.env.REACT_APP_API_URL}/user/check-otp`, {
-        otp: validOtp,
-        _id
-      })
+      .post(`${process.env.REACT_APP_API_URL}/user/check-otp`, { otp, _id })
       .then((res) => {
         if (!res.data.message)
           return alert("! Some error occurred on server, try again later");
@@ -42,11 +35,9 @@ export default function ConfirmEmail({ setInSignup, _id, history }) {
       data-aos="flip-right"
       data-aos-once="true"
       data-aos-duration="1000"
-      className="col-md-5 col-lg-4"
-      id="createotp"
+      className="col-md-5 col-lg-4 mt-4"
     >
-      <form
-        className="d-inline-block"
+      <div
         style={{
           padding: "3%",
           margin: "4px 0",
@@ -71,22 +62,16 @@ export default function ConfirmEmail({ setInSignup, _id, history }) {
         >
           <IoArrowUndoOutline />
         </button>
-        <p>Please fill 6alphanumeric code for create your account.</p>
+        <p>Otp sent on given email-address.</p>
         <hr className="signuphr" />
-        <label htmlFor="otp" className="inputotp">
-          Otp sent on gievn email-address
-        </label>
-        <input
-          style={{ fontFamily: "sans-serif" }}
-          type="number"
-          ref={otp}
-          placeholder="Enter 6 Digit OTP"
-          id="otp"
-          required
+        <OtpForm
+          onSubmit={otpCheck}
+          otpLength={6}
+          inputType={"number"}
+          labelText="Please fill 6 digit code to verify your account."
         />
         <hr className="signuphr" />
-        <button className="registerbtn">Submit</button>
-      </form>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,33 @@
+#otpInputsWrapper {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.otpInput {
+  width: 100%;
+  padding: 1rem;
+  margin: 5px 0;
+  display: inline-block;
+  border: none;
+  border-radius: 0.5rem;
+  background: #f1f1f1;
+}
+
+.otpSubmitBtn {
+  background-color: black;
+  color: white;
+  padding: 16px 20px;
+  margin: 5px 0 0px 0;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+.otpSubmitBtn:hover,
+.otpSubmitBtn:focus {
+  opacity: 1;
+  background-color: #1e90ff;
+  font-weight: 700;
+}
