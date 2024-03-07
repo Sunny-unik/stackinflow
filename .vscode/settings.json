@@ -6,7 +6,7 @@
   "emmet.includeLanguages": {
     "javascript": "javascriptreact"
   },
-  "editor.cursorSmoothCaretAnimation": true,
+  "editor.cursorSmoothCaretAnimation": "on",
   "editor.cursorBlinking": "phase",
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": "active",
