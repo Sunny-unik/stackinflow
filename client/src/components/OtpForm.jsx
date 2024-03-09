@@ -28,25 +28,24 @@ export default function OtpForm({
       : (finalizeOtp[updatedAtIndex] = value[value.length - 1] ?? "");
     setOtp(finalizeOtp);
 
-    if (event.nativeEvent.inputType.includes("deleteContent")) return;
+    if (event.nativeEvent.inputType?.includes("deleteContent")) return;
     inputWrapperRef.current.children[
       (updatedAtIndex === -1 ? index : updatedAtIndex) + 1
     ]?.focus();
   };
-
   const handleKeyDown = (event, index) => {
     const allInputs = inputWrapperRef.current.children;
-    const keyCode = event.keyCode;
-    if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105))
-      return; // when any number clicked
+    const { code } = event;
 
-    if (event.code === "Backspace" || event.code === "Delete") {
-      const finalizeOtp = [...otp];
-      finalizeOtp.splice(index, 1);
-      finalizeOtp.length = otpLength;
-      setOtp([...finalizeOtp.map((v) => (!v ? "" : v))]);
-      allInputs[index - 1]?.focus();
-    }
+    if (code === "ArrowRight") return allInputs[index + 1]?.focus();
+    else if (code === "ArrowLeft") return allInputs[index - 1]?.focus();
+    else if (code !== "Backspace" || code !== "Delete") return;
+
+    const finalizeOtp = [...otp];
+    finalizeOtp.splice(index, 1);
+    finalizeOtp.length = otpLength;
+    setOtp([...finalizeOtp.map((v) => (!v ? "" : v))]);
+    allInputs[index - 1]?.focus();
   };
 
   const handlePaste = (event) => {
