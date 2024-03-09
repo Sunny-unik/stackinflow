@@ -132,7 +132,7 @@ const questionController = {
 
   questionsSearch: async (req, res) => {
     await questionSchema
-      .find({ question: { $regex: req.query.search, $options: "$i" } })
+      .find({ question: { $regex: req.query.search, $options: "i" } })
       .select("_id question userId date qlikes tags")
       .populate("userId", "_id dname userlikes")
       .then((questions) => res.send({ data: questions, msg: "success" }))

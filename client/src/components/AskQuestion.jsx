@@ -51,35 +51,39 @@ export default function AskQuestion(props) {
 
   const postQuestion = async () => {
     let validTitle = true;
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/question/search?search=${askq}`)
-      .then((res) => !!res.data.data.length && (validTitle = false))
-      .catch((err) => {
-        validTitle = false;
-        console.log(err);
-      });
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/question/search?search=${askq}`
+      );
+      !!res.data.data.length && (validTitle = false);
+    } catch (err) {
+      validTitle = null;
+    }
     if (!validTitle) {
-      alert("This question is already asked by someone else");
-      setLoader(false);
-      return false;
+      alert(
+        validTitle === null
+          ? "Some server side error occurred, try again later."
+          : "This question is already asked by someone else."
+      );
+      return setLoader(false);
     }
 
     axios
       .post(`${process.env.REACT_APP_API_URL}/question`, {
         question: askq,
-        tags: asktag.split(","),
+        tags: asktag.split(", "),
         userId: user?._id,
         questiondetail: askqd
       })
       .then((res) => {
-        const updatepoint = user?.userlikes + 10;
-        setLoader(false);
-        if (!!res.data.msg) dispatch(updateUserPoints(user?._id, updatepoint));
+        if (!res.data.msg) return;
+        dispatch(updateUserPoints(user?._id, user?.userlikes + 10));
+        alert("Question listed successfully.");
       })
-      .catch((err) => {
-        setLoader(false);
-        console.log(err);
-      });
+      .catch(() => {
+        alert("Some server side error occurred, try again later.");
+      })
+      .finally(setLoader(false));
   };
 
   return (
@@ -88,10 +92,7 @@ export default function AskQuestion(props) {
         <div className="ask m-0 mb-1">
           <h1 className="p-2"> Ask a public question </h1>
           <div className="d-md-flex">
-            <form
-              className="col-sm-12 col-md-7 card bg-white p-3 mb-md-4 d-inline-block mx-md-4"
-              style={{ height: "inherit" }}
-            >
+            <form className="col-sm-12 col-md-7 card bg-white p-3 mb-md-4 d-inline-block mx-md-4">
               <label htmlFor="askq">
                 <b>Enter your question title</b>
               </label>
@@ -138,7 +139,9 @@ export default function AskQuestion(props) {
                 className="mb-3 mt-1"
                 type="text"
                 value={asktag}
-                onChange={(e) => setasktag(e.target.value.replaceAll(" ", ","))}
+                onChange={(e) =>
+                  setasktag(e.target.value.replaceAll(" ", ", "))
+                }
                 placeholder="Enter tags related to question"
                 name="askt"
                 id="asktag"
