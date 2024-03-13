@@ -13,9 +13,6 @@
 #createdetail {
   box-shadow: 2% !important;
 }
-#createotp {
-  margin-top: 2%;
-}
 #createemail,
 #createdname,
 #createpassword,
@@ -78,7 +75,6 @@
 }
 #email,
 #password,
-#otpemail,
 #otplogin,
 #newpassword,
 #confirmpassword {
