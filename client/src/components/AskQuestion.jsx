@@ -62,7 +62,9 @@ export default function AskQuestion(props) {
     let validTitle = true;
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/question/search?search=${askQTitle}`
+        `${
+          process.env.REACT_APP_API_URL
+        }/question/search?search=${askQTitle.current.value.trim()}`
       );
       !!res.data.data.length && (validTitle = false);
     } catch (err) {
@@ -79,10 +81,10 @@ export default function AskQuestion(props) {
 
     axios
       .post(`${process.env.REACT_APP_API_URL}/question`, {
-        question: askQTitle,
-        tags: askTags.split(","),
-        userId: user?._id,
-        questiondetail: askQDescription
+        question: askQTitle.current.value.trim(),
+        tags: getTagsToAppend(),
+        userId: user._id,
+        questiondetail: askQDescription.current.value.trim()
       })
       .then((res) => {
         if (!res.data.msg) return;
