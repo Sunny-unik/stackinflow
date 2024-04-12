@@ -51,16 +51,6 @@ const userController = {
   },
 
   authenticate: async (req, res) => {
-    try {
-      const token = req.cookies.stackinflowToken;
-      if (!token) return res.send("cookie not found");
-      const decode = verify(token, "verySecretCode");
-      req.decoded = decode;
-    } catch (error) {
-      res.clearCookie("stackinflowToken").send("token expired");
-      return false;
-    }
-
     await userSchema
       .findOne({ dname: req.decoded.dname })
       .then((result) => {
