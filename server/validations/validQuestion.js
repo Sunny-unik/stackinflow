@@ -11,9 +11,9 @@ const schemaProvider = {
   POST: {
     "/": {
       schema: yup.object().shape({
-        question: yup.string().min(4).max(100).required(),
+        question: yup.string().min(4).max(150).required(),
         userId: yup.string().required(),
-        questiondetail: yup.string().min(5).max(1080).required()
+        questiondetail: yup.string().min(5).max(5000).required()
       })
     }
   },

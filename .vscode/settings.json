@@ -27,5 +27,6 @@
   "editor.tabSize": 2,
   "typescript.format.insertSpaceAfterTypeAssertion": true,
   "prettier.printWidth": 100,
-  "prettier.singleAttributePerLine": false
+  "prettier.singleAttributePerLine": false,
+  "cSpell.words": ["questiondetail", "userlikes"]
 }

@@ -272,7 +272,8 @@ a {
 }
 
 #askTagsWrapper {
-  border: 2px solid black;
+  margin-top: 5px;
+  border: 1px solid #ccc;
   padding: 3px;
 }
 #askTagsWrapper div {
@@ -293,4 +294,5 @@ a {
 .ask form input,
 .ask form textarea {
   padding-inline: 5px;
+  width: 96%;
 }
