@@ -8,7 +8,7 @@ import { authenticateUser, updateUserPoints } from "../action/userAction";
 export default function AskQuestion(props) {
   const [askq, setaskq] = useState("");
   const [askqd, setaskqd] = useState("");
-  const [asktag, setasktag] = useState("");
+  const [asktag, setasktag] = useState([]);
   const [loader, setLoader] = useState(false);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -71,7 +71,7 @@ export default function AskQuestion(props) {
     axios
       .post(`${process.env.REACT_APP_API_URL}/question`, {
         question: askq,
-        tags: asktag.split(", "),
+        tags: asktag.split(","),
         userId: user?._id,
         questiondetail: askqd
       })
@@ -84,6 +84,18 @@ export default function AskQuestion(props) {
         alert("Some server side error occurred, try again later.");
       })
       .finally(setLoader(false));
+  };
+
+  const removeTag = (index) => {
+    const tags = [...asktag];
+    tags.splice(index, 1);
+    setasktag(tags);
+  };
+
+  const getTagsToAppend = () => {
+    const tags = [...asktag];
+    tags.splice(tags.length - 1, 1);
+    return tags;
   };
 
   return (
@@ -135,13 +147,27 @@ export default function AskQuestion(props) {
               <label>
                 Add up to 5 tags to describe what your question is about
               </label>
+              {getTagsToAppend().length ? (
+                <div id="askTagsWrapper">
+                  {getTagsToAppend().map((tag, i) => (
+                    <div id={"askTagSpan" + i} key={"askTagSpan" + i}>
+                      {tag.trim()}
+                      <span
+                        onClick={(e) =>
+                          removeTag(e.target.parentElement.id.at(-1))
+                        }
+                      >
+                        X
+                      </span>{" "}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
               <input
                 className="mb-3 mt-1"
                 type="text"
-                value={asktag}
-                onChange={(e) =>
-                  setasktag(e.target.value.replaceAll(" ", ", "))
-                }
+                value={asktag.join(" ")}
+                onChange={({ target }) => setasktag(target.value.split(" "))}
                 placeholder="Enter tags related to question"
                 name="askt"
                 id="asktag"

@@ -270,3 +270,27 @@ a {
     width: 96%;
   }
 }
+
+#askTagsWrapper {
+  border: 2px solid black;
+  padding: 3px;
+}
+#askTagsWrapper div {
+  display: inline-block;
+  background-color: #0e73d8;
+  color: #fff;
+  border-radius: 25px;
+  padding: 1px 9px;
+  margin: 5px 1px;
+}
+#askTagsWrapper div span {
+  color: red;
+  margin-inline: 5px;
+}
+#askTagsWrapper div span:hover {
+  cursor: pointer;
+}
+.ask form input,
+.ask form textarea {
+  padding-inline: 5px;
+}
