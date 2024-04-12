@@ -1,5 +1,6 @@
 const answerSchema = require("../models/answerSchema");
 const questionSchema = require("../models/questionSchema");
+const userController = require("./userController");
 
 const questionController = {
   listQuestions: async (req, res) => {
@@ -154,13 +155,14 @@ const questionController = {
   },
 
   createQuestion: async (req, res) => {
-    const question = await new questionSchema(req.body);
+    const question = new questionSchema(req.body);
     question
       .save()
-      .then((result) =>
-        res.send({ data: result, msg: "Question listed successfully" })
-      )
-      .catch((err) => res.send(err));
+      .then(async (result) => {
+        await userController.updateUserPoint({ body: { id: req.body.userId } });
+        res.send({ data: result, msg: "Question listed successfully" });
+      })
+      .catch((err) => res.status(500).send(err));
   },
 
   addQlike: async (req, res) => {

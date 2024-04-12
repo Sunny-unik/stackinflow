@@ -171,18 +171,20 @@ const userController = {
   },
 
   updateUserPoint: async (req, res) => {
-    await userSchema
-      .updateOne(
+    try {
+      const result = await userSchema.updateOne(
         { _id: req.body.id },
-        { $set: { userlikes: req.body.userpoint } }
-      )
-      .then((result) => {
-        res.send({
-          data: result,
-          msg: result.modifiedCount ? "User points updated" : "not found"
-        });
-      })
-      .catch((err) => res.send(err));
+        { $inc: { userlikes: 10 } }
+      );
+      const obj = {
+        data: result,
+        msg: result.modifiedCount ? "User points updated" : "not found"
+      };
+      return res ? res.send(obj) : obj;
+    } catch (error) {
+      if (!res) throw error;
+      res.status(500).send(error);
+    }
   },
 
   updateUserDetails: async (req, res) => {

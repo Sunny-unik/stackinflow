@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { tagRegex } from "../helper/RegexHelper";
-import { authenticateUser, updateUserPoints } from "../action/userAction";
+import { authenticateUser } from "../action/userAction";
 
-export default function AskQuestion(props) {
+export default function AskQuestion() {
   const askQTitle = useRef(null);
   const askQDescription = useRef(null);
   const [askTags, setAskTags] = useState([]);
@@ -26,7 +26,26 @@ export default function AskQuestion(props) {
         .querySelectorAll(".extraLink")
         .forEach((elem) => elem?.classList.remove("active"));
     };
-  }, [user, props.history, dispatch]);
+  }, [user, dispatch]);
+
+  const removeTag = useCallback(
+    (index) => {
+      const tags = [...askTags];
+      tags.splice(index, 1);
+      setAskTags(tags);
+    },
+    [askTags]
+  );
+
+  const getTagsToAppend = useCallback(() => {
+    const tags = [...askTags];
+    tags.splice(tags.length - 1, 1);
+    return tags;
+  }, [askTags]);
+
+  const handleInputChange = useCallback(({ target }) => {
+    setAskTags(target.value.split(" "));
+  }, []);
 
   const validQuestion = () => {
     const errors = [],
@@ -46,19 +65,14 @@ export default function AskQuestion(props) {
       errors.push("tags can't includes symbol & empty spaces at any position");
 
     if (!!errors.length) {
-      let errorsString = errors.join(",\n");
-      alert(
-        errorsString.replace(
-          errorsString[0],
-          errorsString[0].toLocaleUpperCase()
-        ) + "."
-      );
+      const errorsString = errors.join(",\n");
+      alert(`${errorsString.charAt(0).toUpperCase()}${errorsString.slice(1)}.`);
       setLoader(false);
     }
     return !errors.length;
   };
 
-  const postQuestion = async () => {
+  const postQuestion = useCallback(async () => {
     let validTitle = true;
     try {
       const res = await axios.get(
@@ -66,14 +80,14 @@ export default function AskQuestion(props) {
           process.env.REACT_APP_API_URL
         }/question/search?search=${askQTitle.current.value.trim()}`
       );
-      !!res.data.data.length && (validTitle = false);
+      if (res.data.data.length) validTitle = false;
     } catch (err) {
       validTitle = null;
     }
     if (!validTitle) {
       alert(
         validTitle === null
-          ? "Some server side error occurred, try again later."
+          ? "Some server-side error occurred, try again later."
           : "This question is already asked by someone else."
       );
       return setLoader(false);
@@ -86,28 +100,11 @@ export default function AskQuestion(props) {
         userId: user._id,
         questiondetail: askQDescription.current.value.trim()
       })
-      .then((res) => {
-        if (!res.data.msg) return;
-        dispatch(updateUserPoints(user?._id, user?.userlikes + 10));
-        alert("Question listed successfully.");
-      })
-      .catch(() => {
-        alert("Some server side error occurred, try again later.");
-      })
-      .finally(setLoader(false));
-  };
-
-  const removeTag = (index) => {
-    const tags = [...askTags];
-    tags.splice(index, 1);
-    setAskTags(tags);
-  };
-
-  const getTagsToAppend = () => {
-    const tags = [...askTags];
-    tags.splice(tags.length - 1, 1);
-    return tags;
-  };
+      .then(() => alert("Question listed successfully."))
+      .catch(() => alert("Some server-side error occurred, try again later."))
+      .finally(() => setLoader(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, dispatch]);
 
   return (
     <div className="bg-light" style={{ borderLeft: "2px solid lightgrey" }}>
@@ -178,7 +175,7 @@ export default function AskQuestion(props) {
                 className="mb-3 mt-1"
                 type="text"
                 value={askTags.join(" ")}
-                onChange={({ target }) => setAskTags(target.value.split(" "))}
+                onChange={handleInputChange}
                 placeholder="Enter tags related to question"
                 name="askTag"
                 id="askTag"
