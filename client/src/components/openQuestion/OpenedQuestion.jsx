@@ -191,14 +191,9 @@ export default function Question(props) {
             className="btn btn-outline-primary mx-3"
             to={{
               pathname: `/editQuestion/${qid}`,
-              questionid: qid,
-              questiontitle: question,
-              questiondetails: questiondetail,
-              questiontags: tag,
-              questionlikes: qlikes,
-              questiondate: qdate,
-              quser: quser,
-              qanswers: answers
+              questionTitle: question,
+              questionDetails: questiondetail,
+              questionTags: tag
             }}
           >
             Edit Question

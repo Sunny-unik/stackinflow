@@ -132,8 +132,11 @@ const questionController = {
   },
 
   questionsSearch: async (req, res) => {
-    await questionSchema
-      .find({ question: { $regex: req.query.search, $options: "i" } })
+    const { search, qid } = req.query;
+    const queries = [{ question: { $regex: search, $options: "i" } }];
+    if (qid) queries[1] = { _id: { $ne: qid } };
+    questionSchema
+      .find({ $and: queries })
       .select("_id question userId date qlikes tags")
       .populate("userId", "_id dname userlikes")
       .then((questions) => res.send({ data: questions, msg: "success" }))
@@ -201,21 +204,33 @@ const questionController = {
   },
 
   updateQuestion: async (req, res) => {
-    await questionSchema
+    const { userId } = req.decoded;
+    questionSchema
       .updateOne(
-        { _id: req.body.id },
+        { $and: [{ _id: req.body.id }, { userId: userId }] },
         {
           $set: {
             question: req.body.question,
-            questiondetail: req.body.questiondetail,
+            questiondetail: req.body.questionDetail,
             tags: req.body.tags
           }
         }
       )
-      .then((result) =>
-        res.send({ data: result, msg: "Your question updated successfully 😊" })
-      )
-      .catch((error) => res.send(error));
+      .then((result) => {
+        const { modifiedCount, matchedCount } = result;
+        if (!matchedCount)
+          return res.send({
+            data: null,
+            msg: "Not authorized to perform this action"
+          });
+        res.send({
+          data: result,
+          msg: modifiedCount
+            ? "Your question updated successfully 😊"
+            : "No changes have been made now"
+        });
+      })
+      .catch((error) => res.status(500).send(error));
   }
 };
 

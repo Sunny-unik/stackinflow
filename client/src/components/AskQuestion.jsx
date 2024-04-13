@@ -1,14 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { tagRegex } from "../helper/RegexHelper";
 import { authenticateUser } from "../action/userAction";
 
-export default function AskQuestion() {
-  const askQTitle = useRef(null);
-  const askQDescription = useRef(null);
-  const [askTags, setAskTags] = useState([]);
+export default function AskQuestion(props) {
+  const { questionTitle, questionDetails, questionTags } = props.location;
+  const questionId = useParams().qid;
+  const [askQTitle, setQTitle] = useState(questionTitle || "");
+  const [askQDescription, setQDescription] = useState(questionDetails || "");
+  const [askTags, setAskTags] = useState(
+    questionId && questionTags ? [...questionTags, ""] : []
+  );
   const [loader, setLoader] = useState(false);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -17,16 +21,27 @@ export default function AskQuestion() {
     if (!user) {
       dispatch(authenticateUser());
       return false;
-    }
-    document
-      .querySelectorAll(".extraLink")
-      .forEach((elem) => elem?.classList.add("active"));
+    } else if (questionId) {
+      if (!askQTitle)
+        axios
+          .get(`${process.env.REACT_APP_API_URL}/question?id=${questionId}`)
+          .then((res) => {
+            console.log(res.data.data);
+            setQTitle(res.data.data.question);
+            setQDescription(res.data.data.questiondetail);
+            setAskTags([...res.data.data.tags, ""]);
+          })
+          .catch((err) => console.log("In question fetch: ", err));
+    } else
+      document
+        .querySelectorAll(".extraLink")
+        .forEach((elem) => elem?.classList.add("active"));
     return () => {
       document
         .querySelectorAll(".extraLink")
         .forEach((elem) => elem?.classList.remove("active"));
     };
-  }, [user, dispatch]);
+  }, [user, dispatch, questionId, askQTitle]);
 
   const removeTag = useCallback(
     (index) => {
@@ -47,13 +62,13 @@ export default function AskQuestion() {
     setAskTags(target.value.split(" "));
   }, []);
 
-  const validQuestion = () => {
+  const validQuestion = useCallback(() => {
     const errors = [],
       tagsToAppend = getTagsToAppend();
     // valid tags which doesn't includes symbol & empty space at any position
     const validTags = tagsToAppend.filter((tag) => tagRegex.test(tag.trim())),
-      qTitle = askQTitle.current.value.trim(),
-      qDescription = askQDescription.current.value.trim();
+      qTitle = askQTitle.trim(),
+      qDescription = askQDescription.trim();
 
     if (qTitle.length < 4 || qTitle.length > 151)
       errors.push("title's characters length must in between 4 to 151");
@@ -70,15 +85,16 @@ export default function AskQuestion() {
       setLoader(false);
     }
     return !errors.length;
-  };
+  }, [askQDescription, askQTitle, getTagsToAppend]);
 
-  const postQuestion = useCallback(async () => {
+  const validUniqueTitle = useCallback(async () => {
     let validTitle = true;
     try {
+      console.log(askQTitle);
       const res = await axios.get(
         `${
           process.env.REACT_APP_API_URL
-        }/question/search?search=${askQTitle.current.value.trim()}`
+        }/question/search?search=${askQTitle.trim()}&qid=${questionId}`
       );
       if (res.data.data.length) validTitle = false;
     } catch (err) {
@@ -88,36 +104,80 @@ export default function AskQuestion() {
       alert(
         validTitle === null
           ? "Some server-side error occurred, try again later."
-          : "This question is already asked by someone else."
+          : "This question title is already listed."
       );
-      return setLoader(false);
+      setLoader(false);
+      return false;
     }
+    return true;
+  }, [askQTitle, questionId]);
 
+  const postQuestion = useCallback(async () => {
+    if (!validUniqueTitle) return false;
     axios
       .post(`${process.env.REACT_APP_API_URL}/question`, {
-        question: askQTitle.current.value.trim(),
+        question: askQTitle.trim(),
         tags: getTagsToAppend(),
         userId: user._id,
-        questiondetail: askQDescription.current.value.trim()
+        questiondetail: askQDescription.trim()
       })
       .then(() => alert("Question listed successfully."))
       .catch(() => alert("Some server-side error occurred, try again later."))
       .finally(() => setLoader(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, dispatch]);
+  }, [
+    getTagsToAppend,
+    askQDescription,
+    askQTitle,
+    user?._id,
+    validUniqueTitle
+  ]);
+
+  const updateQuestion = useCallback(async () => {
+    if (!validUniqueTitle) return false;
+    axios
+      .put(`${process.env.REACT_APP_API_URL}/question/`, {
+        question: askQTitle.trim(),
+        tags: getTagsToAppend(),
+        id: questionId,
+        questionDetail: askQDescription.trim()
+      })
+      .then(({ data }) => {
+        alert(data.msg);
+        !data.msg.includes("No changes") &&
+          props.history.push(`/question/${questionId}`);
+      })
+      .catch((error) =>
+        alert(
+          error.message,
+          "Some server-side error occurred, try again later."
+        )
+      )
+      .finally(() => setLoader(false));
+  }, [
+    askQTitle,
+    askQDescription,
+    questionId,
+    getTagsToAppend,
+    props.history,
+    validUniqueTitle
+  ]);
 
   return (
     <div className="bg-light" style={{ borderLeft: "2px solid lightgrey" }}>
       {user && (
         <div className="ask m-0 mb-1">
-          <h1 className="p-2"> Ask a public question </h1>
+          <h1 className="p-2">
+            {" "}
+            {questionId ? " Edit Question " : "Ask a public question"}{" "}
+          </h1>
           <div className="d-md-flex">
             <form
               className="col-sm-12 col-md-7 card bg-white p-3 mb-md-4 d-inline-block mx-md-4"
               onSubmit={(e) => {
                 e.preventDefault();
                 setLoader(true);
-                validQuestion() && postQuestion();
+                if (validQuestion())
+                  questionId ? updateQuestion() : postQuestion();
               }}
             >
               <label htmlFor="askQTitle">
@@ -128,7 +188,8 @@ export default function AskQuestion() {
               <input
                 className="mb-3 mt-1"
                 type="text"
-                ref={askQTitle}
+                value={askQTitle}
+                onChange={(e) => setQTitle(e.target.value)}
                 placeholder="Enter your question title"
                 name="askQTitle"
                 id="askQTitle"
@@ -143,7 +204,8 @@ export default function AskQuestion() {
               <textarea
                 className="mb-3 mt-1"
                 type="text"
-                ref={askQDescription}
+                value={askQDescription}
+                onChange={(e) => setQDescription(e.target.value)}
                 placeholder="Describe your question"
                 name="askQDescription"
                 id="askQDescription"
@@ -185,7 +247,7 @@ export default function AskQuestion() {
                 className="submitFormBtn btn btn-primary"
                 style={{ boxShadow: " .08em .2em #888888" }}
               >
-                Publish Question{" "}
+                {questionId ? "Update" : "Publish"} Question{" "}
                 {loader && (
                   <div
                     className="spinner-border spinner-border-sm ml-1"

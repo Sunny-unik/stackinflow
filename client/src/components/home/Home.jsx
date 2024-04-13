@@ -10,7 +10,6 @@ import Question from "../openQuestion/OpenedQuestion";
 import Footer from "../Footer";
 import User from "../User";
 import QuestionsByTag from "../QuestionsByTag";
-import EditQuestion from "../EditQuestion";
 import About from "../About";
 import Feedback from "../Feedback";
 import Searchq from "../searchQuestion/SearchQuestion";
@@ -101,7 +100,7 @@ export default function Home(props) {
               <Route path="/popularTags" component={Populartags} />
               <Route path="/popularUsers" component={Popularusers} />
               <Route path="/question/:qid" component={Question} />
-              <Route path="/editQuestion/:qid" component={EditQuestion} />
+              <Route path="/editQuestion/:qid" component={AskQuestion} />
               <Route path="/user/:_id" component={User} />
               <Route path="/questionsBy/:tag" component={QuestionsByTag} />
               <Route path="/askQuestion" component={AskQuestion} />

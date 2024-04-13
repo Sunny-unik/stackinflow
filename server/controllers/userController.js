@@ -2,7 +2,7 @@ const sendMail = require("../helpers/mailer");
 const userSchema = require("../models/userSchema");
 const upload = require("../helpers/multerConfig");
 const fs = require("fs");
-const { sign, verify } = require("jsonwebtoken");
+const { sign } = require("jsonwebtoken");
 const errorHandler = require("../helpers/ErrorHandler");
 const bcrypt = require("bcrypt");
 const { getOtp } = require("../helpers/otpManager");
@@ -12,9 +12,13 @@ const userController = {
     const checkPassword = async (user) => {
       if (await bcrypt.compare(req.body.password, user.password)) {
         user.password = undefined;
-        const token = sign({ dname: user.dname }, "verySecretCode", {
-          expiresIn: "7d"
-        });
+        const token = sign(
+          { dname: user.dname, userId: user._id },
+          "verySecretCode",
+          {
+            expiresIn: "7d"
+          }
+        );
         return [user, token];
       }
     };
