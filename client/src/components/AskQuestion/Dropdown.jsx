@@ -7,13 +7,48 @@ export default function Dropdown({ availableTags, askTags, setAskTags }) {
   );
   const dropdownBtn = useRef(null);
   const dropdownInput = useRef(null);
+  const dropdownList = useRef(null);
 
   const dropdownInputFocus = () => dropdownInput.current.focus();
+  const handleInputKeyDown = (event) => {
+    if (event.key === "Tab" && !event.shiftKey) {
+      event.preventDefault();
+      dropdownList.current.firstChild.focus();
+    }
+  };
+  const handleListKeyDown = (event) => {
+    if (
+      event.key === "Tab" &&
+      event.shiftKey &&
+      !event.target.previousSibling
+    ) {
+      event.preventDefault();
+      dropdownInput.current.focus();
+    } else if (
+      event.key === "Tab" &&
+      !event.shiftKey &&
+      !event.target.nextSibling
+    ) {
+      event.preventDefault();
+      dropdownList.current
+        .closest(".dropdown")
+        .parentElement.parentElement.querySelector("button.submitFormBtn")
+        .focus();
+    }
+  };
 
   useEffect(() => {
+    const listRef = dropdownList.current,
+      inputRef = dropdownInput.current,
+      btnRef = dropdownBtn.current;
+    dropdownList.current.addEventListener("keydown", handleListKeyDown);
+    dropdownInput.current.addEventListener("keydown", handleInputKeyDown);
     dropdownBtn.current.addEventListener("click", dropdownInputFocus);
-    return () =>
-      dropdownBtn.current?.removeEventListener("click", dropdownInputFocus);
+    return () => {
+      listRef.removeEventListener("keydown", handleListKeyDown);
+      inputRef.removeEventListener("keydown", handleInputKeyDown);
+      btnRef.removeEventListener("click", dropdownInputFocus);
+    };
   }, []);
 
   const removeTag = useCallback(
@@ -62,6 +97,7 @@ export default function Dropdown({ availableTags, askTags, setAskTags }) {
               className="mb-3 mt-1 form-control mx-auto"
               ref={dropdownInput}
               type="text"
+              tabIndex={0}
               placeholder="Search tags.."
               onChange={({ target }) =>
                 setValidTags(
@@ -75,12 +111,15 @@ export default function Dropdown({ availableTags, askTags, setAskTags }) {
               name="askTag"
               id="askTag"
             />
-            <ul
+            <div
+              ref={dropdownList}
               className="suggestedTags px-1"
               style={{ maxHeight: "280px", overflowY: "auto" }}
             >
-              {ValidTags.map((tag) => (
-                <li
+              {ValidTags.map((tag, i) => (
+                <button
+                  key={tag + "-li"}
+                  tabIndex={i + 1}
                   className="btn btn-secondary w-100 mb-1"
                   onClick={({ target }) => {
                     setAskTags((previousValue) => [
@@ -89,12 +128,13 @@ export default function Dropdown({ availableTags, askTags, setAskTags }) {
                     setValidTags((currentValidTags) =>
                       currentValidTags.filter((t) => t !== target.innerText)
                     );
+                    dropdownBtn.current.focus();
                   }}
                 >
                   {tag}
-                </li>
+                </button>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
       </div>
