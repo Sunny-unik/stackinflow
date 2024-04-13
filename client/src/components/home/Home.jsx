@@ -107,6 +107,7 @@ export default function Home(props) {
               <Route path="/" exact component={Topquestions} />
               <Route path="/about" component={About} />
               <Route path="/feedback" component={Feedback} />
+              <Route path="/request/:type" component={Feedback} />
               <Route path="/search/:questionSearch" component={Searchq} />
             </Switch>
           </div>
