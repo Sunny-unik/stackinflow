@@ -150,6 +150,9 @@
 .forgotPasswordLink:hover {
   color: navy;
 }
+li {
+  list-style: none;
+}
 /* question css */
 a {
   color: dodgerblue;
@@ -158,43 +161,40 @@ a {
   border: 1px solid grey;
 }
 /* footer */
-.socialicon,
-.fnav {
+footer {
+  font-family: Poppins, sans-serif;
+  position: relative;
+  width: 100%;
+  background: rgb(33, 37, 41);
+  min-height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.footerNav {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 10px 0;
 }
-.socialicon li,
-.fnav li {
-  list-style: none;
+.footerNav h6:hover {
+  color: dodgerblue;
+  transform: translateY(5px);
 }
-.ficon {
-  font-size: 2em;
-  color: #fff;
-  margin: 0 10px;
-  display: inline-block;
-  transition: 0.5s;
-}
-.ficon:hover {
-  transform: translateY(-10px);
-}
-.fnav h6:hover {
-  color: indigo;
-}
-.fnav h6 {
-  font-size: 2em;
+.footerNav h6 {
+  font-size: 1.4em;
   color: #fff;
   margin: 0 10px;
   display: inline-block;
   text-decoration: none;
   opacity: 0.75;
 }
-.fnav h6:hover {
+.footerNav h6:hover {
   opacity: 1;
 }
-.fline {
+.fPara {
   margin-top: 15px;
   margin-bottom: 10px;
   text-align: center;
@@ -272,9 +272,8 @@ a {
 }
 
 #askTagsWrapper {
-  margin-top: 5px;
   border: 1px solid #ccc;
-  padding: 3px;
+  min-height: 42px;
 }
 #askTagsWrapper div {
   display: inline-block;

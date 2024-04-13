@@ -3,36 +3,30 @@ import { NavLink } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <>
-      <footer
-        style={{
-          fontFamily: "Poppins, sans-serif",
-          position: "relative",
-          width: "100%",
-          background: "black",
-          minHeight: "100px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column"
-        }}
-      >
-        <ul className="fnav">
-          <NavLink to={"/"}>
-            <h6>Home</h6>
-          </NavLink>
-          <NavLink to={"/about"}>
-            <h6>About</h6>
-          </NavLink>
-          <NavLink to={"/feedback"}>
-            <h6>Feedback</h6>
-          </NavLink>
-        </ul>
-        <p className="fline">
-          Copyright © 2021 Stackinflow Pvt. Ltd. All rights reserved.
-        </p>
-        <p className="fline">Made by Sunny Creations @ 2021</p>
-      </footer>
-    </>
+    <footer>
+      <ul className="footerNav">
+        <NavLink to={"/about"} target="_blank">
+          <h6>About</h6>
+        </NavLink>
+        <NavLink to={"/feedback"} target="_blank">
+          <h6>Feedback</h6>
+        </NavLink>
+      </ul>
+      <p className="fPara">
+        Copyright © 2021 Stackinflow Pvt. Ltd. All rights reserved.
+      </p>
+      <p className="fPara">
+        Made by{" "}
+        <a
+          href="https://sunny.is-a.dev"
+          target="_blank"
+          rel="noreferrer"
+          style={{ color: "white", textDecoration: "none" }}
+        >
+          Sunny Creations
+        </a>{" "}
+        @ 2021
+      </p>
+    </footer>
   );
 }
