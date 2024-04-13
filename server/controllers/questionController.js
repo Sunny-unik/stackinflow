@@ -158,7 +158,10 @@ const questionController = {
   },
 
   createQuestion: async (req, res) => {
-    const question = new questionSchema(req.body);
+    const question = new questionSchema({
+      ...req.body,
+      tags: [...new Set(req.body.tags)]
+    });
     question
       .save()
       .then(async (result) => {

@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { tagRegex } from "../../helper/RegexHelper";
 import { authenticateUser } from "../../action/userAction";
 import AskQuestionGuide from "./AskQuestionGuide";
+import Dropdown from "./Dropdown";
 
 export default function AskQuestion(props) {
   const { questionTitle, questionDetails, questionTags } = props.location;
@@ -12,17 +13,16 @@ export default function AskQuestion(props) {
   const [askQTitle, setQTitle] = useState(questionTitle || "");
   const [askQDescription, setQDescription] = useState(questionDetails || "");
   const [askTags, setAskTags] = useState(
-    questionId && questionTags ? [...questionTags, ""] : []
+    questionId && questionTags ? questionTags : []
   );
   const [loader, setLoader] = useState(false);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const availableTags = ["js", "test", "java", "cpp", "CAD", "CI", "CD", "ts"];
 
   useEffect(() => {
-    if (!user) {
-      dispatch(authenticateUser());
-      return false;
-    } else if (questionId) {
+    if (!user) dispatch(authenticateUser());
+    else if (questionId) {
       if (!askQTitle)
         axios
           .get(`${process.env.REACT_APP_API_URL}/question?id=${questionId}`)
@@ -33,37 +33,22 @@ export default function AskQuestion(props) {
             setAskTags([...res.data.data.tags, ""]);
           })
           .catch((err) => console.log("In question fetch: ", err));
-    } else
+    } else {
       document
         .querySelectorAll(".extraLink")
         .forEach((elem) => elem?.classList.add("active"));
-    return () => {
-      document
-        .querySelectorAll(".extraLink")
-        .forEach((elem) => elem?.classList.remove("active"));
-    };
+      return () => {
+        document
+          .querySelectorAll(".extraLink")
+          .forEach((elem) => elem?.classList.remove("active"));
+      };
+    }
   }, [user, dispatch, questionId, askQTitle]);
 
-  const removeTag = useCallback(
-    (index) => {
-      const tags = [...askTags];
-      tags.splice(index, 1);
-      setAskTags(tags);
-    },
-    [askTags]
-  );
-
-  const getTagsToAppend = useCallback(() => {
-    const tags = [...askTags];
-    tags.splice(tags.length - 1, 1);
-    return tags;
-  }, [askTags]);
-
   const validQuestion = useCallback(() => {
-    const errors = [],
-      tagsToAppend = getTagsToAppend();
+    const errors = [];
     // valid tags which doesn't includes symbol & empty space at any position
-    const validTags = tagsToAppend.filter((tag) => tagRegex.test(tag.trim())),
+    const validTags = askTags.filter((tag) => tagRegex.test(tag.trim())),
       qTitle = askQTitle.trim(),
       qDescription = askQDescription.trim();
 
@@ -71,9 +56,9 @@ export default function AskQuestion(props) {
       errors.push("title's characters length must in between 4 to 151");
     if (qDescription.length < 5 || qDescription.length > 5001)
       errors.push("description's characters length must in between 5 to 5000");
-    if (tagsToAppend.length < 0 || tagsToAppend.length > 5)
+    if (askTags.length < 0 || askTags.length > 5)
       errors.push("number of tags must in between 1 to 5");
-    if (validTags.length !== tagsToAppend.length)
+    if (validTags.length !== askTags.length)
       errors.push("tags can't includes symbol & empty spaces at any position");
 
     if (!!errors.length) {
@@ -82,12 +67,11 @@ export default function AskQuestion(props) {
       setLoader(false);
     }
     return !errors.length;
-  }, [askQDescription, askQTitle, getTagsToAppend]);
+  }, [askQDescription, askQTitle, askTags]);
 
   const validUniqueTitle = useCallback(async () => {
     let validTitle = true;
     try {
-      console.log(askQTitle);
       const res = await axios.get(
         `${
           process.env.REACT_APP_API_URL
@@ -114,27 +98,21 @@ export default function AskQuestion(props) {
     axios
       .post(`${process.env.REACT_APP_API_URL}/question`, {
         question: askQTitle.trim(),
-        tags: getTagsToAppend(),
+        tags: askTags,
         userId: user._id,
         questiondetail: askQDescription.trim()
       })
       .then(() => alert("Question listed successfully."))
       .catch(() => alert("Some server-side error occurred, try again later."))
       .finally(() => setLoader(false));
-  }, [
-    getTagsToAppend,
-    askQDescription,
-    askQTitle,
-    user?._id,
-    validUniqueTitle
-  ]);
+  }, [askTags, askQDescription, askQTitle, user?._id, validUniqueTitle]);
 
   const updateQuestion = useCallback(async () => {
     if (!validUniqueTitle) return false;
     axios
       .put(`${process.env.REACT_APP_API_URL}/question/`, {
         question: askQTitle.trim(),
-        tags: getTagsToAppend(),
+        tags: askTags,
         id: questionId,
         questionDetail: askQDescription.trim()
       })
@@ -154,7 +132,7 @@ export default function AskQuestion(props) {
     askQTitle,
     askQDescription,
     questionId,
-    getTagsToAppend,
+    askTags,
     props.history,
     validUniqueTitle
   ]);
@@ -208,37 +186,7 @@ export default function AskQuestion(props) {
                 required
                 rows="7"
               ></textarea>
-              <label htmlFor="askTag">
-                <b>Enter tags related to questions</b>
-                <br />
-                Add up to 5 tags to describe what your question is about
-              </label>
-              {getTagsToAppend().length ? (
-                <div id="askTagsWrapper">
-                  {getTagsToAppend().map((tag, i) => (
-                    <div id={"askTagSpan" + i} key={"askTagSpan" + i}>
-                      {tag.trim()}
-                      <span
-                        onClick={(e) =>
-                          removeTag(e.target.parentElement.id.at(-1))
-                        }
-                      >
-                        X
-                      </span>{" "}
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-              <input
-                className="mb-3 mt-1"
-                type="text"
-                value={askTags.join(" ")}
-                onChange={({ target }) => setAskTags(target.value.split(" "))}
-                placeholder="Enter tags related to question"
-                name="askTag"
-                id="askTag"
-                required
-              />
+              <Dropdown {...{ availableTags, setAskTags, askTags }} />
               <button
                 className="submitFormBtn btn btn-primary"
                 style={{ boxShadow: " .08em .2em #888888" }}
