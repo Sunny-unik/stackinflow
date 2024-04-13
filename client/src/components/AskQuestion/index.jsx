@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { NavLink, useParams } from "react-router-dom";
-import { tagRegex } from "../helper/RegexHelper";
-import { authenticateUser } from "../action/userAction";
+import { useParams } from "react-router-dom";
+import { tagRegex } from "../../helper/RegexHelper";
+import { authenticateUser } from "../../action/userAction";
+import AskQuestionGuide from "./AskQuestionGuide";
 
 export default function AskQuestion(props) {
   const { questionTitle, questionDetails, questionTags } = props.location;
@@ -57,10 +58,6 @@ export default function AskQuestion(props) {
     tags.splice(tags.length - 1, 1);
     return tags;
   }, [askTags]);
-
-  const handleInputChange = useCallback(({ target }) => {
-    setAskTags(target.value.split(" "));
-  }, []);
 
   const validQuestion = useCallback(() => {
     const errors = [],
@@ -167,8 +164,7 @@ export default function AskQuestion(props) {
       {user && (
         <div className="ask m-0 mb-1">
           <h1 className="p-2">
-            {" "}
-            {questionId ? " Edit Question " : "Ask a public question"}{" "}
+            {questionId ? " Edit Question " : " Ask a public question"}{" "}
           </h1>
           <div className="d-md-flex">
             <form
@@ -237,7 +233,7 @@ export default function AskQuestion(props) {
                 className="mb-3 mt-1"
                 type="text"
                 value={askTags.join(" ")}
-                onChange={handleInputChange}
+                onChange={({ target }) => setAskTags(target.value.split(" "))}
                 placeholder="Enter tags related to question"
                 name="askTag"
                 id="askTag"
@@ -257,66 +253,8 @@ export default function AskQuestion(props) {
                   </div>
                 )}
               </button>
-              <style>{`
-                .submitFormBtn:hover {
-                  color: pink !important;
-                }
-                .submitFormBtn:focus {
-                  color: pink !important;
-                }
-              `}</style>
             </form>
-            <div className="col-md-4 col-sm-11 d-inline-block mb-4 mx-1 card">
-              <div className="card-header text-center">
-                <h4>Tips for your question</h4>
-              </div>
-              <p className="p-2">
-                The community is here to help you with specific coding,
-                algorithm, or language problems.
-                <br />
-                Avoid asking opinion-based questions.
-              </p>
-              <details className="p-2">
-                <summary style={{ fontFamily: "sans-serif" }}>
-                  <h5 className="d-inline-block">1. Summarize the problem</h5>
-                </summary>
-                <p className="px-3 py-1">
-                  Include details about your goal Describe expected and actual
-                  results Include any error messages
-                </p>
-              </details>
-              <details className="p-2">
-                <summary style={{ fontFamily: "sans-serif" }}>
-                  <h5 className="d-inline-block">
-                    2. Describe what you’ve tried
-                  </h5>
-                </summary>
-                <p className="px-3 py-1">
-                  Show what you’ve tried and tell us what you found (on this
-                  site or elsewhere) and why it didn’t meet your needs. You can
-                  get better answers when you provide research.
-                </p>
-              </details>
-              <details className="p-2">
-                <summary style={{ fontFamily: "sans-serif" }}>
-                  <h5 className="d-inline-block">3. How to tag</h5>
-                </summary>
-                <p>Tags help the right people find and answer your question.</p>
-                <li>
-                  Identify your tags by completing the sentence, "My question is
-                  about…"
-                </li>
-                <li>
-                  Include tags that are crucial to your question only, like{" "}
-                  <NavLink to="/questionsBy/java">java</NavLink>
-                </li>
-                <li>
-                  Only include version numbers, like c#-4.0, when absolutely
-                  necessary
-                </li>
-                <li>Use existing popular tags</li>
-              </details>
-            </div>
+            <AskQuestionGuide />
           </div>
         </div>
       )}
