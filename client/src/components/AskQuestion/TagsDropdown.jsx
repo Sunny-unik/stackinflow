@@ -1,46 +1,55 @@
 import React, { useCallback, useRef, useState } from "react";
 import { useEffect } from "react";
+import axios from "axios";
 
-export default function Dropdown({ availableTags, askTags, setAskTags }) {
-  const [ValidTags, setValidTags] = useState(
-    availableTags.filter((t) => !askTags.includes(t)) || []
-  );
-  const dropdownBtn = useRef(null);
-  const dropdownInput = useRef(null);
-  const dropdownList = useRef(null);
+export default function TagsDropdown({ askTags, setAskTags }) {
+  const [ValidTags, setValidTags] = useState([]),
+    dropdownBtn = useRef(null),
+    dropdownInput = useRef(null),
+    dropdownList = useRef(null);
 
-  const dropdownInputFocus = () => dropdownInput.current.focus();
-  const handleInputKeyDown = (event) => {
-    if (event.key === "Tab" && !event.shiftKey) {
-      event.preventDefault();
-      dropdownList.current.firstChild.focus();
-    }
-  };
-  const handleListKeyDown = (event) => {
-    if (
-      event.key === "Tab" &&
-      event.shiftKey &&
-      !event.target.previousSibling
-    ) {
-      event.preventDefault();
-      dropdownInput.current.focus();
-    } else if (
-      event.key === "Tab" &&
-      !event.shiftKey &&
-      !event.target.nextSibling
-    ) {
-      event.preventDefault();
-      dropdownList.current
-        .closest(".dropdown")
-        .parentElement.parentElement.querySelector("button.submitFormBtn")
-        .focus();
-    }
-  };
+  const dropdownInputFocus = () => dropdownInput.current.focus(),
+    handleInputKeyDown = (event) => {
+      if (event.key === "Tab" && !event.shiftKey) {
+        event.preventDefault();
+        dropdownList.current.firstChild.focus();
+      }
+    },
+    handleListKeyDown = (event) => {
+      if (
+        event.key === "Tab" &&
+        event.shiftKey &&
+        !event.target.previousSibling
+      ) {
+        event.preventDefault();
+        dropdownInput.current.focus();
+      } else if (
+        event.key === "Tab" &&
+        !event.shiftKey &&
+        !event.target.nextSibling
+      ) {
+        event.preventDefault();
+        dropdownList.current
+          .closest(".dropdown")
+          .parentElement.parentElement.querySelector("button.submitFormBtn")
+          .focus();
+      }
+    };
 
   useEffect(() => {
     const listRef = dropdownList.current,
       inputRef = dropdownInput.current,
       btnRef = dropdownBtn.current;
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/tag/on-page?limit=1000`)
+      .then((res) => {
+        const tags = [];
+        res.data.data.forEach(
+          ({ name }) => !askTags.includes(name) && tags.push(name)
+        );
+        setValidTags(tags);
+      })
+      .catch(() => console.log("Unable to fetch tags now, try again later"));
     dropdownList.current.addEventListener("keydown", handleListKeyDown);
     dropdownInput.current.addEventListener("keydown", handleInputKeyDown);
     dropdownBtn.current.addEventListener("click", dropdownInputFocus);
@@ -49,7 +58,20 @@ export default function Dropdown({ availableTags, askTags, setAskTags }) {
       inputRef.removeEventListener("keydown", handleInputKeyDown);
       btnRef.removeEventListener("click", dropdownInputFocus);
     };
-  }, []);
+  }, [askTags]);
+
+  const handleInputChange = useCallback(
+    ({ target }) => {
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/tag/search?search=${target.value}`,
+          { askedTags: askTags }
+        )
+        .then((res) => setValidTags(res.data.data.map((t) => t.name)))
+        .catch(() => console.log("Unable to fetch tags now, try again later"));
+    },
+    [askTags]
+  );
 
   const removeTag = useCallback(
     (index) => {
@@ -99,15 +121,7 @@ export default function Dropdown({ availableTags, askTags, setAskTags }) {
               type="text"
               tabIndex={0}
               placeholder="Search tags.."
-              onChange={({ target }) =>
-                setValidTags(
-                  availableTags.filter(
-                    (t) =>
-                      t.toLowerCase().includes(target.value.toLowerCase()) &&
-                      !askTags.includes(t)
-                  )
-                )
-              }
+              onChange={handleInputChange}
               name="askTag"
               id="askTag"
             />

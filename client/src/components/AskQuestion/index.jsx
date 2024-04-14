@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { tagRegex } from "../../helper/RegexHelper";
 import { authenticateUser } from "../../action/userAction";
 import AskQuestionGuide from "./AskQuestionGuide";
-import Dropdown from "./Dropdown";
+import TagsDropdown from "./TagsDropdown";
 
 export default function AskQuestion(props) {
   const { questionTitle, questionDetails, questionTags } = props.location;
@@ -18,11 +18,10 @@ export default function AskQuestion(props) {
   const [loader, setLoader] = useState(false);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const availableTags = ["js", "test", "java", "cpp", "CAD", "CI", "CD", "ts"];
 
   useEffect(() => {
     if (!user) dispatch(authenticateUser());
-    else if (questionId) {
+    if (questionId) {
       if (!askQTitle)
         axios
           .get(`${process.env.REACT_APP_API_URL}/question?id=${questionId}`)
@@ -186,7 +185,7 @@ export default function AskQuestion(props) {
                 required
                 rows="7"
               ></textarea>
-              <Dropdown {...{ availableTags, setAskTags, askTags }} />
+              <TagsDropdown {...{ setAskTags, askTags }} />
               <button
                 className="submitFormBtn btn btn-primary"
                 style={{ boxShadow: " .08em .2em #888888" }}

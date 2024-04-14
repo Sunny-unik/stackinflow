@@ -11,7 +11,7 @@ const tagController = {
   countTags: async (req, res) => {
     const { key, value } = req.query;
     const query = key && value ? { [key]: value } : {};
-    await tagSchema
+    tagSchema
       .countDocuments(query)
       .then((count) => res.send({ msg: "success", data: count }))
       .catch((err) => res.status(500).send(err));
@@ -28,13 +28,29 @@ const tagController = {
       newest: { createdAt: -1 },
       name: { name: 1 }
     };
-    await tagSchema
+    tagSchema
       .find()
       .sort(sortBy[type] || sortBy["popular"])
       .limit(limit * 1)
       .skip(page * 1 * limit)
       .then((tags) => res.send({ data: tags, msg: "success" }))
       .catch((err) => res.status(500).send(err));
+  },
+
+  tagsSearch: async (req, res) => {
+    const { search, limit, page } = req.query;
+    const { askedTags } = req.body;
+    tagSchema
+      .find({
+        $and: [
+          { name: { $regex: search, $options: "i" } },
+          { name: { $nin: askedTags || [] } }
+        ]
+      })
+      .limit((+limit || 20) * 1)
+      .skip((+page || 0) * 1 * (+limit || 20))
+      .then((tags) => res.send({ data: tags, msg: "success" }))
+      .catch((err) => res.send(err));
   }
 };
 
