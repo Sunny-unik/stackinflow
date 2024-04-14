@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import { debounce } from "lodash";
 
 export default function TagsDropdown({ askTags, setAskTags }) {
   const [ValidTags, setValidTags] = useState([]),
@@ -60,8 +61,9 @@ export default function TagsDropdown({ askTags, setAskTags }) {
     };
   }, [askTags]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleInputChange = useCallback(
-    ({ target }) => {
+    debounce(({ target }) => {
       axios
         .post(
           `${process.env.REACT_APP_API_URL}/tag/search?search=${target.value}`,
@@ -69,7 +71,7 @@ export default function TagsDropdown({ askTags, setAskTags }) {
         )
         .then((res) => setValidTags(res.data.data.map((t) => t.name)))
         .catch(() => console.log("Unable to fetch tags now, try again later"));
-    },
+    }, 300),
     [askTags]
   );
 
