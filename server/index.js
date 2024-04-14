@@ -8,6 +8,7 @@ const questionRoutes = require("./routes/questionRoutes");
 const userRoutes = require("./routes/userRoutes");
 const answerRoutes = require("./routes/answerRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
+const tagRoutes = require("./routes/tagRoutes");
 const cookieParser = require("cookie-parser");
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.use("/question", questionRoutes);
 app.use("/user", userRoutes);
 app.use("/answer", answerRoutes);
 app.use("/", feedbackRoutes);
+app.use("/tag", tagRoutes);
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`Server live on http://localhost:${port}`));
