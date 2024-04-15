@@ -15,10 +15,22 @@ const tagSchema = new Schema(
     },
     questionsCount: {
       type: Number,
-      default: 0
+      default: 0,
+      min: 0
     }
   },
   { timestamps: true }
 );
+
+tagSchema.pre("updateOne", async function (next) {
+  const docToUpdate = await this.model.findOne(this.getQuery());
+  if (docToUpdate.questionsCount + this.getUpdate().$inc.questionsCount < 0) {
+    const err = new Error(
+      "Updating questionsCount would result in a negative value"
+    );
+    return next(err);
+  }
+  next();
+});
 
 module.exports = mongoose.model("tags", tagSchema);

@@ -1,5 +1,6 @@
 const answerSchema = require("../models/answerSchema");
 const questionSchema = require("../models/questionSchema");
+const tagSchema = require("../models/tagSchema");
 const userController = require("./userController");
 
 const questionController = {
@@ -134,13 +135,13 @@ const questionController = {
   questionsSearch: async (req, res) => {
     const { search, qid } = req.query;
     const queries = [{ question: { $regex: search, $options: "i" } }];
-    if (qid) queries[1] = { _id: { $ne: qid } };
+    if (qid && qid !== "undefined") queries[1] = { _id: { $ne: qid } };
     questionSchema
       .find({ $and: queries })
       .select("_id question userId date qlikes tags")
       .populate("userId", "_id dname userlikes")
       .then((questions) => res.send({ data: questions, msg: "success" }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   questionById: async (req, res) => {
@@ -158,14 +159,13 @@ const questionController = {
   },
 
   createQuestion: async (req, res) => {
-    const question = new questionSchema({
-      ...req.body,
-      tags: [...new Set(req.body.tags)]
-    });
+    const uniqueTags = [...new Set(req.body.tags)];
+    const question = new questionSchema({ ...req.body, tags: uniqueTags });
     question
       .save()
       .then(async (result) => {
         await userController.updateUserPoint({ body: { id: req.body.userId } });
+        await updateTagsQuestionCount(null, uniqueTags);
         res.send({ data: result, msg: "Question listed successfully" });
       })
       .catch((err) => res.status(500).send(err));
@@ -208,6 +208,14 @@ const questionController = {
 
   updateQuestion: async (req, res) => {
     const { userId } = req.decoded;
+    let question;
+    try {
+      question = await questionSchema.findOne({
+        $and: [{ _id: req.body.id }, { userId: userId }]
+      });
+    } catch (error) {
+      return res.status(500).send(error);
+    }
     questionSchema
       .updateOne(
         { $and: [{ _id: req.body.id }, { userId: userId }] },
@@ -219,13 +227,14 @@ const questionController = {
           }
         }
       )
-      .then((result) => {
+      .then(async (result) => {
         const { modifiedCount, matchedCount } = result;
         if (!matchedCount)
           return res.send({
             data: null,
             msg: "Not authorized to perform this action"
           });
+        await updateTagsQuestionCount(question.tags, req.body.tags);
         res.send({
           data: result,
           msg: modifiedCount
@@ -238,3 +247,28 @@ const questionController = {
 };
 
 module.exports = questionController;
+
+async function updateTagsQuestionCount(
+  questionTags,
+  updatedTags,
+  countOperation = 1
+) {
+  try {
+    if (!questionTags) {
+      return await Promise.all(
+        updatedTags.map(async (tag) => {
+          await tagSchema.updateOne(
+            { name: tag },
+            { $inc: { questionsCount: countOperation } }
+          );
+        })
+      );
+    }
+    const newTags = updatedTags.filter((t) => !questionTags.includes(t)),
+      removedTags = questionTags.filter((t) => !updatedTags.includes(t));
+    await updateTagsQuestionCount(null, newTags);
+    await updateTagsQuestionCount(null, removedTags, -1);
+  } catch (error) {
+    return false;
+  }
+}
