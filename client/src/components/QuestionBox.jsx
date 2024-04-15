@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import handleDate from "../helper/dateHelper";
-import "./css/qls.css";
+import "../css/qls.css";
 
 export default function QuestionBox({
   dataAos,

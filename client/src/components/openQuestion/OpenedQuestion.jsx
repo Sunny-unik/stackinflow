@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import "../css/qls.css";
+import "../../css/qls.css";
 import Spinner from "../Spinner";
 import handleDate from "../../helper/dateHelper";
 import LikeButton from "./LikeButton";
