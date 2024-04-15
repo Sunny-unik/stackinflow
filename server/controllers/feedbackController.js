@@ -1,10 +1,13 @@
 const sendMail = require("../helpers/mailer");
 const feedbackSchema = require("../models/feedbackSchema");
-const userSchema = require("../models/userSchema");
+const requestSchema = require("../models/requestSchema");
 
 const feedbackController = {
-  addFeedback: async (req, res) => {
-    const feedback = await new feedbackSchema(req.body);
+  addFeedback: (req, res) => {
+    const { isTagRequest } = req.body;
+    const feedback = new (isTagRequest ? requestSchema : feedbackSchema)(
+      req.body
+    );
     feedback
       .save()
       .then((result) => {
@@ -14,10 +17,15 @@ const feedbackController = {
           req.query.userEmail,
           "Thanks for submit your feedback",
           `<h2>stackinflow</h2><br>
-          <h4> Your Feedback Sent SuccessFull </h4><br>
+          <h4> Your ${
+            isTagRequest ? "Request" : "Feedback"
+          } Sent SuccessFully </h4><br>
           <h6>We hope you find our service cool.</h6><br>`
         );
-        res.send({ data: result, msg: "Your feedback submitted" });
+        res.send({
+          data: result,
+          msg: `Your ${isTagRequest ? "Request" : "Feedback"} submitted`
+        });
       })
       .catch((err) => res.send(err));
   },

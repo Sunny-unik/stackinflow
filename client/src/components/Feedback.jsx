@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { tagRegex } from "../helper/RegexHelper";
 
 export default function Feedback() {
   const isTagRequest = useParams().type?.toLowerCase() === "tag";
@@ -42,22 +41,22 @@ export default function Feedback() {
   const submitFeedback = useCallback(
     async (e) => {
       e.preventDefault();
-      if (!user) return alert("For submit feedback you need to login first");
+      if (!user)
+        return alert(
+          `For submit ${
+            isTagRequest ? "request" : "feedback"
+          } you need to login first`
+        );
       const errors = [],
-        tagsToAppend = getTagsToAppend(),
-        validTags = tagsToAppend.filter((tag) => tagRegex.test(tag.trim()));
+        tagsToAppend = getTagsToAppend();
       setLoader(true);
 
       if (FeedbackHead.trim().length > 73 || FeedbackHead.trim().length < 4)
         errors.push("Feedback title length must between 4 to 73");
       if (FeedbackBody.trim().length > 1000 || FeedbackBody.trim().length < 6)
-        errors.push("Feedback explaination length must between 10 to 1000");
-      if (tagsToAppend.length < 0 || tagsToAppend.length > 5)
+        errors.push("Feedback explanation length must between 10 to 1000");
+      if (isTagRequest && (tagsToAppend.length < 1 || tagsToAppend.length > 5))
         errors.push("number of tags must in between 1 to 5");
-      if (validTags.length !== tagsToAppend.length)
-        errors.push(
-          "tags can't includes symbol & empty spaces at any position"
-        );
 
       if (!!errors.length) {
         const errorsString = errors.join(",\n");
@@ -74,8 +73,9 @@ export default function Feedback() {
           {
             title: FeedbackHead,
             description: FeedbackBody,
-            conclusion: FeedbackFoot,
-            userId: user._id
+            [isTagRequest ? "tags" : "conclusion"]: FeedbackFoot,
+            userId: user._id,
+            isTagRequest
           }
         )
         .then(
@@ -86,7 +86,14 @@ export default function Feedback() {
         );
       setLoader(false);
     },
-    [FeedbackHead, FeedbackBody, FeedbackFoot, user]
+    [
+      FeedbackHead,
+      FeedbackBody,
+      FeedbackFoot,
+      user,
+      getTagsToAppend,
+      isTagRequest
+    ]
   );
 
   return (
@@ -118,14 +125,16 @@ export default function Feedback() {
             id="eHead"
             disabled={isTagRequest}
             required
-            style={{ width: "90%" }}
+            className="w-100 px-2"
           />
         </div>
         <br />
         <div className="card-body bg-light">
           <label htmlFor="eBody">
             <b>
-              Explain why you want to add these tags
+              {isTagRequest
+                ? "Explain why you want to add these tags"
+                : "Explain which features you like most about our service or fields where need to improve"}
               <span className="text-danger"> *</span>
             </b>
           </label>
@@ -138,18 +147,18 @@ export default function Feedback() {
             id="eBody"
             required
             rows="7"
-            style={{ width: "90%" }}
+            className="w-100 px-2"
           ></textarea>
           <br />
         </div>
         <br />
         <div className="card-footer">
           <label htmlFor="eFoot">
-            <b>Enter tags related to questions</b>
-            <br />
-            Add up to 5 tags to describe what your question is about
+            <b>
+              {isTagRequest ? "Add up to 5 tags to add" : "Optional conclusion"}
+            </b>
           </label>
-          {getTagsToAppend().length ? (
+          {isTagRequest ? (
             <div id="askTagsWrapper">
               {getTagsToAppend().map((tag, i) => (
                 <div id={"askTagSpan" + i} key={"askTagSpan" + i}>
@@ -170,12 +179,12 @@ export default function Feedback() {
             placeholder={
               isTagRequest
                 ? "Enter tags you want to add"
-                : "Enter footer content or conclusion"
+                : "Enter summary, short-note or conclusion"
             }
             name="FeedbackFoot"
             id="eFoot"
             required
-            style={{ width: "90%" }}
+            className={"w-100 px-2 " + (isTagRequest ? "mt-2" : "")}
           />
         </div>
         <br />
