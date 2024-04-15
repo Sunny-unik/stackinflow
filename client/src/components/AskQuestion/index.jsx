@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { tagRegex } from "../../helper/RegexHelper";
 import { authenticateUser } from "../../action/userAction";
 import AskQuestionGuide from "./AskQuestionGuide";
 import TagsDropdown from "./TagsDropdown";
@@ -29,7 +28,7 @@ export default function AskQuestion(props) {
             console.log(res.data.data);
             setQTitle(res.data.data.question);
             setQDescription(res.data.data.questiondetail);
-            setAskTags([...res.data.data.tags, ""]);
+            setAskTags([...res.data.data.tags]);
           })
           .catch((err) => console.log("In question fetch: ", err));
     } else {
@@ -45,9 +44,7 @@ export default function AskQuestion(props) {
   }, [user, dispatch, questionId, askQTitle]);
 
   const validQuestion = useCallback(() => {
-    const errors = [];
-    // valid tags which doesn't includes symbol & empty space at any position
-    const validTags = askTags.filter((tag) => tagRegex.test(tag.trim())),
+    const errors = [],
       qTitle = askQTitle.trim(),
       qDescription = askQDescription.trim();
 
@@ -55,10 +52,8 @@ export default function AskQuestion(props) {
       errors.push("title's characters length must in between 4 to 151");
     if (qDescription.length < 5 || qDescription.length > 5001)
       errors.push("description's characters length must in between 5 to 5000");
-    if (askTags.length < 0 || askTags.length > 5)
+    if (askTags.length < 1 || askTags.length > 5)
       errors.push("number of tags must in between 1 to 5");
-    if (validTags.length !== askTags.length)
-      errors.push("tags can't includes symbol & empty spaces at any position");
 
     if (!!errors.length) {
       const errorsString = errors.join(",\n");
@@ -93,7 +88,7 @@ export default function AskQuestion(props) {
   }, [askQTitle, questionId]);
 
   const postQuestion = useCallback(async () => {
-    if (!validUniqueTitle) return false;
+    if (!(await validUniqueTitle())) return false;
     axios
       .post(`${process.env.REACT_APP_API_URL}/question`, {
         question: askQTitle.trim(),
@@ -107,7 +102,7 @@ export default function AskQuestion(props) {
   }, [askTags, askQDescription, askQTitle, user?._id, validUniqueTitle]);
 
   const updateQuestion = useCallback(async () => {
-    if (!validUniqueTitle) return false;
+    if (!(await validUniqueTitle())) return false;
     axios
       .put(`${process.env.REACT_APP_API_URL}/question/`, {
         question: askQTitle.trim(),
