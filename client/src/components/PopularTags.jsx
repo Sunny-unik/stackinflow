@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { FcSearch } from "react-icons/fc";
-import Spinner from "./Spinner";
+import Spinner from "./loadings/Spinner";
 
 export default function Populartags(props) {
   const [question, setquestion] = useState([]);

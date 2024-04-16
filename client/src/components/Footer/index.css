@@ -1,0 +1,41 @@
+/* footer */
+footer {
+  font-family: Poppins, sans-serif;
+  position: relative;
+  width: 100%;
+  background: rgb(33, 37, 41);
+  min-height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.footerNav {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.footerNav h6:hover {
+  color: dodgerblue;
+  transform: translateY(5px);
+  opacity: 1;
+}
+.footerNav h6 {
+  font-size: 1.4em;
+  color: #fff;
+  margin: 0 10px;
+  display: inline-block;
+  opacity: 0.75;
+}
+
+.fPara {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #fff;
+  font-size: 1.1rem;
+}

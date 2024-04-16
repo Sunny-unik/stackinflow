@@ -2,36 +2,36 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import Spinner from "./Spinner";
-import Reactpaginate from "react-paginate";
+import Spinner from "./loadings/Spinner";
+import ReactPaginate from "react-paginate";
 import QuestionBox from "./QuestionBox";
 
-export default function Allquestions() {
-  const [questionsLength, setquestionsLength] = useState();
-  const [questions, setquestions] = useState();
+export default function AllQuestions() {
+  const [questionsLength, setQuestionsLength] = useState();
+  const [questions, setQuestions] = useState();
   const limit = 8;
-  let currentpage = { selected: 0 };
+  let currentPage = { selected: 0 };
 
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/question/count`)
-      .then((res) => setquestionsLength(res.data.data))
+      .then((res) => setQuestionsLength(res.data.data))
       .catch((err) => console.log(err));
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/question/onpage?page=${currentpage.selected}&limit=${limit}`
+        `${process.env.REACT_APP_API_URL}/question/newest?page=${currentPage.selected}&limit=${limit}`
       )
-      .then((res) => setquestions(res.data.data))
+      .then((res) => setQuestions(res.data.data))
       .catch((err) => console.log(err));
-  }, [currentpage.selected]);
+  }, [currentPage.selected]);
 
   function pageChange(data) {
-    currentpage = data;
+    currentPage = data;
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/question/onpage?page=${currentpage.selected}&limit=${limit}`
+        `${process.env.REACT_APP_API_URL}/question/newest?page=${currentPage.selected}&limit=${limit}`
       )
-      .then((res) => setquestions(res.data.data))
+      .then((res) => setQuestions(res.data.data))
       .catch((err) => console.log(err));
   }
 
@@ -72,7 +72,7 @@ export default function Allquestions() {
               {questions && (
                 <div>
                   <div className="pt-3 pb-1">
-                    <Reactpaginate
+                    <ReactPaginate
                       previousLabel={"<<"}
                       nextLabel={">>"}
                       breakLabel={"..."}

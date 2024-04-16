@@ -44,21 +44,12 @@ export default function SetPassword({ id, goto }) {
       data-aos-once="true"
       data-aos-duration="1000"
       className="col-md-5 col-lg-4"
-      id="loginpass"
     >
-      <form
-        className="d-inline-block"
-        style={{
-          padding: "3%",
-          margin: "4px 0",
-          borderRadius: "2%",
-          boxShadow: "3px 4px 3px 4px #888888"
-        }}
-      >
+      <form className="setPassword registerForm">
         <h1>Recreate Password</h1>
         <p>Please fill new password for login your account.</p>
-        <hr className="signuphr" />
-        <label htmlFor="newpassword" className="newpassword">
+        <hr className="skyBlueHr" />
+        <label htmlFor="newPassword" className="newPassword">
           <b>Enter New Password</b>
         </label>
         <div className="d-flex flex-grow-1">
@@ -66,11 +57,10 @@ export default function SetPassword({ id, goto }) {
             className="form-control"
             type={newPasswordType}
             value={newPassword}
-            style={{ fontFamily: "sans-serif" }}
             onChange={(e) => setNewPassword(e.target.value)}
             placeholder="new password"
-            name="newpassword"
-            id="newpassword"
+            name="newPassword"
+            id="newPassword"
             required
           />
           <span
@@ -84,7 +74,7 @@ export default function SetPassword({ id, goto }) {
             {newPasswordType === "text" ? <BsEyeSlashFill /> : <BsEyeFill />}
           </span>
         </div>
-        <label htmlFor="confirmpassword" className="confirmpassword">
+        <label htmlFor="confirmPassword" className="confirmPassword">
           <b>Confirm Entered Password</b>
         </label>
         <div className="d-flex flex-grow-1">
@@ -92,11 +82,10 @@ export default function SetPassword({ id, goto }) {
             className="form-control"
             type={confirmPasswordType}
             value={confirmPassword}
-            style={{ fontFamily: "sans-serif" }}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="confirm password"
-            name="confirmpassword"
-            id="confirmpassword"
+            name="confirmPassword"
+            id="confirmPassword"
             required
           />
           <span
@@ -114,30 +103,16 @@ export default function SetPassword({ id, goto }) {
             )}
           </span>
         </div>
-        <hr className="signuphr" />
+        <hr className="skyBlueHr" />
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
           <button
-            type="button"
-            className="loginBtn updateBtn"
-            style={{
-              fontFamily: "monospace",
-              fontSize: "large",
-              width: "46%",
-              boxShadow: "2px 3px 2px 3px #888888"
-            }}
+            className="updateBtn btn btn-primary w-50 me-1"
             onClick={otpLogin}
           >
             Submit
           </button>
           <button
-            type="button"
-            className="loginBtn cancelBtn"
-            style={{
-              fontFamily: "monospace",
-              fontSize: "large",
-              width: "46%",
-              boxShadow: "2px 3px 2px 3px #888888"
-            }}
+            className="cancelBtn btn btn-warning w-50 border ms-1"
             onClick={goto}
           >
             Cancel

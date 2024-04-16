@@ -1,0 +1,26 @@
+/* Login css */
+.forgotPasswordLink {
+  color: #0e73d8;
+  text-align: center;
+  margin: 2%;
+  font-weight: 700;
+  font-size: 1.8rem;
+  cursor: pointer;
+  font-family: "Franklin Gothic Medium", "poppins", "Arial Narrow", Arial,
+    sans-serif;
+}
+.forgotPasswordLink:hover {
+  color: navy;
+}
+
+/* set password */
+.updateBtn:hover,
+.updateBtn:focus {
+  background-color: #48cb2e;
+  color: black;
+}
+.cancelBtn:hover,
+.cancelBtn:focus {
+  background-color: rgb(253, 247, 226);
+  color: black;
+}

@@ -37,40 +37,23 @@ export default function ConfirmEmail({ setInSignup, _id, history }) {
       data-aos-duration="1000"
       className="col-md-5 col-lg-4 mt-4"
     >
-      <div
-        style={{
-          padding: "3%",
-          margin: "4px 0",
-          borderRadius: "2%",
-          boxShadow: "3px 4px 3px 2px #888888"
-        }}
-        onSubmit={otpCheck}
-      >
+      <div className="confirmEmail registerForm" onSubmit={otpCheck}>
         <h1 style={{ display: "inline-block", width: "82%" }}>Confirm Email</h1>
         <button
-          type="button"
           onClick={() => setInSignup(true)}
-          className="border btn btn-warning float-end p-2 px-3"
-          style={{
-            fontWeight: "600",
-            fontFamily: "sans-serif",
-            padding: "2% 1%",
-            margin: "0",
-            borderRadius: "10%",
-            boxShadow: "2px 3px 2px 3px #888888"
-          }}
+          className="border border-light btn btn-warning float-end shadow p-3 rounded py-2 mt-1"
         >
           <IoArrowUndoOutline />
         </button>
         <p>Otp sent on given email-address.</p>
-        <hr className="signuphr" />
+        <hr className="skyBlueHr" />
         <OtpForm
           onSubmitHandle={otpCheck}
           otpLength={6}
           inputType={"number"}
           labelText="Please fill 6 digit code to verify your account."
         />
-        <hr className="signuphr" />
+        <hr className="skyBlueHr" />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import "../css/otpForm.css";
+import "./index.css";
 
 export default function OtpForm({
   onSubmitHandle,

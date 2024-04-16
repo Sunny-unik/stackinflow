@@ -1,79 +1,45 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { FaHome, FaTags, FaUsers } from "react-icons/fa";
+import { RiQuestionnaireFill } from "react-icons/ri";
+import { TbPencilQuestion } from "react-icons/tb";
 
 export default function CanvasNav(props) {
   const user = useSelector((state) => state.user);
 
-  const sidelink = () => {
+  const sideLink = useCallback(() => {
     user
-      ? props.history.push("/askquestion")
+      ? props.history.push("/askQuestion")
       : alert("User need to login first");
-  };
+  }, [user, props]);
 
   return (
     <ul id="canvasNav" className="p-1">
       <li className="mt-2 p-1">
-        <NavLink
-          style={{
-            fontFamily: "serif",
-            fontSize: "1.4em",
-            textShadow: "0.02em 0.02em black"
-          }}
-          exact
-          to="/"
-        >
-          Home
+        <NavLink exact to="/">
+          <FaHome /> Home
         </NavLink>
       </li>
       <li className="mt-2 p-1">
-        <NavLink
-          style={{
-            fontFamily: "serif",
-            fontSize: "1.4em",
-            textShadow: "0.02em 0.02em black"
-          }}
-          to="/questions"
-        >
-          All Question
+        <NavLink to="/questions">
+          <RiQuestionnaireFill /> Questions
         </NavLink>
       </li>
       <li className="mt-2 p-1">
-        <NavLink
-          style={{
-            fontFamily: "serif",
-            fontSize: "1.4em",
-            textShadow: "0.02em 0.02em black"
-          }}
-          to="/popularTags"
-        >
-          Popular Tags
+        <NavLink to="/popularTags">
+          <FaTags /> Tags
         </NavLink>
       </li>
       <li className="mt-2 p-1">
-        <NavLink
-          style={{
-            fontFamily: "serif",
-            fontSize: "1.4em",
-            textShadow: "0.02em 0.02em black"
-          }}
-          to="/popularUsers"
-        >
-          Popular Users
+        <NavLink to="/popularUsers">
+          <FaUsers /> Users
         </NavLink>
       </li>
       <li className="mt-2 p-1">
-        <span
-          className="extraLink"
-          style={{
-            fontFamily: "serif",
-            textShadow: "0.02em 0.02em black",
-            fontSize: "1.4rem"
-          }}
-          onClick={sidelink}
-        >
-          Ask Question
-        </span>
+        <div className="extraLink" onClick={sideLink}>
+          <TbPencilQuestion /> Ask Question
+        </div>
       </li>
     </ul>
   );

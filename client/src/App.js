@@ -12,11 +12,12 @@ import {
   FaUserTie
 } from "react-icons/fa";
 import Home from "./components/home/Home";
-import Login from "./components/login/Login";
+import Login from "./components/Login";
 import Profile from "./components/profile/Profile";
-import Signup from "./components/signup/Signup";
+import Signup from "./components/SignUp";
 import SearchBox from "./components/searchQuestion/SearchBox";
 import CanvasNav from "./components/home/CanvasNav";
+import OverlayLoading from "./components/loadings/OverlayLoading";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -31,13 +32,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      {loading && (
-        <div className="overlay-loading">
-          <div className="uil-ring-css">
-            <div></div>
-          </div>
-        </div>
-      )}
+      {loading && <OverlayLoading />}
       <nav className="p-0 navbar navbar-expand-sm navbar-primary bg-dark sticky-top">
         <div className="container-lg">
           <button
@@ -71,9 +66,12 @@ export default function App() {
             <ul className="navbar-nav me-4 ms-4 text-center">
               {!user && (
                 <li className="nav-link me-1 ms-1">
-                  <NavLink activeClassName="activeTopNav" to="/login">
-                    <FaSignInAlt />
-                    LogIn
+                  <NavLink
+                    activeClassName="activeTopNav"
+                    className="p-2"
+                    to="/login"
+                  >
+                    <FaSignInAlt /> LogIn
                   </NavLink>
                 </li>
               )}
@@ -81,11 +79,10 @@ export default function App() {
                 <li className="nav-link me-1 ms-1">
                   <NavLink
                     activeClassName="activeTopNav"
+                    className="p-2"
                     to="/signup"
-                    style={{ fontFamily: "Monaco" }}
                   >
-                    <FaRegistered />
-                    SignIn
+                    <FaRegistered /> SignIn
                   </NavLink>
                 </li>
               )}

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import QuestionBox from "./QuestionBox";
-import Spinner from "./Spinner";
+import Spinner from "./loadings/Spinner";
 
 export default function QuestionsByTag(props) {
   const [questions, setquestions] = useState();

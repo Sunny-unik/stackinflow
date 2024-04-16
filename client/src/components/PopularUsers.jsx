@@ -4,7 +4,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { FcCollaboration, FcSearch } from "react-icons/fc";
 import { FaGithub, FaTwitter } from "react-icons/fa";
-import Spinner from "./Spinner";
+import Spinner from "./loadings/Spinner";
 import { NavLink } from "react-router-dom";
 
 export default function Popularusers(props) {

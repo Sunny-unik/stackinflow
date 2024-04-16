@@ -4,7 +4,7 @@ import { FaGithub, FaTwitter } from "react-icons/fa";
 import { FcCollaboration } from "react-icons/fc";
 import { IoLocationSharp } from "react-icons/io5";
 import QuestionBox from "./QuestionBox";
-import Spinner from "./Spinner";
+import Spinner from "./loadings/Spinner";
 
 export default function User(props) {
   const [userbyudn, setuserbyudn] = useState([]);

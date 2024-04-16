@@ -28,37 +28,26 @@ export default function ForgotPassword({ goto, _id }) {
       data-aos-once="true"
       data-aos-duration="1000"
       className="col-md-5 col-lg-4"
-      id="loginotp"
     >
-      <div
-        style={{
-          padding: "3%",
-          margin: "4px 0",
-          borderRadius: "2%",
-          boxShadow: "3px 4px 3px 2px #888888"
-        }}
-        onSubmit={otpCheck}
-      >
+      <div className="registerForm">
         <h2 style={{ display: "inline-block", width: "82%" }}>
           Forgot Password
         </h2>
         <button
-          to="/login"
-          type="button"
-          className="btn btn-primary float-end m-1"
+          className="border border-light btn btn-warning float-end shadow p-3 rounded py-2 mt-1"
           onClick={() => goto()}
         >
           <TbArrowBackUp />
         </button>
         <p>Otp sent on given email-address.</p>
-        <hr className="signuphr" />
+        <hr className="skyBlueHr" />
         <OtpForm
           onSubmitHandle={otpCheck}
           otpLength={6}
           inputType={"number"}
           labelText="Please fill 6 digit code to verify your account."
         />
-        <hr className="signuphr" />
+        <hr className="skyBlueHr" />
       </div>
     </div>
   );

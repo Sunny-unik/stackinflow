@@ -1,3 +1,5 @@
+import "../../css/registerForm.css";
+import "./index.css";
 import React, { useState, useEffect } from "react";
 import { checkLogin } from "../../action/userAction";
 import setLoading from "../../action/loadingAction";
@@ -16,12 +18,12 @@ export default function Login(props) {
   const [path, setPath] = useState("");
   const [id, setId] = useState("");
   const reduxUser = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     reduxUser && props.history.push("/");
   }, [reduxUser, props.history, path]);
 
-  const dispatch = useDispatch();
   const checkAuth = (event) => {
     event.preventDefault();
     dispatch(checkLogin({ email, password }));
@@ -55,7 +57,7 @@ export default function Login(props) {
   return (
     <React.Fragment>
       <div className="text-center">
-        <div className="container logincon">
+        <div className="container mx-auto p-0 d-inline-flex justify-content-center w-100">
           {path === "/setPassword" ? (
             <SetPassword id={id} goto={setPath} />
           ) : path === "/forgotPassword" ? (
@@ -65,22 +67,12 @@ export default function Login(props) {
               data-aos="flip-left"
               data-aos-once="true"
               data-aos-duration="500"
-              className="col-md-5 col-lg-4 "
-              id="logindetail"
+              className="col-md-5 col-lg-4"
             >
-              <form
-                className="d-inline-block"
-                style={{
-                  padding: "3%",
-                  margin: "4px 0",
-                  borderRadius: "2%",
-                  boxShadow: "4px 4px 3px 3px #888888"
-                }}
-                onSubmit={checkAuth}
-              >
+              <form className="login registerForm" onSubmit={checkAuth}>
                 <h1>Log In</h1>
                 <p>Please fill log in details for login your account.</p>
-                <hr className="signuphr" />
+                <hr className="skyBlueHr" />
                 <label htmlFor="email">
                   <b>Registered Email Or Username</b>
                 </label>
@@ -90,12 +82,11 @@ export default function Login(props) {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="example@eg.com"
                   name="email"
-                  style={{ fontFamily: "sans-serif" }}
                   id="email"
                   required
                 />
                 <label htmlFor="password" className="form-label">
-                  Your Password
+                  <b>Your Password</b>
                 </label>
                 <div className="d-flex flex-grow-1">
                   <input
@@ -107,7 +98,6 @@ export default function Login(props) {
                     name="password"
                     id="password"
                     required
-                    style={{ fontFamily: "sans-serif" }}
                   />
                   <span
                     className="btn align-self-center"
@@ -124,9 +114,9 @@ export default function Login(props) {
                     )}
                   </span>
                 </div>
-                <hr className="signuphr" />
-                <button className="loginBtn">Log In</button>
-                <hr className="signuphr" />
+                <hr className="skyBlueHr" />
+                <button className="registerBtn">Log In</button>
+                <hr className="skyBlueHr" />
                 <p className="forgotPasswordLink" onClick={updatePath}>
                   Forgot Password ?
                 </p>
