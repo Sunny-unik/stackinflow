@@ -11,12 +11,12 @@ import {
   FaTerminal,
   FaUserTie
 } from "react-icons/fa";
-import Home from "./components/home/Home";
+import Home from "./components/Home";
 import Login from "./components/Login";
-import Profile from "./components/profile/Profile";
-import Signup from "./components/SignUp";
-import SearchBox from "./components/searchQuestion/SearchBox";
-import CanvasNav from "./components/home/CanvasNav";
+import Profile from "./components/Profile";
+import Signup from "./components/Signup";
+import SearchBox from "./components/SearchQuestion/SearchBox";
+import CanvasNav from "./components/Home/CanvasNav";
 import OverlayLoading from "./components/loadings/OverlayLoading";
 
 export default function App() {

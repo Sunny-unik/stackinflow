@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import Spinner from "../loadings/Spinner";
-import QuestionBox from "../QuestionBox";
-import Error from "../Error";
+import Spinner from "./loadings/Spinner";
+import QuestionBox from "./QuestionBox";
+import Error from "./Error";
 
 export default function TopQuestions() {
   const [data, setData] = useState({
