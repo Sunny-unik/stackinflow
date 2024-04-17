@@ -8,12 +8,12 @@ import QuestionBox from "./QuestionBox";
 import Error from "./Error";
 import UseSearchParam from "../helper/UseSearchParam";
 
-export default function AllQuestions() {
+export default function AllQuestions({ history }) {
   const location = UseSearchParam(),
     limit = location.get("limit") || 4,
     pageNumber = +location.get("page") || 0,
     [currentPage, setCurrentPage] = useState({
-      selected: pageNumber < 0 ? 0 : pageNumber
+      selected: pageNumber < 1 ? 0 : pageNumber - 1
     }),
     [questionsLength, setQuestionsLength] = useState(),
     [questions, setQuestions] = useState({
@@ -37,7 +37,7 @@ export default function AllQuestions() {
       .catch((error = {}) =>
         setQuestions({ error, loading: false, data: null })
       );
-  }, [currentPage.selected, limit, location]);
+  }, [currentPage.selected, limit, pageNumber, history]);
 
   return (
     <div
@@ -83,7 +83,13 @@ export default function AllQuestions() {
                       marginPagesDisplayed={5}
                       pageCount={Math.floor(Math.ceil(questionsLength / limit))}
                       pageRangeDisplayed={2}
-                      onPageChange={setCurrentPage}
+                      onPageChange={(pageData) => {
+                        setCurrentPage(pageData);
+                        history.push({
+                          pathname: "/questions",
+                          search: "?page=" + (Number(pageData.selected) + 1)
+                        });
+                      }}
                       containerClassName={"pagination justify-content-center"}
                       pageClassName={"page-item"}
                       pageLinkClassName={"page-link"}
@@ -94,7 +100,11 @@ export default function AllQuestions() {
                       breakClassName={"page-item"}
                       breakLinkClassName={"page-link"}
                       activeClassName={"active"}
-                      initialPage={+currentPage.selected}
+                      initialPage={
+                        +currentPage.selected > 0
+                          ? +currentPage.selected
+                          : undefined
+                      }
                     />
                   </div>
                 </div>
