@@ -61,7 +61,7 @@ const userController = {
         result.password = undefined;
         res.send({ status: "ok", data: result });
       })
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   validEmail: (req, res) => {
@@ -71,7 +71,7 @@ const userController = {
       })
       .select("email")
       .then((result) => res.send(result ?? "valid email"))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   validDname: async (req, res) => {
@@ -90,7 +90,7 @@ const userController = {
         isDnameValid = result ?? "valid dname";
         res && res.send(isDnameValid);
       })
-      .catch((err) => res && res.send(err));
+      .catch((err) => res && res.status(500).send(err));
     return isDnameValid === "valid dname" ? true : false;
   },
 
@@ -203,7 +203,7 @@ const userController = {
         }
       )
       .then((result) => res.send({ data: result, msg: "Your details updated" }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   updateUserProfile: (req, res) => {
@@ -228,7 +228,7 @@ const userController = {
               console.log("Old profile delete error: ", error);
             }
           })
-          .catch((err) => res.send(err));
+          .catch((err) => res.status(500).send(err));
       })();
     });
   },
@@ -251,7 +251,7 @@ const userController = {
             : "Old password is not correct"
         })
       )
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   createUser: async (req, res) => {
@@ -302,7 +302,17 @@ const userController = {
         "_id name dname userlikes email about address gitlink title twitter weblink profile"
       )
       .then((user) => res.send({ data: user, msg: "success" }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
+  },
+
+  countUser: async (req, res) => {
+    const key = req.query.key;
+    const value = req.query.value;
+    const query = key && value ? { [key]: value } : {};
+    userSchema
+      .countDocuments(query)
+      .then((count) => res.send({ msg: "success", data: count }))
+      .catch((err) => res.status(500).send(err));
   },
 
   listUser: async (req, res) => {
@@ -310,7 +320,7 @@ const userController = {
       .find()
       .select("_id name dname userlikes password")
       .then((users) => res.send({ msg: users.length, data: users }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   userByLikes: async (req, res) => {
@@ -322,7 +332,7 @@ const userController = {
       .skip(page * 1 * limit)
       .select("_id name dname userlikes gitlink twitter weblink")
       .then((users) => res.send({ data: users, msg: "success" }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   }
 };
 

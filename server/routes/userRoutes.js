@@ -15,7 +15,8 @@ const {
   logout,
   userByLikes,
   checkOtp,
-  removeUnverified
+  removeUnverified,
+  countUser
 } = require("../controllers/userController");
 const validUser = require("../validations/validUser");
 const auth = require("../middleware/auth");
@@ -23,9 +24,10 @@ const auth = require("../middleware/auth");
 const router = express.Router();
 
 router.get("/list", listUser);
+router.get("/count", countUser);
 router.get("/", userById);
 router.get("/authenticate", auth, authenticate);
-router.get("/mostliked", userByLikes);
+router.get("/most-liked", userByLikes);
 router.get("/logout", logout);
 
 router.post("/", validUser(), createUser);

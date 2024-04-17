@@ -10,7 +10,7 @@ const questionController = {
       .select("_id question answers userId date qlikes tags")
       .populate("userId", "_id dname userlikes")
       .then((questions) => res.send({ msg: questions.length, data: questions }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   questionsPerUser: async (req, res) => {
@@ -23,7 +23,7 @@ const questionController = {
       .select("_id question userId date qlikes tags")
       .populate("userId", "_id dname userlikes")
       .then((questions) => res.send({ data: questions, msg: "success" }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   userLikedQuestions: async (req, res) => {
@@ -36,7 +36,7 @@ const questionController = {
       .select("_id question userId date qlikes tags")
       .populate("userId", "_id dname userlikes")
       .then((questions) => res.send({ data: questions, msg: "success" }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   questionByTag: async (req, res) => {
@@ -49,7 +49,7 @@ const questionController = {
       .select("_id question userId date qlikes tags")
       .populate("userId", "_id dname userlikes")
       .then((questions) => res.send({ data: questions, msg: "success" }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   countQuestions: async (req, res) => {
@@ -59,7 +59,7 @@ const questionController = {
     await questionSchema
       .countDocuments(query)
       .then((count) => res.send({ msg: "success", data: count }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   questionsPerPage: async (req, res) => {
@@ -72,7 +72,7 @@ const questionController = {
       .select("_id question userId date qlikes tags")
       .populate("userId", "_id dname userlikes")
       .then((questions) => res.send({ data: questions, msg: "success" }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   oldestWithLimit: async (req, res) => {
@@ -83,7 +83,7 @@ const questionController = {
       .select("_id question userId date qlikes tags")
       .populate("userId", "_id dname userlikes")
       .then((questions) => res.send({ data: questions, msg: "success" }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   mostLikedWithLimit: async (req, res) => {
@@ -105,7 +105,7 @@ const questionController = {
       })
       .unwind("userId")
       .then((questions) => res.send({ data: questions, msg: "success" }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   filterByAnswerWithLimit: async (req, res) => {
@@ -129,7 +129,7 @@ const questionController = {
       })
       .unwind("userId")
       .then((questions) => res.send({ data: questions, msg: "success" }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   },
 
   questionsSearch: async (req, res) => {
@@ -177,7 +177,7 @@ const questionController = {
       .then((result) =>
         res.send({ data: result, msg: "Like added successfully!" })
       )
-      .catch((error) => res.send(error));
+      .catch((error) => res.status(500).send(error));
   },
 
   removeQlike: async (req, res) => {
@@ -186,7 +186,7 @@ const questionController = {
       .then((result) =>
         res.send({ data: result, msg: "Like removed successfully!" })
       )
-      .catch((error) => res.send(error));
+      .catch((error) => res.status(500).send(error));
   },
 
   deleteQuestion: async (req, res) => {
