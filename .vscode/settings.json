@@ -28,5 +28,14 @@
   "typescript.format.insertSpaceAfterTypeAssertion": true,
   "prettier.printWidth": 100,
   "prettier.singleAttributePerLine": false,
-  "cSpell.words": ["dname", "qlikes", "questiondetail", "userlikes"]
+  "cSpell.words": [
+    "alikes",
+    "dname",
+    "gitlink",
+    "Qlike",
+    "qlikes",
+    "questiondetail",
+    "userlikes",
+    "weblink"
+  ]
 }
