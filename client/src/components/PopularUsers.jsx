@@ -6,43 +6,29 @@ import { FcCollaboration, FcSearch } from "react-icons/fc";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import Spinner from "./loadings/Spinner";
 import { NavLink } from "react-router-dom";
-import UseSearchParam from "../helper/UseSearchParam";
 import Error from "./Error";
-import Pagination from "./Pagination";
 
 export default function PopularUsers(props) {
-  const location = UseSearchParam(),
-    limit = location.get("limit") || 10,
-    pageNumber = +location.get("page") || 0,
-    [currentPage, setCurrentPage] = useState(
-      pageNumber < 1 ? 0 : pageNumber - 1
-    ),
-    [perPageLimit, setPerPageLimit] = useState(limit < 0 ? 10 : limit),
-    [usersLength, setUsersLength] = useState("{count loading...}"),
+  const [usersLength, setUsersLength] = useState("{count loading...}"),
+    [searchUser, setSearchUser] = useState(""),
     [users, setUsers] = useState({
       data: null,
       loading: true,
       error: null
-    }),
-    [searchUser, setSearchUser] = useState("");
+    });
 
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/user/count`)
       .then((res) => setUsersLength(res.data.data))
       .catch(() => setUsersLength("count failed"));
-  }, []);
-
-  useEffect(() => {
     axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/user/most-liked?page=${currentPage}&limit=${perPageLimit}`
-      )
+      .get(`${process.env.REACT_APP_API_URL}/user/most-liked`)
       .then(({ data }) =>
         setUsers({ data: data.data, loading: false, error: null })
       )
       .catch((error = {}) => setUsers({ error, loading: false, data: null }));
-  }, [currentPage, perPageLimit]);
+  }, []);
 
   function goToUser() {
     if (searchUser === null) alert("Enter some tags first in input box");
@@ -53,10 +39,14 @@ export default function PopularUsers(props) {
 
   return (
     <>
-      <div className="container pb-3 border border-2 border-top-0 border-start-0 border-end-0">
+      <div
+        data-count={usersLength}
+        className="container pb-3 border border-2 border-top-0 border-start-0 border-end-0"
+      >
         <h1 className="p-1">Popular Users</h1>
         <h4 className="fw-normal pb-2">
-          These all users are arranged in sequence as higher points to lowest.
+          These all users profiles are arranged in sequence as higher points to
+          lowest.
         </h4>
         <div className="row g-3">
           <div className="col-auto">
@@ -71,8 +61,15 @@ export default function PopularUsers(props) {
               value={searchUser}
             />
             <datalist id="userSearch">
-              {users.data &&
-                users.data.map((u) => <option value={u._id}>{u.dname}</option>)}
+              {users.data?.length ? (
+                <datalist id="userSearch">
+                  {users.data.map((u) => (
+                    <option key={"item-" + u._id} value={u.dname}>
+                      {u.dname}
+                    </option>
+                  ))}
+                </datalist>
+              ) : null}
             </datalist>
           </div>
           <div className="col-auto">
@@ -149,19 +146,6 @@ export default function PopularUsers(props) {
                     </div>
                   </div>
                 ))}
-                <Pagination
-                  {...{
-                    limitValues: [10, 20, 30],
-                    limitsMessage: "users per page",
-                    itemsLength: usersLength,
-                    perPageLimit,
-                    setPerPageLimit,
-                    currentPage,
-                    setCurrentPage,
-                    history: props.history,
-                    route: "/questions"
-                  }}
-                />
               </>
             ) : (
               <Error />
