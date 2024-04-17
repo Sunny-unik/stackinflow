@@ -15,22 +15,19 @@ export default function TopQuestions() {
   const [sortBy, setSortBy] = useState("mostLiked");
 
   useEffect(() => {
-    let route = `/question/most-liked?limit=${10}`;
-    if (sortBy === "oldest") route = `/question/oldest?limit=${10}`;
-    else if (sortBy === "newest") route = `/question/newest?limit=${10}`;
-    else if (sortBy === "notAnswered")
-      route = `/question/answer-filter?type=eq`;
+    const limit = 100;
+    let route = `/question/most-liked?limit=${limit}`;
+    if (sortBy === "notAnswered") route = `/question/answer-filter?type=eq`;
+    else if (sortBy === "oldest") route = `/question/oldest?limit=${limit}`;
+    else if (sortBy === "newest") route = `/question/newest?limit=${limit}`;
     else if (sortBy === "mostAnswered")
       route = `/question/answer-filter?type=ne`;
-    console.log(process.env.REACT_APP_API_URL + route);
     axios
       .get(process.env.REACT_APP_API_URL + route)
       .then((res) =>
         setData({ questions: res.data.data, loading: false, error: null })
       )
-      .catch((err) =>
-        setData({ questions: null, loading: false, error: err || {} })
-      );
+      .catch((error) => setData({ questions: null, loading: false, error }));
   }, [sortBy]);
 
   return (
@@ -139,31 +136,39 @@ export default function TopQuestions() {
       </div>
       {data.loading ? (
         <Spinner />
-      ) : data.questions?.length ? (
-        <div>
-          {data.questions.map((q) => {
-            return (
-              <QuestionBox
-                questionId={q._id}
-                likesCount={q.qlikes.length}
-                questionTitle={q.question}
-                answersCount={q.answers ? q.answers.length : 0}
-                tags={q.tags}
-                dataAos={"fade-up"}
-                userObj={q.userId ? q.userId : (q.userId = { dname: "404" })}
-                date={q.date}
-                key={q._id}
-              />
-            );
-          })}
-        </div>
       ) : (
-        <Error
-          statusCode={
-            data.questions?.length === 0 ? 404 : data.error.statusCode
-          }
-          message={data.questions?.length === 0 ? "No such data found" : null}
-        />
+        <>
+          {data.questions?.length ? (
+            <div>
+              {data.questions.map((q) => {
+                return (
+                  <QuestionBox
+                    questionId={q._id}
+                    likesCount={q.qlikes.length}
+                    questionTitle={q.question}
+                    answersCount={q.answers ? q.answers.length : 0}
+                    tags={q.tags}
+                    dataAos={"fade-up"}
+                    userObj={
+                      q.userId ? q.userId : (q.userId = { dname: "404" })
+                    }
+                    date={q.date}
+                    key={q._id}
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <Error
+              statusCode={
+                data.questions?.length === 0 ? 404 : data.error.statusCode
+              }
+              message={
+                data.questions?.length === 0 ? "No such data found" : null
+              }
+            />
+          )}
+        </>
       )}
     </div>
   );
