@@ -12,7 +12,7 @@ import {
   FaUserTie
 } from "react-icons/fa";
 import Home from "./components/home/Home";
-import Login from "./components/Login";
+import Login from "./components/login";
 import Profile from "./components/profile/Profile";
 import Signup from "./components/SignUp";
 import SearchBox from "./components/searchQuestion/SearchBox";
