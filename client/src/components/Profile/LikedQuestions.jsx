@@ -62,7 +62,7 @@ export default function Likedquestions() {
                       padding: ".2rem"
                     }}
                     className="m-1 rounded-2 bg-dark"
-                    to={`/questionsBy/${o}`}
+                    to={`/tagged/${o}`}
                   >
                     {o}
                   </NavLink>

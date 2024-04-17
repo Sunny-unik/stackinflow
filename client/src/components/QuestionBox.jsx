@@ -69,7 +69,7 @@ export default function QuestionBox({
                     textDecorationLine: "none"
                   }}
                   className="m-1 rounded bg-dark"
-                  to={`/questionsBy/${o}`}
+                  to={`/tagged/${o}`}
                 >
                   {o.replace(",", "")}
                 </NavLink>

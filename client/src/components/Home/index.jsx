@@ -36,12 +36,12 @@ export default function Home(props) {
               </NavLink>
             </li>
             <li className="nav-link px-xl-0 px-3">
-              <NavLink to="/popularTags">
+              <NavLink to="/tags">
                 <FaTags /> Tags
               </NavLink>
             </li>
             <li className="nav-link px-xl-0 px-3">
-              <NavLink to="/popularUsers">
+              <NavLink to="/users">
                 <FaUsers /> Users
               </NavLink>
             </li>
@@ -50,7 +50,7 @@ export default function Home(props) {
                 className="extraLink"
                 onClick={() =>
                   user
-                    ? props.history.push("/askQuestion")
+                    ? props.history.push("/question/create")
                     : alert("You need to login first")
                 }
               >
@@ -64,13 +64,13 @@ export default function Home(props) {
           >
             <Switch>
               <Route path="/questions" component={AllQuestions} />
-              <Route path="/popularTags" component={PopularTags} />
-              <Route path="/popularUsers" component={PopularUsers} />
+              <Route path="/tags" component={PopularTags} />
+              <Route path="/users" component={PopularUsers} />
+              <Route path="/question/create" component={AskQuestion} />
               <Route path="/question/:qid" component={Question} />
-              <Route path="/editQuestion/:qid" component={AskQuestion} />
-              <Route path="/user/:_id" component={User} />
-              <Route path="/questionsBy/:tag" component={QuestionsByTag} />
-              <Route path="/askQuestion" component={AskQuestion} />
+              <Route path="/question/:qid/edit" component={AskQuestion} />
+              <Route path="/user/:dname" component={User} />
+              <Route path="/tagged/:tag" component={QuestionsByTag} />
               <Route path="/" exact component={TopQuestions} />
               <Route path="/about" component={About} />
               <Route path="/feedback" component={Feedback} />

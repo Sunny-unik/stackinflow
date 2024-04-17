@@ -58,7 +58,7 @@ function authenticateUser(token) {
         else if (res.data === "token expired") {
           if (
             window.location.pathname.includes("/profile") ||
-            window.location.pathname.includes("/askquestion")
+            window.location.pathname.includes("/question/create")
           )
             window.location.pathname = "/login";
           console.log(res.data);

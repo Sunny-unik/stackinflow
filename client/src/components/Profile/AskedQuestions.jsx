@@ -71,7 +71,7 @@ export default function Askedquestions() {
                           padding: ".2rem"
                         }}
                         className="rounded-2 bg-dark m-1"
-                        to={`/questionsBy/${o}`}
+                        to={`/tagged/${o}`}
                       >
                         {o}
                       </NavLink>

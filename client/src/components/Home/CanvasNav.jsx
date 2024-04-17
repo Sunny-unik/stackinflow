@@ -10,7 +10,7 @@ export default function CanvasNav(props) {
 
   const sideLink = useCallback(() => {
     user
-      ? props.history.push("/askQuestion")
+      ? props.history.push("/question/create")
       : alert("User need to login first");
   }, [user, props]);
 
@@ -27,12 +27,12 @@ export default function CanvasNav(props) {
         </NavLink>
       </li>
       <li className="mt-2 p-1">
-        <NavLink to="/popularTags">
+        <NavLink to="/tags">
           <FaTags /> Tags
         </NavLink>
       </li>
       <li className="mt-2 p-1">
-        <NavLink to="/popularUsers">
+        <NavLink to="/users">
           <FaUsers /> Users
         </NavLink>
       </li>

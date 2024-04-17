@@ -190,7 +190,7 @@ export default function Question(props) {
           <NavLink
             className="btn btn-outline-primary mx-3"
             to={{
-              pathname: `/editQuestion/${qid}`,
+              pathname: `/question/${qid}/edit`,
               questionTitle: question,
               questionDetails: questiondetail,
               questionTags: tag
@@ -271,7 +271,7 @@ export default function Question(props) {
             <NavLink
               style={{ fontFamily: "monospace" }}
               className="btn btn-link btn-outline-dark m-1"
-              to={`/questionsBy/${o}`}
+              to={`/tagged/${o}`}
             >
               {o}
             </NavLink>
@@ -286,7 +286,7 @@ export default function Question(props) {
             <NavLink
               style={{ fontFamily: "monospace" }}
               className="btn btn-primary ayoq"
-              to={`/AskQuestion`}
+              to={`/question/create`}
             >
               ask you questions.
             </NavLink>

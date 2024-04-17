@@ -39,7 +39,7 @@ export default function AskQuestionGuide() {
         <p>Tags help the right people find and answer your question.</p>
         <li>
           Include tags that are crucial to your question only, like{" "}
-          <NavLink to="/questionsBy/test" target="_blank">
+          <NavLink to="/tagged/test" target="_blank">
             test
           </NavLink>
         </li>
