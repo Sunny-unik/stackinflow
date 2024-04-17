@@ -90,3 +90,9 @@ a {
 #tagButton:hover {
   transform: scale(1.2);
 }
+
+/* allQuestions */
+.limit-buttons [data-limit].active {
+  background-color: #0d6efd;
+  color: aliceblue;
+}
