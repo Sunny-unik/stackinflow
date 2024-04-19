@@ -26,7 +26,7 @@ router.get("/list", listQuestions);
 router.get("/count", countQuestions);
 router.get("/peruser", questionsPerUser);
 router.get("/userliked", auth, userLikedQuestions);
-router.get("/bytag", questionByTag);
+router.get("/tagged", questionByTag);
 router.get("/newest", questionsPerPage);
 router.get("/oldest", oldestWithLimit);
 router.get("/most-liked", mostLikedWithLimit);

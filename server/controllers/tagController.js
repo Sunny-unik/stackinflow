@@ -4,6 +4,7 @@ const tagController = {
   listTags: async (req, res) => {
     tagSchema
       .find()
+      .sort({ questionCount: -1 })
       .then((tags) => res.send({ msg: tags.length, data: tags }))
       .catch((err) => res.status(500).send(err));
   },
@@ -50,7 +51,7 @@ const tagController = {
       .limit((+limit || 20) * 1)
       .skip((+page || 0) * 1 * (+limit || 20))
       .then((tags) => res.send({ data: tags, msg: "success" }))
-      .catch((err) => res.send(err));
+      .catch((err) => res.status(500).send(err));
   }
 };
 
