@@ -23,7 +23,7 @@ export default function PopularUsers(props) {
       .then((res) => setUsersLength(res.data.data))
       .catch(() => setUsersLength("count failed"));
     axios
-      .get(`${process.env.REACT_APP_API_URL}/user/most-liked`)
+      .get(`${process.env.REACT_APP_API_URL}/user/most-liked?limit=5000`)
       .then(({ data }) =>
         setUsers({ data: data.data, loading: false, error: null })
       )
@@ -43,45 +43,30 @@ export default function PopularUsers(props) {
         data-count={usersLength}
         className="container pb-3 border border-2 border-top-0 border-start-0 border-end-0"
       >
-        <h1 className="p-1">Popular Users</h1>
+        <div className="row flex-nowrap justify-content-between">
+          <h1 className="py-1 d-inline-block w-50">Popular Users</h1>
+          <form
+            className="input-group flex-nowrap w-25 align-items-center"
+            onSubmit={goToUser}
+          >
+            <input
+              type="text"
+              placeholder="Search User"
+              name="searchP"
+              id="searchP"
+              className="form-control border-secondary px-2"
+              onChange={(e) => setSearchUser(e.target.value)}
+              value={searchUser}
+            />{" "}
+            <button className="btn btn-outline-secondary w-25">
+              <FcSearch />
+            </button>
+          </form>
+        </div>
         <h4 className="fw-normal pb-2">
           These all users profiles are arranged in sequence as higher points to
           lowest.
         </h4>
-        <div className="row g-3">
-          <div className="col-auto">
-            <input
-              type="text"
-              list="userSearch"
-              placeholder="Search User"
-              name="searchP"
-              id="searchP"
-              className="form-control border-dark px-2 d-inline-block"
-              onChange={(e) => setSearchUser(e.target.value)}
-              value={searchUser}
-            />
-            <datalist id="userSearch">
-              {users.data?.length ? (
-                <datalist id="userSearch">
-                  {users.data.map((u) => (
-                    <option key={"item-" + u._id} value={u.dname}>
-                      {u.dname}
-                    </option>
-                  ))}
-                </datalist>
-              ) : null}
-            </datalist>
-          </div>
-          <div className="col-auto">
-            <button
-              className="btn btn-light border-dark"
-              style={{ fontFamily: "Fantasy" }}
-              onClick={goToUser}
-            >
-              <FcSearch /> Search
-            </button>
-          </div>
-        </div>
       </div>
       <div style={{ minHeight: "60vh" }} className="p-3 text-center">
         {users.loading ? (
