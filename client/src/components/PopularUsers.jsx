@@ -57,8 +57,8 @@ export default function PopularUsers(props) {
               className="form-control border-secondary px-2"
               onChange={(e) => setSearchUser(e.target.value)}
               value={searchUser}
-            />{" "}
-            <button className="btn btn-outline-secondary w-25">
+            />
+            <button className="btn btn-outline-secondary">
               <FcSearch />
             </button>
           </form>
@@ -74,17 +74,17 @@ export default function PopularUsers(props) {
         ) : (
           <>
             {users.data.length ? (
-              <>
+              <div className="row gap-md-5 gap-4 justify-content-center">
                 {users.data.map((p) => (
                   <div
-                    className="bg-dark d-inline-block card m-md-4 m-3 w-25"
+                    className="card px-0 col-10 col-md-3 col-lg-2"
                     data-aos="flip-up"
                     data-aos-once="true"
                     data-aos-duration="500"
                     key={p._id}
                   >
-                    <div className="border border-1 text-center border-secondary">
-                      <div className="card-img m-auto my-2 d-inline-block">
+                    <div className="px-0 text-center border-secondary">
+                      <div className="card-img mt-3 mb-2">
                         <img
                           height="50rem"
                           width="60rem"
@@ -96,10 +96,10 @@ export default function PopularUsers(props) {
                           alt="user profile"
                         />
                       </div>
-                      <div className="card-body d-inline-block p-2">
+                      <div className="card-body py-0">
                         <NavLink to={`/user/${p._id}`}>{p.dname}</NavLink>
                       </div>
-                      <h6>
+                      <div className="my-2">
                         {p.weblink && (
                           <a target="_blank" href={p.weblink} rel="noreferrer">
                             <abbr title={p.weblink}>
@@ -124,14 +124,14 @@ export default function PopularUsers(props) {
                           </a>
                         )}
                         &nbsp;
-                      </h6>
-                      <div className="card-footer text-white">
+                      </div>
+                      <div className="card-footer">
                         Points: {p.userlikes == null ? 0 : p.userlikes}
                       </div>
                     </div>
                   </div>
                 ))}
-              </>
+              </div>
             ) : (
               <Error />
             )}
