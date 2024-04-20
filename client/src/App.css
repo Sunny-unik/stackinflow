@@ -87,8 +87,21 @@ a {
 }
 
 /* tags */
-#tagButton:hover {
-  transform: scale(1.2);
+.multiline-ellipsis {
+  display: block;
+  display: -webkit-box;
+  font-size: 1.2;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card:has(#inTagsTag) .card-body .card-text {
+  max-height: 190px;
+}
+.card:has(#inTagsTag):hover {
+  transform: scale(1.13);
+  cursor: pointer;
 }
 
 /* allQuestions */

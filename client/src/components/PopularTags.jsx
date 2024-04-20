@@ -73,21 +73,31 @@ export default function PopularTags(props) {
         {!tags.data ? (
           <Spinner />
         ) : (
-          <>
+          <div className="row gap-xl-4 gap-lg-5 gap-4 justify-content-center">
             {tags.data?.length ? (
               tags.data.map((t) => (
-                <button
-                  data-aos="zoom-in"
+                <div
                   key={t._id + "-tag-btn"}
+                  data-aos="zoom-in"
                   data-aos-offset="max-height"
                   data-aos-once="true"
                   data-aos-duration="200"
-                  className="btn btn-light m-2 border border-3 border-secondary"
-                  id="tagButton"
+                  className="card px-0 col-md-3 col-xl-2 d-inline-block"
                   onClick={() => questionsByTag(t.name, "open")}
                 >
-                  {t.name}
-                </button>
+                  <div className="card-body">
+                    <span id="inTagsTag" className="badge bg-primary my-2">
+                      {t.name}
+                    </span>
+                    <p className="card-text multiline-ellipsis">{t.detail}</p>
+                  </div>
+                  <div className="card-footer">
+                    has{" "}
+                    {!t.questionsCount
+                      ? "0 question"
+                      : t.questionsCount + " questions"}
+                  </div>
+                </div>
               ))
             ) : (
               <Error
@@ -97,7 +107,7 @@ export default function PopularTags(props) {
                 message={tags.data?.length === 0 ? "No such data found" : null}
               />
             )}
-          </>
+          </div>
         )}
       </div>
     </div>
