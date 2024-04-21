@@ -7,6 +7,7 @@ import UseSearchParam from "../helper/UseSearchParam";
 import Error from "./Error";
 import Pagination from "./Pagination";
 import { debounce } from "lodash";
+import { NavLink } from "react-router-dom/";
 
 export default function PopularTags(props) {
   const location = UseSearchParam(),
@@ -99,14 +100,14 @@ export default function PopularTags(props) {
             {tags.data?.length ? (
               <>
                 {tags.data.map((t) => (
-                  <a
+                  <NavLink
                     key={t._id + "-tag-btn"}
                     data-aos="zoom-in"
                     data-aos-offset="max-height"
                     data-aos-once="true"
                     data-aos-duration="200"
                     className="card text-dark px-0 col-md-3 col-xl-2 d-inline-block"
-                    href={`tagged/${t.name}`}
+                    to={`tagged/${t.name}`}
                   >
                     <div className="card-body">
                       <span id="inTagsTag" className="badge bg-primary my-2">
@@ -120,7 +121,7 @@ export default function PopularTags(props) {
                         ? "0 question"
                         : t.questionsCount + " questions"}
                     </div>
-                  </a>
+                  </NavLink>
                 ))}
                 <Pagination
                   {...{
