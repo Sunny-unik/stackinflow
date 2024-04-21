@@ -305,6 +305,16 @@ const userController = {
       .catch((err) => res.status(500).send(err));
   },
 
+  userByDname: async (req, res) => {
+    await userSchema
+      .findOne({ dname: req.query.dname })
+      .select(
+        "_id name dname userlikes email about address gitlink title twitter weblink profile"
+      )
+      .then((user) => res.send({ data: user, msg: "success" }))
+      .catch((err) => res.status(500).send(err));
+  },
+
   countUser: async (req, res) => {
     const { search } = req.query,
       searchQuery = { $regex: search, $options: "i" };

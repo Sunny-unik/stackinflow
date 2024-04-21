@@ -5,178 +5,138 @@ import { FcCollaboration } from "react-icons/fc";
 import { IoLocationSharp } from "react-icons/io5";
 import QuestionBox from "./QuestionBox";
 import Spinner from "./loadings/Spinner";
+import Error from "./Error";
+import getAnchorOptions from "../helper/getAnchorOptions";
 
 export default function User(props) {
-  const [userbyudn, setuserbyudn] = useState([]);
-  const [profilebyudn, setprofilebyudn] = useState("");
-  const [namebyudn, setnamebyudn] = useState("");
-  const [dnamebyudn, setdnamebyudn] = useState("");
-  const [titlebyudn, settilebyudn] = useState("");
-  const [aboutbyudn, setaboutbyudn] = useState("");
-  const [sociallinkbyudn, setsociallinkbyudn] = useState("");
-  const [weblinkbyudn, setweblinkbyudn] = useState("");
-  const [gitlinkbyudn, setgitlinkbyudn] = useState("");
-  const [addressbyudn, setaddressbyudn] = useState("");
-  const [question, setquestion] = useState([]);
-  const [userlikes, setuserlikes] = useState();
-  const [notfound, setnotfound] = useState(null);
-  const uid = props.match.params._id;
+  const uDname = props.match.params.dname;
+  const [user, setUser] = useState([]);
+  // const [question, setQuestion] = useState({
+  //   data: null,
+  //   loading: true,
+  //   error: null
+  // });
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/user/?id=` + uid)
+      .get(`${process.env.REACT_APP_API_URL}/user/by-dname?dname=` + uDname)
       .then((res) => {
         console.log(res.data);
-        setuserbyudn(res.data.data);
-        setuserlikes(res.data.data?.userlikes);
-        setnamebyudn(res.data.data?.name);
-        setdnamebyudn(res.data.data?.dname);
-        setaboutbyudn(res.data.data?.about);
-        settilebyudn(res.data.data?.title);
-        setprofilebyudn(res.data.data?.profile);
-        setgitlinkbyudn(res.data.data?.gitlink);
-        setsociallinkbyudn(res.data.data?.twitter);
-        setweblinkbyudn(res.data.data?.weblink);
-        setaddressbyudn(res.data.data?.address);
+        setUser({ data: res.data.data, loading: false, error: null });
       })
-      .catch((err) => {
-        setnotfound(`!User not found`);
-        console.log(err);
+      .catch((error) => {
+        console.log(error);
+        setUser({ data: null, loading: false, error });
       });
 
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/question/list`)
-      .then((res) => setquestion(res.data.data))
-      .catch((err) => console.log(err));
-  }, [uid]);
-
-  const answer = [];
-  question.forEach((un) => {
-    if (un.answers.length > 0) {
-      un.answers.forEach((i) => i.userdname === uid && answer.push(i));
-    }
-  });
-
-  const questions = [];
-  question.forEach((un) => un.userdname === uid && questions.push(un));
-
-  const askedquestion = questions.filter((un) => un.userdname === uid);
+    // axios
+    //   .get(`${process.env.REACT_APP_API_URL}/question/list`)
+    //   .then((res) =>
+    //     setQuestion({ data: res.data.data, loading: false, error: null })
+    //   )
+    //   .catch((error) => {
+    //     console.log({ error });
+    //     setQuestion({ data: null, loading: false, error });
+    //   });
+  }, [uDname]);
 
   return (
     <div style={{ minHeight: "70vh" }}>
-      {userbyudn.length !== 0 ? (
-        <div>
-          <div className="container">
-            <div className="d-md-flex">
-              <div className="col-md-5 col-sm-10 text-center col-lg-4 mx-auto proimgdiv">
-                <br />
+      {user.loading ? (
+        <Spinner />
+      ) : (
+        <>
+          {user.data ? (
+            <div className="container">
+              <div className="d-md-flex mt-4">
+                <div className="col-md-5 col-sm-10 text-center col-lg-4">
+                  <div
+                    className="profilePic col-sm-8 mx-auto"
+                    data-aos="flip-up"
+                    data-aos-once="true"
+                    data-aos-duration="600"
+                  >
+                    <img
+                      className="col-sm-12"
+                      height="225rem"
+                      width="225rem"
+                      src={
+                        user.profile
+                          ? `${process.env.REACT_APP_API_URL}/${user.profile}`
+                          : "../assets/img/profile.jpg"
+                      }
+                      alt="user profile"
+                    />
+                  </div>
+                </div>
                 <div
-                  className="profilepic col-sm-8"
-                  data-aos="flip-up"
-                  data-aos-once="true"
+                  data-aos="fade-left"
                   data-aos-duration="600"
+                  className="px-md-4 col-md-8 col-lg-7 col-sm-10"
                 >
-                  <img
-                    className="col-sm-12 m-auto"
-                    height="225rem"
-                    width="225rem"
-                    src={
-                      profilebyudn
-                        ? `${process.env.REACT_APP_API_URL}/${profilebyudn}`
-                        : "../assets/img/profile.jpg"
-                    }
-                    alt="user profile"
-                  />
+                  <div className="text-center">
+                    <label htmlFor="name">User's Name</label>
+                    <h2 id="name">{user.data?.name}</h2>
+                    <label htmlFor="dname">Display Name</label>
+                    <h3 id="dname">{user.data?.dname}</h3>
+                    {user.data.title && (
+                      <>
+                        <label htmlFor="workTitle">Work Title</label>
+                        <h3 id="workTitle">{user.data.title}</h3>
+                      </>
+                    )}
+                    {user.data.address && (
+                      <>
+                        <label htmlFor="address">Address</label>
+                        <h4 id="address">
+                          <IoLocationSharp /> {user.data.address}
+                        </h4>
+                      </>
+                    )}
+                    <h4 className="d-flex gap-3 justify-content-center">
+                      {user.data.weblink && (
+                        <a {...getAnchorOptions(null, user.data.weblink)}>
+                          <abbr title={user.data.weblink}>
+                            <FcCollaboration />
+                          </abbr>
+                        </a>
+                      )}
+                      &middot;
+                      {user.data.gitlink && (
+                        <a {...getAnchorOptions(null, user.data.gitlink)}>
+                          <abbr title={user.data.gitlink}>
+                            <FaGithub />
+                          </abbr>
+                        </a>
+                      )}
+                      &middot;
+                      {user.data.twitter && (
+                        <a {...getAnchorOptions(null, user.data.twitter)}>
+                          <abbr title={user.data.twitter}>
+                            <FaTwitter />
+                          </abbr>
+                        </a>
+                      )}
+                    </h4>
+                    <h4>
+                      Total Points :
+                      <span className="px-2">
+                        {user.data.userlikes ? user.data.userlikes : 0}
+                      </span>
+                    </h4>
+                  </div>
                 </div>
               </div>
-              <div
-                data-aos="fade-left"
-                data-aos-duration="600"
-                className="px-md-4 col-md-8 col-lg-7 col-sm-10 procontent"
-              >
-                <br />
-                <div className="text-center">
-                  <label style={{ fontFamily: "SeogUI" }}>User's Name</label>
-                  <div>
-                    <h2
-                      className="my-0"
-                      style={{ fontFamily: "Sans-Serif", fontWeight: "bold" }}
-                    >
-                      {namebyudn}
-                    </h2>
-                  </div>
-                  <label style={{ fontFamily: "SeogUI" }}>Display Name</label>
-                  <div>
-                    <h3
-                      style={{ fontFamily: "Sans-Serif", fontWeight: "bold" }}
-                    >
-                      {dnamebyudn}
-                    </h3>
-                  </div>
-                  {titlebyudn && (
-                    <div>
-                      <label style={{ fontFamily: "SeogUI" }}>Work Title</label>
-                      <h3>{titlebyudn}</h3>
-                    </div>
-                  )}
-                  {addressbyudn && (
-                    <div>
-                      <label style={{ fontFamily: "SeogUI" }}>Address</label>
-                      <h4 style={{ fontFamily: "Sans-Serif" }}>
-                        <IoLocationSharp /> {addressbyudn}
-                      </h4>{" "}
-                    </div>
-                  )}
-                  <h4>
-                    {weblinkbyudn && (
-                      <a target="_blank" href={weblinkbyudn} rel="noreferrer">
-                        <abbr title={weblinkbyudn}>
-                          <FcCollaboration />
-                        </abbr>
-                      </a>
-                    )}{" "}
-                    &middot;{" "}
-                    {gitlinkbyudn && (
-                      <a target="_blank" href={gitlinkbyudn} rel="noreferrer">
-                        <abbr title={gitlinkbyudn}>
-                          <FaGithub />
-                        </abbr>
-                      </a>
-                    )}{" "}
-                    &middot;{" "}
-                    {sociallinkbyudn && (
-                      <a
-                        target="_blank"
-                        href={sociallinkbyudn}
-                        rel="noreferrer"
-                      >
-                        <abbr title={sociallinkbyudn}>
-                          <FaTwitter />
-                        </abbr>
-                      </a>
-                    )}{" "}
-                  </h4>
-                  <h4 style={{ fontFamily: "SeogUI", fontWeight: "bold" }}>
-                    Total Points : {userlikes != null ? userlikes : 0}{" "}
-                  </h4>
-                  <br />
-                </div>
+              <div className="col-sm-10">
+                {user.data.about && (
+                  <>
+                    <label htmlFor="about">About</label>
+                    <h3 id="about">{user.data.about}</h3>
+                  </>
+                )}
               </div>
-            </div>
-            <div className="col-sm-10">
-              {aboutbyudn && (
-                <div>
-                  <label>
-                    <h1>About </h1>
-                  </label>
-                  <h3>{aboutbyudn}</h3>{" "}
-                </div>
-              )}
-            </div>
-          </div>
-          <hr className="mb-0 mt-5" />
-          <br />
-          <div>
+              {/* <hr className="mb-0 mt-5" /> */}
+              {/* <div>
             {askedquestion.length > 0 ? (
               <div>
                 <h1>
@@ -208,12 +168,16 @@ export default function User(props) {
                 })}
               {!askedquestion && <Spinner />}
             </div>
-          </div>
-        </div>
-      ) : notfound != null ? (
-        <h1 className="text-danger text-center mt-5">{notfound}</h1>
-      ) : (
-        <Spinner />
+          </div> */}
+            </div>
+          ) : (
+            <Error
+              statusCode={!user.data ? 404 : user.error.statusCode}
+              message={!user.data ? "No user data found" : null}
+              heading={!user.data ? "Not found" : null}
+            />
+          )}
+        </>
       )}
     </div>
   );

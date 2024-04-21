@@ -99,7 +99,7 @@ export default function PopularUsers(props) {
           <Spinner />
         ) : (
           <>
-            {users.data.length ? (
+            {users.data?.length ? (
               <>
                 <div className="row gap-md-5 gap-4 justify-content-center">
                   {users.data.map((p) => (
@@ -124,7 +124,7 @@ export default function PopularUsers(props) {
                       </div>
                       <div className="card-body py-0">
                         <div className="">{p.name}</div>
-                        <NavLink to={`/user/${p._id}`}>{p.dname}</NavLink>
+                        <NavLink to={`/user/${p.dname}`}>{p.dname}</NavLink>
                       </div>
                       <div className="my-2">
                         {p.weblink && (

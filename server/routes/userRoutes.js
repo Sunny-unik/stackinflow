@@ -16,7 +16,8 @@ const {
   userByLikes,
   checkOtp,
   removeUnverified,
-  countUser
+  countUser,
+  userByDname
 } = require("../controllers/userController");
 const validUser = require("../validations/validUser");
 const auth = require("../middleware/auth");
@@ -26,6 +27,7 @@ const router = express.Router();
 router.get("/list", listUser);
 router.get("/count", countUser);
 router.get("/", userById);
+router.get("/by-dname", userByDname);
 router.get("/authenticate", auth, authenticate);
 router.get("/most-liked", userByLikes);
 router.get("/logout", logout);
