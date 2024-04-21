@@ -25,7 +25,7 @@ const tagController = {
       req.query.type || "popular"
     ];
     const sortBy = {
-      popular: { questionCount: 1 },
+      popular: { questionsCount: -1 },
       newest: { createdAt: -1 },
       name: { name: 1 }
     };

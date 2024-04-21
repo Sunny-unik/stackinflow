@@ -7,6 +7,7 @@ import { FaGithub, FaTwitter } from "react-icons/fa";
 import Spinner from "./loadings/Spinner";
 import { NavLink } from "react-router-dom";
 import Error from "./Error";
+import getAnchorOptions from "../helper/getAnchorOptions";
 
 export default function PopularUsers() {
   const [usersLength, setUsersLength] = useState("{count loading...}"),
@@ -77,51 +78,50 @@ export default function PopularUsers() {
                     data-aos-duration="500"
                     key={p._id}
                   >
-                    <div className="px-0 text-center border-secondary">
-                      <div className="card-img mt-3 mb-2">
-                        <img
-                          height="50rem"
-                          width="60rem"
-                          src={
-                            p.profile
-                              ? `${process.env.REACT_APP_API_URL}/${p.profile}`
-                              : "assets/img/profile.jpg"
-                          }
-                          alt="user profile"
-                        />
-                      </div>
-                      <div className="card-body py-0">
-                        <NavLink to={`/user/${p._id}`}>{p.dname}</NavLink>
-                      </div>
-                      <div className="my-2">
-                        {p.weblink && (
-                          <a target="_blank" href={p.weblink} rel="noreferrer">
-                            <abbr title={p.weblink}>
-                              <FcCollaboration />
-                            </abbr>
-                          </a>
-                        )}
-                        &nbsp;&middot;&nbsp;
-                        {p.gitlink && (
-                          <a target="_blank" href={p.gitlink} rel="noreferrer">
-                            <abbr title={p.gitlink}>
-                              <FaGithub />
-                            </abbr>
-                          </a>
-                        )}
-                        &nbsp;&middot;&nbsp;
-                        {p.twitter && (
-                          <a target="_blank" href={p.twitter} rel="noreferrer">
-                            <abbr title={p.twitter}>
-                              <FaTwitter />
-                            </abbr>
-                          </a>
-                        )}
-                        &nbsp;
-                      </div>
-                      <div className="card-footer">
-                        Points: {p.userlikes == null ? 0 : p.userlikes}
-                      </div>
+                    <div className="card-img mt-3 mb-2">
+                      <img
+                        height="50rem"
+                        width="60rem"
+                        src={
+                          p.profile
+                            ? `${process.env.REACT_APP_API_URL}/${p.profile}`
+                            : "assets/img/profile.jpg"
+                        }
+                        alt="user profile"
+                      />
+                    </div>
+                    <div className="card-body py-0">
+                      <div className="">{p.name}</div>
+                      <NavLink to={`/user/${p._id}`}>{p.dname}</NavLink>
+                    </div>
+                    <div className="my-2">
+                      {p.weblink && (
+                        <a {...getAnchorOptions(null, p.weblink)}>
+                          <abbr title={p.weblink}>
+                            <FcCollaboration />
+                          </abbr>
+                        </a>
+                      )}
+                      &nbsp;&middot;&nbsp;
+                      {p.gitlink && (
+                        <a {...getAnchorOptions(null, p.gitlink)}>
+                          <abbr title={p.gitlink}>
+                            <FaGithub />
+                          </abbr>
+                        </a>
+                      )}
+                      &nbsp;&middot;&nbsp;
+                      {p.twitter && (
+                        <a {...getAnchorOptions(null, p.twitter)}>
+                          <abbr title={p.twitter}>
+                            <FaTwitter />
+                          </abbr>
+                        </a>
+                      )}
+                      &nbsp;
+                    </div>
+                    <div className="card-footer">
+                      Points: {p.userlikes == null ? 0 : p.userlikes}
                     </div>
                   </div>
                 ))}

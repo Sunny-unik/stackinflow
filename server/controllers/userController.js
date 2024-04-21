@@ -324,11 +324,16 @@ const userController = {
   },
 
   userByLikes: async (req, res) => {
-    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
-    const { search } = req.query;
+    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0],
+      { search } = req.query,
+      searchQuery = { $regex: search, $options: "i" };
     await userSchema
-      .find(search ? { name: { $regex: search, $options: "i" } } : undefined)
-      .sort({ userlikes: -1 })
+      .find(
+        search
+          ? { $or: [{ name: searchQuery }, { dname: searchQuery }] }
+          : undefined
+      )
+      .sort({ [search ? "dname" : "userlikes"]: -1 })
       .limit(limit * 1)
       .skip(page * 1 * limit)
       .select("_id name dname userlikes gitlink twitter weblink")
