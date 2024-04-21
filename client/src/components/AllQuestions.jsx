@@ -99,6 +99,7 @@ export default function AllQuestions({ history }) {
               message={
                 questions.data?.length === 0 ? "No such data found" : null
               }
+              heading={questions.data?.length === 0 ? "Not found" : null}
             />
           )}
         </>

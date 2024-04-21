@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { FcSearch } from "react-icons/fc";
 import Spinner from "./loadings/Spinner";
 import Error from "./Error";
 
@@ -20,13 +19,19 @@ export default function PopularTags(props) {
       .get(`${process.env.REACT_APP_API_URL}/tag/count`)
       .then(({ data }) => setTagsLength(data.data))
       .catch(() => setTagsLength("count failed"));
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/tag/on-page`)
+  }, []);
+
+  useEffect(() => {
+    axios[searchTag ? "post" : "get"](
+      `${process.env.REACT_APP_API_URL}/tag/${
+        !searchTag ? "on-page" : `search/?search=${searchTag}`
+      }`
+    )
       .then(({ data }) =>
         setTags({ data: data.data, loading: false, error: null })
       )
       .catch((error = {}) => setTags({ error, loading: false, data: null }));
-  }, []);
+  }, [searchTag]);
 
   function questionsByTag(t, action) {
     if (action !== "search" && " ") props.history.push("/tagged/" + t);
@@ -41,12 +46,11 @@ export default function PopularTags(props) {
   return (
     <div>
       <div className="container pb-3 border border-2 border-top-0 border-start-0 border-end-0">
-        <div className="row flex-nowrap justify-content-between">
-          <h1 className="py-1 d-inline-block w-50">Total {tagsLength} Tags</h1>
-          <form
-            className="ms-auto input-group w-25 flex-nowrap align-items-center"
-            onSubmit={() => questionsByTag("notValid", "search")}
-          >
+        <div className="row flex-md-nowrap justify-content-between mb-2">
+          <h1 className="py-1 d-inline-block col-md-6">
+            Total {tagsLength} Tags
+          </h1>
+          <div className="input-group w-auto flex-nowrap align-items-center">
             <input
               type="text"
               placeholder="Search Tags"
@@ -54,13 +58,9 @@ export default function PopularTags(props) {
               value={searchTag}
               name="searchT"
               id="searchT"
-              required
               className="form-control border-secondary px-2"
             />
-            <button className="btn btn-outline-secondary">
-              <FcSearch />
-            </button>
-          </form>
+          </div>
         </div>
         <h4 className="fw-normal pb-2">
           A tag is a keyword or label that categorizes your question with other,
@@ -105,6 +105,7 @@ export default function PopularTags(props) {
                   tags.data?.length === 0 ? 404 : tags.error.statusCode
                 }
                 message={tags.data?.length === 0 ? "No such data found" : null}
+                heading={tags.data?.length === 0 ? "Not found" : null}
               />
             )}
           </div>

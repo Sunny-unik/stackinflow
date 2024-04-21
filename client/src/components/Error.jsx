@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function Error({ message, statusCode }) {
+export default function Error({ message, statusCode, heading }) {
   return (
     <div className="alert m-4 w-75 mx-auto alert-danger" role="alert">
-      <h4 className="alert-heading">Server Error!</h4>
+      <h4 className="alert-heading">{heading ? heading : "Server Error!"}</h4>
       <svg
         className="bi flex-shrink-0 me-2"
         width="24"

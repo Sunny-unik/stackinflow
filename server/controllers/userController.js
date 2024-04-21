@@ -325,8 +325,9 @@ const userController = {
 
   userByLikes: async (req, res) => {
     const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
+    const { search } = req.query;
     await userSchema
-      .find()
+      .find(search ? { name: { $regex: search, $options: "i" } } : undefined)
       .sort({ userlikes: -1 })
       .limit(limit * 1)
       .skip(page * 1 * limit)

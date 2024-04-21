@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { FcCollaboration, FcSearch } from "react-icons/fc";
+import { FcCollaboration } from "react-icons/fc";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import Spinner from "./loadings/Spinner";
 import { NavLink } from "react-router-dom";
 import Error from "./Error";
 
-export default function PopularUsers(props) {
+export default function PopularUsers() {
   const [usersLength, setUsersLength] = useState("{count loading...}"),
     [searchUser, setSearchUser] = useState(""),
     [users, setUsers] = useState({
@@ -22,20 +22,20 @@ export default function PopularUsers(props) {
       .get(`${process.env.REACT_APP_API_URL}/user/count`)
       .then((res) => setUsersLength(res.data.data))
       .catch(() => setUsersLength("count failed"));
+  }, []);
+
+  useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/user/most-liked?limit=5000`)
+      .get(
+        `${process.env.REACT_APP_API_URL}/user/most-liked?limit=15${
+          searchUser ? `&search=${searchUser}` : ""
+        }`
+      )
       .then(({ data }) =>
         setUsers({ data: data.data, loading: false, error: null })
       )
       .catch((error = {}) => setUsers({ error, loading: false, data: null }));
-  }, []);
-
-  function goToUser() {
-    if (searchUser === null) alert("Enter some tags first in input box");
-    else if (searchUser.includes(" "))
-      alert("Remove blank space from input box");
-    else props.history.push("/user/" + searchUser);
-  }
+  }, [searchUser]);
 
   return (
     <>
@@ -43,12 +43,9 @@ export default function PopularUsers(props) {
         data-count={usersLength}
         className="container pb-3 border border-2 border-top-0 border-start-0 border-end-0"
       >
-        <div className="row flex-nowrap justify-content-between">
-          <h1 className="py-1 d-inline-block w-50">Popular Users</h1>
-          <form
-            className="input-group flex-nowrap w-25 align-items-center"
-            onSubmit={goToUser}
-          >
+        <div className="row flex-md-nowrap justify-content-between mb-2">
+          <h1 className="py-1 d-inline-block col-md-6">Popular Users</h1>
+          <div className="input-group flex-nowrap w-auto align-items-center">
             <input
               type="text"
               placeholder="Search User"
@@ -58,10 +55,7 @@ export default function PopularUsers(props) {
               onChange={(e) => setSearchUser(e.target.value)}
               value={searchUser}
             />
-            <button className="btn btn-outline-secondary">
-              <FcSearch />
-            </button>
-          </form>
+          </div>
         </div>
         <h4 className="fw-normal pb-2">
           These all users profiles are arranged in sequence as higher points to
@@ -133,7 +127,13 @@ export default function PopularUsers(props) {
                 ))}
               </div>
             ) : (
-              <Error />
+              <Error
+                statusCode={
+                  users.data?.length === 0 ? 404 : users.error.statusCode
+                }
+                message={users.data?.length === 0 ? "No such data found" : null}
+                heading={users.data?.length === 0 ? "Not found" : null}
+              />
             )}
           </>
         )}

@@ -166,6 +166,7 @@ export default function TopQuestions() {
               message={
                 data.questions?.length === 0 ? "No such data found" : null
               }
+              heading={data.questions?.length === 0 ? "Not found" : null}
             />
           )}
         </>
