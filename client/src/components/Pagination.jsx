@@ -42,12 +42,12 @@ export default function Pagination({
         </div>
         <div className="flex-grow-1"></div>
         <ReactPaginate
-          previousLabel={"<<"}
-          nextLabel={">>"}
-          breakLabel={"..."}
-          marginPagesDisplayed={5}
+          previousLabel={"<"}
+          nextLabel={">"}
+          breakLabel={"_"}
+          marginPagesDisplayed={3}
           pageCount={Math.ceil(itemsLength / perPageLimit)}
-          pageRangeDisplayed={2}
+          pageRangeDisplayed={1}
           onPageChange={(pageData) => {
             setCurrentPage(pageData.selected);
             history.push(`${route}?page=${+pageData.selected + 1}`);
