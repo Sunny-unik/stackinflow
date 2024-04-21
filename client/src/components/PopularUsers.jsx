@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -6,37 +6,68 @@ import { FcCollaboration } from "react-icons/fc";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import Spinner from "./loadings/Spinner";
 import { NavLink } from "react-router-dom";
+import UseSearchParam from "../helper/UseSearchParam";
 import Error from "./Error";
+import Pagination from "./Pagination";
 import getAnchorOptions from "../helper/getAnchorOptions";
+import { debounce } from "lodash";
 
-export default function PopularUsers() {
-  const [usersLength, setUsersLength] = useState("{count loading...}"),
-    [searchUser, setSearchUser] = useState(""),
+export default function PopularUsers(props) {
+  const location = UseSearchParam(),
+    limit = location.get("limit") || 15,
+    pageNumber = +location.get("page") || 0,
+    [currentPage, setCurrentPage] = useState(
+      pageNumber < 1 ? 0 : pageNumber - 1
+    ),
+    [perPageLimit, setPerPageLimit] = useState(limit < 0 ? 10 : limit),
+    [usersLength, setUsersLength] = useState("{count loading...}"),
+    searchUser = useRef(null),
     [users, setUsers] = useState({
       data: null,
       loading: true,
       error: null
     });
 
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/user/count`)
-      .then((res) => setUsersLength(res.data.data))
-      .catch(() => setUsersLength("count failed"));
-  }, []);
+  const fetchUsersData = useCallback(
+    async (value) => {
+      const searchValue = searchUser.current?.value;
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/user/count?search=${
+            value || searchValue
+          }`
+        );
+        setUsersLength(res.data.data);
+      } catch (error) {
+        setUsersLength("count failed");
+      }
+      axios
+        .get(
+          `${
+            process.env.REACT_APP_API_URL
+          }/user/most-liked?page=${currentPage}&limit=${perPageLimit}${
+            value || searchValue ? `&search=${value || searchValue}` : ""
+          }`
+        )
+        .then(({ data }) =>
+          setUsers({ data: data.data, loading: false, error: null })
+        )
+        .catch((error = {}) => setUsers({ error, loading: false, data: null }));
+    },
+    [currentPage, perPageLimit]
+  );
 
   useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/user/most-liked?limit=15${
-          searchUser ? `&search=${searchUser}` : ""
-        }`
-      )
-      .then(({ data }) =>
-        setUsers({ data: data.data, loading: false, error: null })
-      )
-      .catch((error = {}) => setUsers({ error, loading: false, data: null }));
-  }, [searchUser]);
+    fetchUsersData();
+  }, [fetchUsersData]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleInputChange = useCallback(
+    debounce(({ target }) => {
+      fetchUsersData(target.value);
+    }, 300),
+    [fetchUsersData]
+  );
 
   return (
     <>
@@ -53,8 +84,8 @@ export default function PopularUsers() {
               name="searchP"
               id="searchP"
               className="form-control border-secondary px-2"
-              onChange={(e) => setSearchUser(e.target.value)}
-              value={searchUser}
+              onChange={handleInputChange}
+              ref={searchUser}
             />
           </div>
         </div>
@@ -69,63 +100,78 @@ export default function PopularUsers() {
         ) : (
           <>
             {users.data.length ? (
-              <div className="row gap-md-5 gap-4 justify-content-center">
-                {users.data.map((p) => (
-                  <div
-                    className="card px-0 col-10 col-md-3 col-lg-2"
-                    data-aos="flip-up"
-                    data-aos-once="true"
-                    data-aos-duration="500"
-                    key={p._id}
-                  >
-                    <div className="card-img mt-3 mb-2">
-                      <img
-                        height="50rem"
-                        width="60rem"
-                        src={
-                          p.profile
-                            ? `${process.env.REACT_APP_API_URL}/${p.profile}`
-                            : "assets/img/profile.jpg"
-                        }
-                        alt="user profile"
-                      />
+              <>
+                <div className="row gap-md-5 gap-4 justify-content-center">
+                  {users.data.map((p) => (
+                    <div
+                      className="card px-0 col-10 col-md-3 col-lg-2"
+                      data-aos="flip-up"
+                      data-aos-once="true"
+                      data-aos-duration="500"
+                      key={p._id}
+                    >
+                      <div className="card-img mt-3 mb-2">
+                        <img
+                          height="50rem"
+                          width="60rem"
+                          src={
+                            p.profile
+                              ? `${process.env.REACT_APP_API_URL}/${p.profile}`
+                              : "assets/img/profile.jpg"
+                          }
+                          alt="user profile"
+                        />
+                      </div>
+                      <div className="card-body py-0">
+                        <div className="">{p.name}</div>
+                        <NavLink to={`/user/${p._id}`}>{p.dname}</NavLink>
+                      </div>
+                      <div className="my-2">
+                        {p.weblink && (
+                          <a {...getAnchorOptions(null, p.weblink)}>
+                            <abbr title={p.weblink}>
+                              <FcCollaboration />
+                            </abbr>
+                          </a>
+                        )}
+                        &nbsp;&middot;&nbsp;
+                        {p.gitlink && (
+                          <a {...getAnchorOptions(null, p.gitlink)}>
+                            <abbr title={p.gitlink}>
+                              <FaGithub />
+                            </abbr>
+                          </a>
+                        )}
+                        &nbsp;&middot;&nbsp;
+                        {p.twitter && (
+                          <a {...getAnchorOptions(null, p.twitter)}>
+                            <abbr title={p.twitter}>
+                              <FaTwitter />
+                            </abbr>
+                          </a>
+                        )}
+                        &nbsp;
+                      </div>
+                      <div className="card-footer">
+                        Points: {p.userlikes == null ? 0 : p.userlikes}
+                      </div>
                     </div>
-                    <div className="card-body py-0">
-                      <div className="">{p.name}</div>
-                      <NavLink to={`/user/${p._id}`}>{p.dname}</NavLink>
-                    </div>
-                    <div className="my-2">
-                      {p.weblink && (
-                        <a {...getAnchorOptions(null, p.weblink)}>
-                          <abbr title={p.weblink}>
-                            <FcCollaboration />
-                          </abbr>
-                        </a>
-                      )}
-                      &nbsp;&middot;&nbsp;
-                      {p.gitlink && (
-                        <a {...getAnchorOptions(null, p.gitlink)}>
-                          <abbr title={p.gitlink}>
-                            <FaGithub />
-                          </abbr>
-                        </a>
-                      )}
-                      &nbsp;&middot;&nbsp;
-                      {p.twitter && (
-                        <a {...getAnchorOptions(null, p.twitter)}>
-                          <abbr title={p.twitter}>
-                            <FaTwitter />
-                          </abbr>
-                        </a>
-                      )}
-                      &nbsp;
-                    </div>
-                    <div className="card-footer">
-                      Points: {p.userlikes == null ? 0 : p.userlikes}
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+                <Pagination
+                  {...{
+                    limitValues: [15, 30, 45],
+                    limitsMessage: "users per page",
+                    itemsLength: +usersLength || 0,
+                    perPageLimit,
+                    setPerPageLimit,
+                    currentPage,
+                    setCurrentPage,
+                    history: props.history,
+                    route: "/users"
+                  }}
+                />
+              </>
             ) : (
               <Error
                 statusCode={

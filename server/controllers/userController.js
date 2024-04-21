@@ -306,11 +306,12 @@ const userController = {
   },
 
   countUser: async (req, res) => {
-    const key = req.query.key;
-    const value = req.query.value;
-    const query = key && value ? { [key]: value } : {};
+    const { search } = req.query,
+      searchQuery = { $regex: search, $options: "i" };
     userSchema
-      .countDocuments(query)
+      .countDocuments(
+        search ? { $or: [{ dname: searchQuery }, { name: searchQuery }] } : {}
+      )
       .then((count) => res.send({ msg: "success", data: count }))
       .catch((err) => res.status(500).send(err));
   },
@@ -330,10 +331,10 @@ const userController = {
     await userSchema
       .find(
         search
-          ? { $or: [{ name: searchQuery }, { dname: searchQuery }] }
+          ? { $or: [{ dname: searchQuery }, { name: searchQuery }] }
           : undefined
       )
-      .sort({ [search ? "dname" : "userlikes"]: -1 })
+      .sort({ [search ? "dname" : "userlikes"]: -1, _id: 1 })
       .limit(limit * 1)
       .skip(page * 1 * limit)
       .select("_id name dname userlikes gitlink twitter weblink")
