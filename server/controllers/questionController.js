@@ -2,6 +2,7 @@ const answerSchema = require("../models/answerSchema");
 const questionSchema = require("../models/questionSchema");
 const tagSchema = require("../models/tagSchema");
 const userController = require("./userController");
+const { ObjectId } = require("mongoose").Types;
 
 const questionController = {
   listQuestions: async (req, res) => {
@@ -15,15 +16,45 @@ const questionController = {
 
   questionsPerUser: async (req, res) => {
     const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
-    await questionSchema
-      .find({ userId: req.query.userId })
-      .sort({ date: -1 })
-      .limit(limit * 1)
-      .skip(page * 1 * limit)
-      .select("_id question userId date qlikes tags")
-      .populate("userId", "_id dname userlikes")
-      .then((questions) => res.send({ data: questions, msg: "success" }))
-      .catch((err) => res.status(500).send(err));
+    try {
+      const pipeline = [
+        { $match: { userId: ObjectId(req.query.userId) } },
+        {
+          $addFields: {
+            qlikesCount: { $size: "$qlikes" },
+            answersCount: { $size: "$answers" }
+          }
+        },
+        {
+          $project: {
+            _id: 1,
+            question: 1,
+            userId: 1,
+            date: 1,
+            tags: 1,
+            qlikesCount: 1,
+            answersCount: 1
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "userId",
+            pipeline: [{ $project: { _id: 1, dname: 1 } }]
+          }
+        },
+        { $unwind: "$userId" },
+        { $sort: { date: -1 } },
+        { $skip: page * limit },
+        { $limit: limit }
+      ];
+      const questions = await questionSchema.aggregate(pipeline);
+      res.send({ data: questions, msg: "success" });
+    } catch (err) {
+      res.status(500).send(err);
+    }
   },
 
   userLikedQuestions: async (req, res) => {

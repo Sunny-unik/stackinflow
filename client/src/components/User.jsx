@@ -10,34 +10,33 @@ import getAnchorOptions from "../helper/getAnchorOptions";
 
 export default function User(props) {
   const uDname = props.match.params.dname;
-  const [user, setUser] = useState([]);
-  // const [question, setQuestion] = useState({
-  //   data: null,
-  //   loading: true,
-  //   error: null
-  // });
+  const [user, setUser] = useState({ loading: true, error: null, data: null });
+  const [questions, setQuestion] = useState({
+    data: null,
+    loading: true,
+    error: null
+  });
 
   useEffect(() => {
+    let userId = "";
     axios
       .get(`${process.env.REACT_APP_API_URL}/user/by-dname?dname=` + uDname)
       .then((res) => {
-        console.log(res.data);
         setUser({ data: res.data.data, loading: false, error: null });
+        userId = res.data.data._id;
+        axios
+          .get(
+            `${process.env.REACT_APP_API_URL}/question/per-user?userId=${userId}`
+          )
+          .then((res) =>
+            setQuestion({ data: res.data.data, loading: false, error: null })
+          )
+          .catch((error) => setQuestion({ data: null, loading: false, error }));
       })
       .catch((error) => {
-        console.log(error);
         setUser({ data: null, loading: false, error });
+        !userId && setQuestion({ loading: false, error: error, data: null });
       });
-
-    // axios
-    //   .get(`${process.env.REACT_APP_API_URL}/question/list`)
-    //   .then((res) =>
-    //     setQuestion({ data: res.data.data, loading: false, error: null })
-    //   )
-    //   .catch((error) => {
-    //     console.log({ error });
-    //     setQuestion({ data: null, loading: false, error });
-    //   });
   }, [uDname]);
 
   return (
@@ -135,40 +134,52 @@ export default function User(props) {
                   </>
                 )}
               </div>
-              {/* <hr className="mb-0 mt-5" /> */}
-              {/* <div>
-            {askedquestion.length > 0 ? (
-              <div>
-                <h1>
-                  <label>These Questions Asked by {dnamebyudn}.</label>
-                </h1>
+              <hr className="mb-0 mt-5" />
+              <div className="my-3">
+                {questions.loading ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    {questions.error ? (
+                      <Error statusCode={questions.error.statusCode} />
+                    ) : (
+                      <>
+                        {questions.data?.length ? (
+                          <>
+                            <h1 className="my-4">
+                              Following questions are posted by{" "}
+                              {user.data.dname}.
+                            </h1>
+                            <div>
+                              {questions.data.map((q) => (
+                                <QuestionBox
+                                  key={q._id}
+                                  questionId={q._id}
+                                  likesCount={q.qlikesCount}
+                                  questionTitle={q.question}
+                                  answersCount={q.answersCount}
+                                  tags={q.tags}
+                                  dataAos={"fade-up"}
+                                  userObj={
+                                    q.userId
+                                      ? q.userId
+                                      : (q.userId = { dname: "404" })
+                                  }
+                                  date={q.date}
+                                />
+                              ))}
+                            </div>
+                          </>
+                        ) : (
+                          <h1 className="text-center text-secondary">
+                            {user.data.dname} has not posted any question.
+                          </h1>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
               </div>
-            ) : (
-              <h1 className="text-center text-secondary">
-                {dnamebyudn} not post any question.
-              </h1>
-            )}
-            <div>
-              {askedquestion &&
-                askedquestion.map((q) => {
-                  return (
-                    <div key={q._id}>
-                      <QuestionBox
-                        questionId={q._id}
-                        likesCount={q.qlikes.length}
-                        questionTitle={q.question}
-                        answersCount={q.answers.length}
-                        tags={q.tags}
-                        dataAos={"fade-up"}
-                        userObj={q.userdname}
-                        date={q.date}
-                      />
-                    </div>
-                  );
-                })}
-              {!askedquestion && <Spinner />}
-            </div>
-          </div> */}
             </div>
           ) : (
             <Error

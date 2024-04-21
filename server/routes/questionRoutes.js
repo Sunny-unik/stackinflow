@@ -24,8 +24,8 @@ const router = express.Router();
 
 router.get("/list", listQuestions);
 router.get("/count", countQuestions);
-router.get("/peruser", questionsPerUser);
-router.get("/userliked", auth, userLikedQuestions);
+router.get("/per-user", questionsPerUser);
+router.get("/user-liked", auth, userLikedQuestions);
 router.get("/tagged", questionByTag);
 router.get("/newest", questionsPerPage);
 router.get("/oldest", oldestWithLimit);
