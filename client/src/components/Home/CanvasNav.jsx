@@ -5,14 +5,17 @@ import { FaHome, FaTags, FaUsers } from "react-icons/fa";
 import { RiQuestionnaireFill } from "react-icons/ri";
 import { TbPencilQuestion } from "react-icons/tb";
 
-export default function CanvasNav(props) {
+export default function CanvasNav() {
   const user = useSelector((state) => state.user);
 
-  const sideLink = useCallback(() => {
-    user
-      ? props.history.push("/question/create")
-      : alert("User need to login first");
-  }, [user, props]);
+  const sideLink = useCallback(
+    (e) => {
+      if (user) return;
+      e.preventDefault();
+      alert("User need to login first");
+    },
+    [user]
+  );
 
   return (
     <ul id="canvasNav" className="p-1">
@@ -37,9 +40,9 @@ export default function CanvasNav(props) {
         </NavLink>
       </li>
       <li className="mt-2 p-1">
-        <div className="extraLink" onClick={sideLink}>
+        <NavLink className="extraLink" to="/question/create" onClick={sideLink}>
           <TbPencilQuestion /> Ask Question
-        </div>
+        </NavLink>
       </li>
     </ul>
   );
