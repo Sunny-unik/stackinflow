@@ -17,12 +17,10 @@ import Profile from "./components/Profile";
 import Signup from "./components/Signup";
 import SearchBox from "./components/SearchQuestion/SearchBox";
 import CanvasNav from "./components/Home/CanvasNav";
-import OverlayLoading from "./components/loadings/OverlayLoading";
 
 export default function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const loading = useSelector((state) => state.loading);
 
   useEffect(() => {
     dispatch(authenticateUser());
@@ -32,28 +30,20 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      {loading && <OverlayLoading />}
       <nav className="p-0 navbar navbar-expand-sm navbar-primary bg-dark sticky-top">
         <div className="container-lg">
           <button
             className="btn btn-dark d-md-none"
-            type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#smMenu"
           >
             <FaHamburger color="white" />
           </button>
-          <NavLink
-            className="navbar-brand"
-            style={{ fontSize: "1.6rem", fontWeight: "700" }}
-            exact
-            to="/"
-          >
-            <i>Stackinflow</i>
+          <NavLink className="navbar-brand fw-bold fst-italic" exact to="/">
+            <h3>Stackinflow</h3>
           </NavLink>
           <button
             className="navbar-toggler"
-            type="button"
             data-bs-toggle="collapse"
             data-bs-target="#topNavbar"
           >
