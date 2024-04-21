@@ -10,10 +10,12 @@ const tagController = {
   },
 
   countTags: async (req, res) => {
-    const { key, value } = req.query;
-    const query = key && value ? { [key]: value } : {};
     tagSchema
-      .countDocuments(query)
+      .countDocuments(
+        req.query.search
+          ? { name: { $regex: req.query.search, $options: "i" } }
+          : {}
+      )
       .then((count) => res.send({ msg: "success", data: count }))
       .catch((err) => res.status(500).send(err));
   },
@@ -44,12 +46,13 @@ const tagController = {
     tagSchema
       .find({
         $and: [
-          { name: { $regex: search, $options: "i" } },
+          { name: { $regex: search || "", $options: "i" } },
           { name: { $nin: askedTags || [] } }
         ]
       })
       .limit((+limit || 20) * 1)
       .skip((+page || 0) * 1 * (+limit || 20))
+      .sort({ questionsCount: -1, _id: 1 })
       .then((tags) => res.send({ data: tags, msg: "success" }))
       .catch((err) => res.status(500).send(err));
   }

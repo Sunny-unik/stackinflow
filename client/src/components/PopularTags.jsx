@@ -1,61 +1,83 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Spinner from "./loadings/Spinner";
+import UseSearchParam from "../helper/UseSearchParam";
 import Error from "./Error";
+import Pagination from "./Pagination";
+import { debounce } from "lodash";
 
 export default function PopularTags(props) {
-  const [searchTag, setSearchTag] = useState("");
-  const [tagsLength, setTagsLength] = useState("{count loading...}");
-  const [tags, setTags] = useState({
-    data: null,
-    error: null,
-    loading: true
-  });
+  const location = UseSearchParam(),
+    limit = location.get("limit") || 45,
+    pageNumber = +location.get("page") || 0,
+    [currentPage, setCurrentPage] = useState(
+      pageNumber < 1 ? 0 : pageNumber - 1
+    ),
+    [perPageLimit, setPerPageLimit] = useState(limit < 0 ? 10 : limit),
+    [tagsLength, setTagsLength] = useState("{count loading...}"),
+    searchTag = useRef(null),
+    [tags, setTags] = useState({
+      data: null,
+      error: null,
+      loading: true
+    });
+
+  const fetchTagsData = useCallback(
+    async (value) => {
+      const searchValue = searchTag.current?.value;
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/tag/count?search=${
+            value || searchValue
+          }`
+        );
+        setTagsLength(res.data.data);
+      } catch (error) {
+        setTagsLength("count failed");
+      }
+      axios
+        .post(
+          `${
+            process.env.REACT_APP_API_URL
+          }/tag/search?page=${currentPage}&limit=${perPageLimit}${
+            value || searchValue ? `&search=${value || searchValue}` : ""
+          }`
+        )
+        .then(({ data }) =>
+          setTags({ data: data.data, loading: false, error: null })
+        )
+        .catch((error = {}) => setTags({ error, loading: false, data: null }));
+    },
+    [currentPage, perPageLimit]
+  );
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/tag/count`)
-      .then(({ data }) => setTagsLength(data.data))
-      .catch(() => setTagsLength("count failed"));
-  }, []);
+    fetchTagsData();
+  }, [fetchTagsData]);
 
-  useEffect(() => {
-    axios[searchTag ? "post" : "get"](
-      `${process.env.REACT_APP_API_URL}/tag/${
-        !searchTag ? "on-page" : `search/?search=${searchTag}`
-      }`
-    )
-      .then(({ data }) =>
-        setTags({ data: data.data, loading: false, error: null })
-      )
-      .catch((error = {}) => setTags({ error, loading: false, data: null }));
-  }, [searchTag]);
-
-  function questionsByTag(t, action) {
-    if (action !== "search" && " ") props.history.push("/tagged/" + t);
-    else {
-      if (searchTag == null) alert("Enter some tags first in input box");
-      else if (searchTag.includes(" ") === true)
-        alert("Remove blank space from input box");
-      else props.history.push("/tagged/" + searchTag);
-    }
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleInputChange = useCallback(
+    debounce(({ target }) => {
+      fetchTagsData(target.value);
+    }, 300),
+    []
+  );
 
   return (
     <div>
       <div className="container pb-3 border border-2 border-top-0 border-start-0 border-end-0">
         <div className="row flex-md-nowrap justify-content-between mb-2">
           <h1 className="py-1 d-inline-block col-md-6">
-            Total {tagsLength} Tags
+            Matched {tagsLength} Tags
           </h1>
           <div className="input-group w-auto flex-nowrap align-items-center">
             <input
               type="text"
               placeholder="Search Tags"
-              onChange={(e) => setSearchTag(e.target.value)}
-              value={searchTag}
+              onChange={handleInputChange}
+              ref={searchTag}
               name="searchT"
               id="searchT"
               className="form-control border-secondary px-2"
@@ -75,30 +97,45 @@ export default function PopularTags(props) {
         ) : (
           <div className="row gap-xl-4 gap-lg-5 gap-4 justify-content-center">
             {tags.data?.length ? (
-              tags.data.map((t) => (
-                <div
-                  key={t._id + "-tag-btn"}
-                  data-aos="zoom-in"
-                  data-aos-offset="max-height"
-                  data-aos-once="true"
-                  data-aos-duration="200"
-                  className="card px-0 col-md-3 col-xl-2 d-inline-block"
-                  onClick={() => questionsByTag(t.name, "open")}
-                >
-                  <div className="card-body">
-                    <span id="inTagsTag" className="badge bg-primary my-2">
-                      {t.name}
-                    </span>
-                    <p className="card-text multiline-ellipsis">{t.detail}</p>
-                  </div>
-                  <div className="card-footer">
-                    has{" "}
-                    {!t.questionsCount
-                      ? "0 question"
-                      : t.questionsCount + " questions"}
-                  </div>
-                </div>
-              ))
+              <>
+                {tags.data.map((t) => (
+                  <a
+                    key={t._id + "-tag-btn"}
+                    data-aos="zoom-in"
+                    data-aos-offset="max-height"
+                    data-aos-once="true"
+                    data-aos-duration="200"
+                    className="card text-dark px-0 col-md-3 col-xl-2 d-inline-block"
+                    href={`tagged/${t.name}`}
+                  >
+                    <div className="card-body">
+                      <span id="inTagsTag" className="badge bg-primary my-2">
+                        {t.name}
+                      </span>
+                      <p className="card-text multiline-ellipsis">{t.detail}</p>
+                    </div>
+                    <div className="card-footer">
+                      has{" "}
+                      {!t.questionsCount
+                        ? "0 question"
+                        : t.questionsCount + " questions"}
+                    </div>
+                  </a>
+                ))}
+                <Pagination
+                  {...{
+                    limitValues: [15, 30, 45],
+                    limitsMessage: "tags per page",
+                    itemsLength: +tagsLength || 0,
+                    perPageLimit,
+                    setPerPageLimit,
+                    currentPage,
+                    setCurrentPage,
+                    history: props.history,
+                    route: "/tags"
+                  }}
+                />
+              </>
             ) : (
               <Error
                 statusCode={
