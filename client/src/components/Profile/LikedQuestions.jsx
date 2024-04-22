@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import handleDate from "../../helper/dateHelper";
+import QuestionBox from "../QuestionBox";
 
 export default function Likedquestions() {
   const user = useSelector((state) => state.user);
@@ -24,79 +25,23 @@ export default function Likedquestions() {
   });
 
   return (
-    <div className="border" style={{ minHeight: "46vh" }}>
-      <h1
-        className="m-0"
-        style={{ borderBottom: "2px solid lightgrey", paddingBottom: "2%" }}
-      >
+    <div className="border" style={{ minHeight: "64vh" }}>
+      <h1 className="p-1 pb-2" style={{ borderBottom: "2px solid lightgrey" }}>
         &nbsp;All following questions are liked by {user.dname}.
       </h1>
-      {userliked.map((g) => {
-        return (
-          <div className="m-0" style={{ border: ".1rem solid lightgrey" }}>
-            <h4 className="mainqdiv">
-              <NavLink
-                style={{ textDecoration: "none" }}
-                to={`/question/${g._id}`}
-              >
-                {g.question}
-              </NavLink>
-            </h4>
-            <div className="qla bg-secondary"> Likes: {g.qlikes.length} </div>
-            <div className="qla bg-secondary">
-              <NavLink
-                style={{ color: "black", textDecoration: "none" }}
-                to={`/question/${g._id}`}
-              >
-                {" "}
-                Answer: {g.answers.length}{" "}
-              </NavLink>
-            </div>
-            <div className="maintagdiv mx-2">
-              {g.tags.map((o) => {
-                return (
-                  <NavLink
-                    style={{
-                      color: "white",
-                      fontFamily: "monospace",
-                      padding: ".2rem"
-                    }}
-                    className="m-1 rounded-2 bg-dark"
-                    to={`/tagged/${o}`}
-                  >
-                    {o}
-                  </NavLink>
-                );
-              })}
-            </div>
-            <div
-              className="maindnamediv"
-              style={{ fontSize: ".9rem", fontFamily: "cursive" }}
-            >
-              asked by&nbsp;
-              <NavLink
-                style={{ color: "navy", fontFamily: "cursive" }}
-                to={`/user/${g.userdname}`}
-              >
-                {user.dname}
-              </NavLink>
-            </div>
-            <div
-              style={{
-                width: "37%",
-                display: "inline-block",
-                margin: "6px",
-                fontFamily: "Times"
-              }}
-            >
-              posted{" "}
-              {handleDate(g.date) !== 0
-                ? handleDate(g.date) + " day ago"
-                : "today"}
-            </div>
-          </div>
-        );
-      })}
+      {userliked.map((q) => (
+        <QuestionBox
+          key={q._id + "_selfLiked"}
+          questionId={q._id}
+          likesCount={q.qlikes.length}
+          questionTitle={q.question}
+          answersCount={q.answers ? q.answers.length : 0}
+          tags={q.tags}
+          dataAos={"fade-left"}
+          userObj={q.userId ? q.userId : (q.userId = { dname: "404" })}
+          date={q.date}
+        />
+      ))}
     </div>
   );
 }

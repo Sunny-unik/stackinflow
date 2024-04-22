@@ -14,7 +14,7 @@ export default function QuestionBox({
   date
 }) {
   return (
-    <div className="rounded card">
+    <div className="rounded card border">
       <div
         data-aos="fade-up"
         data-aos-duration="400"
@@ -25,50 +25,30 @@ export default function QuestionBox({
           data-aos={dataAos}
           data-aos-duration="800"
           data-aos-offset="max-height"
-          className="mainqdiv"
+          className="boxTitleWrapper"
         >
-          <NavLink
-            style={{
-              textDecorationLine: "none",
-              textShadow: ".02em .04em black"
-            }}
-            to={`/question/${questionId}`}
-          >
+          <NavLink className="fw-bolder" to={`/question/${questionId}`}>
             {questionTitle}
           </NavLink>
         </h4>
         <div className="d-inline-block">
-          <div
-            className="qla bg-secondary"
-            style={{ textShadow: "0.02em 0.08em black" }}
-          >
-            &nbsp;Likes: {likesCount}{" "}
-          </div>
-          <div className="qla bg-secondary">
-            <NavLink
-              style={{
-                color: "white",
-                textDecoration: "none",
-                textShadow: "0.02em 0.08em black"
-              }}
-              to={`/question/${questionId}`}
-            >
-              &nbsp;Answers: {answersCount}{" "}
+          <div className="px-3 qla bg-secondary">Likes: {likesCount}</div>
+          <div className="qla text-white bg-secondary">
+            <NavLink className="text-white px-2" to={`/question/${questionId}`}>
+              Answers: {answersCount}
             </NavLink>
           </div>
         </div>
-        <div className="maintagdiv mx-2">
+        <div className="boxTagWrapper mx-2">
           {tags.map((o) => {
             return (
               <span key={o}>
                 <NavLink
                   style={{
-                    color: "white",
                     fontFamily: "monospace",
-                    padding: ".2rem",
-                    textDecorationLine: "none"
+                    padding: ".2rem"
                   }}
-                  className="m-1 rounded bg-dark"
+                  className="m-1 text-white rounded bg-dark"
                   to={`/tagged/${o}`}
                 >
                   {o.replace(",", "")}
@@ -77,11 +57,11 @@ export default function QuestionBox({
             );
           })}
         </div>
-        <div className="maindnamediv">
-          asked by &nbsp;
+        <div className="boxDNameWrapper">
+          asked by&nbsp;
           <NavLink
-            style={{ color: "navy", fontFamily: "SeogUI", fontWeight: "bold" }}
-            to={`/user/${userObj._id}`}
+            style={{ color: "navy", fontWeight: "bold" }}
+            to={`/user/${userObj.dname}`}
           >
             {userObj.dname}
           </NavLink>
@@ -91,7 +71,7 @@ export default function QuestionBox({
             width: "37%",
             display: "inline-block",
             margin: "6px",
-            fontFamily: "SeogUI",
+            fontFamily: "roboto",
             fontWeight: "bold"
           }}
         >

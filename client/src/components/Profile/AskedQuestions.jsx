@@ -5,6 +5,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { NavLink } from "react-router-dom";
 import handleDate from "../../helper/dateHelper";
+import QuestionBox from "../QuestionBox";
 
 export default function Askedquestions() {
   const [question, setquestion] = useState([]);
@@ -20,94 +21,27 @@ export default function Askedquestions() {
   const askedquestion = question.filter((un) => un.userdname === user._id);
 
   return (
-    <>
-      <div>
-        <h1 className="pb-2" style={{ borderBottom: "2px solid lightgrey" }}>
-          <label>These Questions Asked by {user.dname}.</label>
-        </h1>
-      </div>
+    <div className="border" style={{ minHeight: "64vh" }}>
+      <h1 className="p-1 pb-2" style={{ borderBottom: "2px solid lightgrey" }}>
+        &nbsp;All following questions are posted by {user.dname}.
+      </h1>
       <div>
         {askedquestion &&
-          askedquestion.map((q) => {
-            return (
-              <div key={q._id}>
-                <div
-                  className="m-0"
-                  style={{ border: ".1rem solid lightgrey" }}
-                >
-                  <h4
-                    data-aos="fade-left"
-                    data-aos-offset="max-height"
-                    data-aos-once="true"
-                    data-aos-duration="400"
-                    className="mainqdiv"
-                  >
-                    <NavLink
-                      style={{ textDecoration: "none" }}
-                      to={`/question/${q._id}`}
-                    >
-                      {q.question}
-                    </NavLink>
-                  </h4>
-                  <div className="qla bg-secondary">
-                    {" "}
-                    Likes: {q.qlikes.length}{" "}
-                  </div>
-                  <div className="qla bg-secondary">
-                    <NavLink
-                      style={{ color: "black", textDecoration: "none" }}
-                      to={`/question/${q._id}`}
-                    >
-                      {" "}
-                      Answer: {q.answers.length}{" "}
-                    </NavLink>
-                  </div>
-                  {q.tags.map((o) => {
-                    return (
-                      <NavLink
-                        style={{
-                          color: "white",
-                          fontFamily: "monospace",
-                          padding: ".2rem"
-                        }}
-                        className="rounded-2 bg-dark m-1"
-                        to={`/tagged/${o}`}
-                      >
-                        {o}
-                      </NavLink>
-                    );
-                  })}
-                  <div
-                    className="maindnamediv"
-                    style={{ fontSize: ".9rem", fontFamily: "cursive" }}
-                  >
-                    asked by
-                    <NavLink
-                      style={{ color: "navy", fontFamily: "cursive" }}
-                      to={`/user/${q.userdname}`}
-                    >
-                      {user.dname}
-                    </NavLink>
-                  </div>
-                  <div
-                    style={{
-                      width: "37%",
-                      display: "inline-block",
-                      margin: "6px",
-                      fontFamily: "Times"
-                    }}
-                  >
-                    posted{" "}
-                    {handleDate(q.date) !== 0
-                      ? handleDate(q.date) + " day ago"
-                      : "today"}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          askedquestion.map((q) => (
+            <QuestionBox
+              key={q._id + "_askedQuestion"}
+              questionId={q._id}
+              likesCount={q.qlikes.length}
+              questionTitle={q.question}
+              answersCount={q.answers ? q.answers.length : 0}
+              tags={q.tags}
+              dataAos={"fade-left"}
+              userObj={q.userId ? q.userId : (q.userId = { dname: "404" })}
+              date={q.date}
+            />
+          ))}
       </div>
-    </>
+    </div>
   );
 }
 AOS.init();

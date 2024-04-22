@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import handleDate from "../../helper/dateHelper";
+import QuestionBox from "../QuestionBox";
 
 export default function Givenaswer() {
   const [question, setquestion] = useState([]);
@@ -25,46 +26,23 @@ export default function Givenaswer() {
   });
 
   return (
-    <div style={{ minHeight: "64vh" }}>
-      <h1 style={{ borderBottom: "2px solid lightgrey", paddingBottom: "2%" }}>
+    <div className="border" style={{ minHeight: "64vh" }}>
+      <h1 className="p-1 pb-2" style={{ borderBottom: "2px solid lightgrey" }}>
         &nbsp;All following answers are given by {user.dname}.
       </h1>
-      {abyuser.map((g) => {
-        return (
-          <div className=" my-1" style={{ border: ".1rem solid lightgrey" }}>
-            <NavLink to={`/question/${g.qid}`}>
-              <h4 className="mainqdiv ">{g.answer}</h4>
-            </NavLink>
-            <div className="qla bg-primary m-2"> Likes: {g.alikes.length} </div>
-            <div
-              className="maindnamediv m-1"
-              style={{ fontSize: ".9rem", fontFamily: "cursive" }}
-            >
-              given by&nbsp;
-              <NavLink
-                style={{ color: "navy", fontFamily: "cursive" }}
-                to={`/user/${g.uid}`}
-              >
-                {user.dname}
-              </NavLink>
-            </div>
-            <div
-              className="m-1"
-              style={{
-                width: "37%",
-                display: "inline-block",
-                margin: "6px",
-                fontFamily: "Times"
-              }}
-            >
-              posted{" "}
-              {handleDate(g.date) !== 0
-                ? handleDate(g.date) + " day ago"
-                : "today"}
-            </div>
-          </div>
-        );
-      })}
+      {abyuser.map((q) => (
+        <QuestionBox
+          key={q._id + "_givenAnswer"}
+          questionId={q._id}
+          likesCount={q.qlikes.length}
+          questionTitle={q.question}
+          answersCount={q.answers ? q.answers.length : 0}
+          tags={q.tags}
+          dataAos={"fade-left"}
+          userObj={q.userId ? q.userId : (q.userId = { dname: "404" })}
+          date={q.date}
+        />
+      ))}
     </div>
   );
 }
