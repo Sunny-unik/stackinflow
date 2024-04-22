@@ -31,6 +31,7 @@ export default function PopularUsers(props) {
   const fetchUsersData = useCallback(
     async (value) => {
       const searchValue = searchUser.current?.value;
+      setUsers({ loading: true, error: null, data: null });
       try {
         const res = await axios.get(
           `${process.env.REACT_APP_API_URL}/user/count?search=${
@@ -65,18 +66,18 @@ export default function PopularUsers(props) {
   const handleInputChange = useCallback(
     debounce(({ target }) => {
       fetchUsersData(target.value);
-    }, 300),
+    }, 400),
     [fetchUsersData]
   );
 
   return (
     <>
-      <div
-        data-count={usersLength}
-        className="container pb-3 border border-2 border-top-0 border-start-0 border-end-0"
-      >
+      <div className="container pb-3 border border-2 border-top-0 border-start-0 border-end-0">
         <div className="row flex-md-nowrap justify-content-between mb-2">
-          <h1 className="py-1 d-inline-block col-md-6">Popular Users</h1>
+          <h1 className="py-1 d-inline-block col-md-6">
+            {searchUser.current?.value ? "Matched" : "Total"} {usersLength}{" "}
+            Users
+          </h1>
           <div className="input-group flex-nowrap w-auto align-items-center">
             <input
               type="text"

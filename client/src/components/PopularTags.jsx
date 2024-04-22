@@ -28,6 +28,7 @@ export default function PopularTags(props) {
   const fetchTagsData = useCallback(
     async (value) => {
       const searchValue = searchTag.current?.value;
+      setTags({ loading: true, error: null, data: null });
       try {
         const res = await axios.get(
           `${process.env.REACT_APP_API_URL}/tag/count?search=${
@@ -62,7 +63,7 @@ export default function PopularTags(props) {
   const handleInputChange = useCallback(
     debounce(({ target }) => {
       fetchTagsData(target.value);
-    }, 300),
+    }, 400),
     []
   );
 
@@ -71,7 +72,7 @@ export default function PopularTags(props) {
       <div className="container pb-3 border border-2 border-top-0 border-start-0 border-end-0">
         <div className="row flex-md-nowrap justify-content-between mb-2">
           <h1 className="py-1 d-inline-block col-md-6">
-            Matched {tagsLength} Tags
+            {searchTag.current?.value ? "Matched" : "Total"} {tagsLength} Tags
           </h1>
           <div className="input-group w-auto flex-nowrap align-items-center">
             <input
@@ -93,7 +94,7 @@ export default function PopularTags(props) {
         </h4>
       </div>
       <div className="p-3" style={{ minHeight: "60vh" }}>
-        {!tags.data ? (
+        {tags.loading ? (
           <Spinner />
         ) : (
           <div className="row gap-xl-4 gap-lg-5 gap-4 justify-content-center">
