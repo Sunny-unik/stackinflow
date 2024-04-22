@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import QuestionBox from "../QuestionBox";
 import { useParams } from "react-router-dom";
+import Spinner from "../loadings/Spinner";
+import Error from "../Error";
 
 export default function SearchQ({ history }) {
   const search = useParams().questionSearch || "";
@@ -12,6 +14,7 @@ export default function SearchQ({ history }) {
   });
 
   useEffect(() => {
+    setQuestions({ data: null, loading: true, error: null });
     if (!search) history.push("/");
     else
       axios
@@ -29,23 +32,41 @@ export default function SearchQ({ history }) {
       <h1 className="ps-2 py-2">Questions related to '{search}'</h1>
       <hr />
       <div className="w-100 bg-light">
-        {questions.data?.length ? (
-          questions.data.map((q) => (
-            <div key={q._id}>
-              <QuestionBox
-                questionId={q._id}
-                likesCount={q.qlikes.length}
-                questionTitle={q.question}
-                answersCount={q.answers ? q.answers.length : 0}
-                tags={q.tags}
-                dataAos={"fade-up"}
-                userObj={q.userId ? q.userId : (q.userId = { dname: "404" })}
-                date={q.date}
-              />
-            </div>
-          ))
+        {questions.loading ? (
+          <>
+            <Spinner />
+          </>
         ) : (
-          <h2 className="text-center text-danger card">!Question not Found</h2>
+          <>
+            {questions.error ? (
+              <Error />
+            ) : (
+              <>
+                {questions.data?.length ? (
+                  questions.data.map((q) => (
+                    <div key={q._id}>
+                      <QuestionBox
+                        questionId={q._id}
+                        likesCount={q.qlikes.length}
+                        questionTitle={q.question}
+                        answersCount={q.answers ? q.answers.length : 0}
+                        tags={q.tags}
+                        dataAos={"fade-up"}
+                        userObj={
+                          q.userId ? q.userId : (q.userId = { dname: "404" })
+                        }
+                        date={q.date}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <h2 className="text-center text-danger card">
+                    !Question not Found
+                  </h2>
+                )}
+              </>
+            )}
+          </>
         )}
       </div>
     </div>
