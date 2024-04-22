@@ -42,7 +42,7 @@ const questionController = {
             localField: "userId",
             foreignField: "_id",
             as: "userId",
-            pipeline: [{ $project: { _id: 1, dname: 1 } }]
+            pipeline: [{ $project: { _id: 1, dname: 1, userlikes: 1 } }]
           }
         },
         { $unwind: "$userId" },
@@ -164,15 +164,28 @@ const questionController = {
   },
 
   questionsSearch: async (req, res) => {
-    const { search, qid } = req.query;
-    const queries = [{ question: { $regex: search, $options: "i" } }];
-    if (qid && qid !== "undefined") queries[1] = { _id: { $ne: qid } };
-    questionSchema
-      .find({ $and: queries })
-      .select("_id question userId date qlikes tags")
-      .populate("userId", "_id dname userlikes")
-      .then((questions) => res.send({ data: questions, msg: "success" }))
-      .catch((err) => res.status(500).send(err));
+    try {
+      const { search, qid } = req.query;
+      const keywords = search.trim().split(/\s+/);
+      const searchQuery = keywords.map((k) => new RegExp(k, "i"));
+      const queries = [
+        {
+          $or: [
+            { question: { $in: searchQuery } },
+            { tags: { $in: searchQuery } }
+          ]
+        }
+      ];
+      if (qid && qid !== "undefined") queries.push({ _id: { $ne: qid } });
+      const questions = await questionSchema
+        .find({ $and: queries })
+        .select("_id question userId date qlikes tags")
+        .populate("userId", "_id dname userlikes")
+        .exec(); // Use exec() for queries to return a promise
+      res.send({ data: questions, msg: "success" });
+    } catch (error) {
+      res.status(500).send(error);
+    }
   },
 
   questionById: async (req, res) => {
