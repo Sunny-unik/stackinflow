@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 export default function SearchBox() {
-  const [questionSearch, setquestionSearch] = useState("");
+  const initialSearch = useLocation().pathname.split("/")[2] || "";
+  const [questionSearch, setQuestionSearch] = useState(initialSearch);
+
+  const handleKeyDown = useCallback((event) => {
+    if (event.key === "Enter") event.target.nextSibling?.click();
+  }, []);
 
   return (
     <div className="d-flex flex-grow-1">
@@ -13,7 +18,8 @@ export default function SearchBox() {
         className="form-control me-1"
         name="question-search"
         value={questionSearch}
-        onChange={(e) => setquestionSearch(e.target.value)}
+        onKeyDown={handleKeyDown}
+        onChange={(e) => setQuestionSearch(e.target.value)}
         id="questionSearch"
       />
       <NavLink

@@ -25,7 +25,7 @@ a {
 .sticky-top .navbar-nav li {
   letter-spacing: 1px;
 }
-.sticky-top .navbar-nav a:hover {
+.sticky-top a:hover {
   color: rgba(50, 400, 150, 0.9);
 }
 @media only screen and (max-width: 576px) {

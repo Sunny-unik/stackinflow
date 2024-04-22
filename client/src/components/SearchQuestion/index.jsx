@@ -1,28 +1,36 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import QuestionBox from "../QuestionBox";
+import { useParams } from "react-router-dom";
 
-export default function Searchq(props) {
-  const [questions, setquestions] = useState([]);
-  const search = props.location.searchedQuestion;
+export default function SearchQ({ history }) {
+  const search = useParams().questionSearch || "";
+  const [questions, setQuestions] = useState({
+    data: null,
+    loading: true,
+    error: null
+  });
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/question/search?search=${search}`)
-      .then((res) => setquestions(res.data.data));
-  }, [search]);
+    if (!search) history.push("/");
+    else
+      axios
+        .get(
+          `${process.env.REACT_APP_API_URL}/question/search?search=${search}`
+        )
+        .then((res) =>
+          setQuestions({ data: res.data.data, loading: false, error: null })
+        )
+        .catch((error) => setQuestions({ data: null, loading: false, error }));
+  }, [search, history]);
 
   return (
-    <div className="border" style={{ minHeight: "70vh" }}>
-      <p
-        className="card p-1 display-5 border"
-        style={{ fontFamily: "SeoogUI", textShadow: ".02em .02em blue" }}
-      >
-        Questions relates to '{search}'
-      </p>
+    <div style={{ minHeight: "70vh" }}>
+      <h1 className="ps-2 py-2">Questions related to '{search}'</h1>
+      <hr />
       <div className="w-100 bg-light">
-        {questions.length ? (
-          questions.map((q) => (
+        {questions.data?.length ? (
+          questions.data.map((q) => (
             <div key={q._id}>
               <QuestionBox
                 questionId={q._id}
