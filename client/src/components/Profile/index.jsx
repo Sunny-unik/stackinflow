@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import axios from "axios";
-import Askedquestions from "./AskedQuestions";
-import Givenanswer from "./GivenAnswers";
-import Editprofile from "./EditProfile";
-import Likedquestions from "./LikedQuestions";
+import AskedQuestions from "./AskedQuestions";
+import GivenAnswers from "./GivenAnswers";
+import EditProfile from "./EditProfile";
+import LikedQuestions from "./LikedQuestions";
 import Footer from "../Footer";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import { IoLocationSharp } from "react-icons/io5";
@@ -216,7 +216,7 @@ export default function Profile(props) {
                   <NavLink
                     className="btn text-primary rounded p-1"
                     activeClassName="active"
-                    to="/profile/editprofile"
+                    to="/profile/edit"
                     style={{ fontSize: "large" }}
                   >
                     Edit Profile
@@ -226,7 +226,7 @@ export default function Profile(props) {
                   <NavLink
                     className="btn text-primary rounded p-1"
                     activeClassName="active"
-                    to="/profile/selfquestion"
+                    to="/profile/questions"
                     style={{ fontSize: "large" }}
                   >
                     Asked Questions
@@ -236,7 +236,7 @@ export default function Profile(props) {
                   <NavLink
                     className="btn text-primary rounded p-1"
                     activeClassName="active"
-                    to="/profile/selfanswer"
+                    to="/profile/answers"
                     style={{ fontSize: "large" }}
                   >
                     Given Answers
@@ -247,10 +247,10 @@ export default function Profile(props) {
             <div className="d-flex justify-content-center">
               <div className="col-sm-10">
                 <Switch>
-                  <Route path="/profile" exact component={Likedquestions} />
-                  <Route path="/profile/editProfile" component={Editprofile} />
-                  <Route path="/profile/questions" component={Askedquestions} />
-                  <Route path="/profile/answers" component={Givenanswer} />
+                  <Route path="/profile" exact component={LikedQuestions} />
+                  <Route path="/profile/edit" component={EditProfile} />
+                  <Route path="/profile/questions" component={AskedQuestions} />
+                  <Route path="/profile/answers" component={GivenAnswers} />
                 </Switch>
               </div>
             </div>
