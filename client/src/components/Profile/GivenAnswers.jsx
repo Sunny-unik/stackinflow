@@ -1,48 +1,71 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
-import handleDate from "../../helper/dateHelper";
 import QuestionBox from "../QuestionBox";
+import Error from "../Error";
+import Spinner from "../loadings/Spinner";
 
-export default function Givenaswer() {
-  const [question, setquestion] = useState([]);
+export default function GivenAnswers() {
   const user = useSelector((state) => state.user);
-  const uid = useSelector((state) => state.user._id);
+  const [answers, setAnswers] = useState({
+    data: null,
+    error: null,
+    loading: true
+  });
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/question/list`)
-      .then((res) => setquestion(res.data.data))
-      .catch((err) => console.log(err));
-  }, []);
-
-  const answer = [];
-  question.forEach((q) => answer.push(...q.answers));
-
-  const abyuser = [];
-  answer.forEach((all) => {
-    if (all.uid === uid) abyuser.push(all);
-  });
+      .get(
+        `${process.env.REACT_APP_API_URL}/answer/per-user?userId=${user._id}`
+      )
+      .then((res) =>
+        setAnswers({ data: res.data.data, loading: false, error: null })
+      )
+      .catch((error) => setAnswers({ data: null, loading: false, error }));
+  }, [user._id]);
 
   return (
     <div className="border" style={{ minHeight: "64vh" }}>
-      <h1 className="p-1 pb-2" style={{ borderBottom: "2px solid lightgrey" }}>
+      <h1
+        className="p-1 pb-2 mb-0"
+        style={{ borderBottom: "2px solid lightgrey" }}
+      >
         &nbsp;All following answers are given by {user.dname}.
       </h1>
-      {abyuser.map((q) => (
-        <QuestionBox
-          key={q._id + "_givenAnswer"}
-          questionId={q._id}
-          likesCount={q.qlikes.length}
-          questionTitle={q.question}
-          answersCount={q.answers ? q.answers.length : 0}
-          tags={q.tags}
-          dataAos={"fade-left"}
-          userObj={q.userId ? q.userId : (q.userId = { dname: "404" })}
-          date={q.date}
-        />
-      ))}
+      {answers.loading ? (
+        <Spinner />
+      ) : (
+        <>
+          {answers.data?.length ? (
+            <>
+              {answers.data.map((a) => (
+                <QuestionBox
+                  key={a._id + "_givenAnswer"}
+                  questionId={a.questionData?._id}
+                  likesCount={a.alikesCount}
+                  questionTitle={a.answer}
+                  tags={a.questionData?.tags}
+                  dataAos={"fade-left"}
+                  userObj={{ dname: user.dname }}
+                  date={a.date}
+                />
+              ))}
+            </>
+          ) : (
+            <>
+              {Array.isArray(answers.data) ? (
+                <Error
+                  heading="Not found"
+                  statusCode="404"
+                  message={"You have not answered any question"}
+                />
+              ) : (
+                <Error />
+              )}
+            </>
+          )}
+        </>
+      )}
     </div>
   );
 }

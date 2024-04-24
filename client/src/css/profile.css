@@ -17,4 +17,5 @@
 }
 #profile-tabs-bar {
   padding-top: 60px !important;
+  z-index: 101;
 }

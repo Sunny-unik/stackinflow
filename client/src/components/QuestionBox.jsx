@@ -25,19 +25,26 @@ export default function QuestionBox({
           data-aos={dataAos}
           data-aos-duration="800"
           data-aos-offset="max-height"
-          className="boxTitleWrapper"
+          className="boxTitleWrapper text-truncate"
         >
           <NavLink className="fw-bolder" to={`/question/${questionId}`}>
             {questionTitle}
           </NavLink>
         </h4>
         <div className="d-inline-block">
-          <div className="px-3 qla bg-secondary">Likes: {likesCount}</div>
-          <div className="qla text-white bg-secondary">
-            <NavLink className="text-white px-2" to={`/question/${questionId}`}>
-              Answers: {answersCount}
-            </NavLink>
-          </div>
+          {(likesCount || likesCount === 0) && (
+            <div className="px-3 qla bg-secondary">Likes: {likesCount}</div>
+          )}
+          {(answersCount || answersCount === 0) && (
+            <div className="qla text-white bg-secondary">
+              <NavLink
+                className="text-white px-2"
+                to={`/question/${questionId}`}
+              >
+                Answers: {answersCount}
+              </NavLink>
+            </div>
+          )}
         </div>
         <div className="boxTagWrapper mx-2">
           {tags.map((o) => {

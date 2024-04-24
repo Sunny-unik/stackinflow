@@ -1,5 +1,6 @@
 const answerSchema = require("../models/answerSchema");
 const questionSchema = require("../models/questionSchema");
+const { ObjectId } = require("mongoose").Types;
 
 const answerController = {
   listAnswer: async (req, res) => {
@@ -10,18 +11,43 @@ const answerController = {
       .then((answers) => res.send({ msg: answers.length, data: answers }))
       .catch((err) => res.send(err));
   },
-  
+
   answersPerUser: async (req, res) => {
-    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
-    await answerSchema 
-      .find({userId:req.query.userId})
-      .sort({ date: -1 })
-      .limit(limit * 1)
-      .skip(page * 1 * limit)
-      .select("_id answer userId date alikes qid")
-      .populate("userId", "_id dname userlikes")
-      .then((answers) => res.send({ data: answers, msg: "success" }))
-      .catch((err) => res.send(err));
+    const [limit, page] = [+req.query.limit || 15, +req.query.page || 0];
+    try {
+      const pipeline = [
+        { $match: { userId: ObjectId(req.query.userId) } },
+        { $addFields: { alikesCount: { $size: "$alikes" } } },
+        {
+          $lookup: {
+            from: "questions",
+            localField: "qid",
+            foreignField: "_id",
+            as: "questionData",
+            pipeline: [{ $project: { _id: 1, tags: 1 } }]
+          }
+        },
+        {
+          $project: {
+            _id: 1,
+            answer: 1,
+            date: 1,
+            alikesCount: 1,
+            questionData: 1
+          }
+        },
+        {
+          $unwind: { path: "$questionData", preserveNullAndEmptyArrays: true }
+        },
+        { $sort: { date: -1 } },
+        { $skip: page * limit },
+        { $limit: limit }
+      ];
+      const answers = await answerSchema.aggregate(pipeline);
+      res.send({ data: answers, msg: "success" });
+    } catch (err) {
+      res.status(500).send(err);
+    }
   },
 
   createAnswer: async (req, res) => {
