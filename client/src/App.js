@@ -81,6 +81,7 @@ export default function App() {
                   <NavLink
                     activeClassName="activeTopNav"
                     to="/profile"
+                    className="p-2"
                     style={{ fontFamily: "Monaco" }}
                   >
                     <FaUserTie />
@@ -94,6 +95,7 @@ export default function App() {
                     activeClassName="activeTopNav"
                     to="/login"
                     onClick={logout}
+                    className="p-2"
                     style={{ fontFamily: "Monaco" }}
                   >
                     <FaSignOutAlt />
