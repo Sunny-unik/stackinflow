@@ -1,12 +1,13 @@
 import "../../css/registerForm.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { emailRegex, passwordRegex } from "../../helper/RegexHelper";
 import ConfirmEmail from "./ConfirmEmail";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import setLoading from "../../action/loadingAction";
+import OverlayLoading from "../loadings/OverlayLoading";
 
 export default function Signup(props) {
   const [userId, setUserId] = useState("");
@@ -15,7 +16,12 @@ export default function Signup(props) {
   const [dName, setDName] = useState("");
   const [password, setPassword] = useState("");
   const [inSignup, setInSignup] = useState(true);
+  const { user: reduxUser, loading } = useSelector((state) => state);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    reduxUser && props.history.push("/");
+  }, [reduxUser, props.history]);
 
   const validateUserDetails = (event) => {
     event.preventDefault();
@@ -52,6 +58,7 @@ export default function Signup(props) {
 
   const uniqueDName = async () => {
     try {
+      dispatch(setLoading(true));
       const result = await axios.post(
         `${process.env.REACT_APP_API_URL}/user/dname`,
         { dname: dName }
@@ -60,11 +67,14 @@ export default function Signup(props) {
       else alert("Entered username is already registered");
     } catch (error) {
       throw error;
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   const createAccountAndVerify = async () => {
     try {
+      dispatch(setLoading(true));
       const result = await axios.post(`${process.env.REACT_APP_API_URL}/user`, {
         email,
         name,
@@ -78,6 +88,8 @@ export default function Signup(props) {
       } else serverErrorHandler();
     } catch (error) {
       throw error;
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -87,6 +99,7 @@ export default function Signup(props) {
 
   return (
     <React.Fragment>
+      {loading && <OverlayLoading />}
       <div className="text-center">
         <div className="container p-0 d-inline-flex justify-content-center w-100">
           {inSignup ? (

@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { authenticateUser } from "../../action/userAction";
 import AskQuestionGuide from "./AskQuestionGuide";
 import TagsDropdown from "./TagsDropdown";
 
@@ -16,10 +15,8 @@ export default function AskQuestion(props) {
   );
   const [loader, setLoader] = useState(false);
   const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!user) dispatch(authenticateUser());
     if (questionId) {
       if (!askQTitle)
         axios
@@ -41,7 +38,7 @@ export default function AskQuestion(props) {
           .forEach((elem) => elem?.classList.remove("active"));
       };
     }
-  }, [user, dispatch, questionId, askQTitle]);
+  }, [user, questionId, askQTitle]);
 
   const validQuestion = useCallback(() => {
     const errors = [],

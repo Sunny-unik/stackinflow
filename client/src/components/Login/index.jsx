@@ -9,6 +9,7 @@ import "aos/dist/aos.css";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import ForgotPassword from "./ForgotPassword";
 import SetPassword from "./SetPassword";
+import OverlayLoading from "../loadings/OverlayLoading";
 import axios from "axios";
 
 export default function Login(props) {
@@ -17,7 +18,7 @@ export default function Login(props) {
   const [passwordType, setPasswordType] = useState("password");
   const [path, setPath] = useState("");
   const [id, setId] = useState("");
-  const reduxUser = useSelector((state) => state.user);
+  const { user: reduxUser, loading } = useSelector((state) => state);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -56,6 +57,7 @@ export default function Login(props) {
 
   return (
     <React.Fragment>
+      {loading && <OverlayLoading />}
       <div className="text-center">
         <div className="container mx-auto p-0 d-inline-flex justify-content-center w-100">
           {path === "/setPassword" ? (

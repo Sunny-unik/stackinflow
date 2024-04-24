@@ -54,15 +54,13 @@ function authenticateUser(token) {
       .then((res) => {
         dispatch({ type: "LOADING_FALSE" });
         if (res.data.status === "ok")
-          dispatch({ type: "LOGIN_USER", payload: res.data.data });
-        else if (res.data === "token expired") {
-          if (
-            window.location.pathname.includes("/profile") ||
-            window.location.pathname.includes("/question/create")
-          )
-            window.location.pathname = "/login";
-          console.log(res.data);
-        } else console.log("cookie not found");
+          return dispatch({ type: "LOGIN_USER", payload: res.data.data });
+        if (
+          window.location.pathname.includes("/profile") ||
+          window.location.pathname.includes("/question/create")
+        )
+          window.location.pathname = "/login";
+        console.log(res.data);
       })
       .catch((err) => {
         dispatch({ type: "LOADING_FALSE" });
