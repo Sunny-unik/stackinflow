@@ -235,19 +235,31 @@ const questionController = {
 
   deleteQuestion: async (req, res) => {
     let answerIds;
-    await questionSchema
-      .findById(req.body.id)
-      .then((question) => (answerIds = question.answers))
-      .catch((err) => console.log(err));
-    answerIds.forEach((id) =>
-      answerSchema.deleteOne({ _id: id }, (err, result) => {
-        if (err) throw err;
-      })
-    );
-    questionSchema.deleteOne({ _id: req.body.id }, (err, result) => {
-      if (err) throw err;
-      res.send({ data: result, msg: "Question is deleted!" });
-    });
+    if (!req.query.id) {
+      return res.status(403).send({
+        name: "ValidationError",
+        message: "id is a required field"
+      });
+    }
+    try {
+      await questionSchema
+        .findById(req.query.id)
+        .then((question) => (answerIds = question.answers))
+        .catch((err) => console.log(err));
+      const errorsInDelete = [];
+      answerIds.forEach((id) =>
+        answerSchema.deleteOne({ _id: id }, (err, result) => {
+          if (err) errorsInDelete.push(err);
+        })
+      );
+      questionSchema.deleteOne({ _id: req.query.id }, (err, result) => {
+        if (err || !result)
+          return res.status(500).send("Server error, try again later.");
+        res.send({ data: result, msg: "Question is deleted!" });
+      });
+    } catch (error) {
+      res.status(500).send("Server error, try again later.");
+    }
   },
 
   updateQuestion: async (req, res) => {

@@ -1,13 +1,6 @@
 const yup = require("yup");
 
 const schemaProvider = {
-  DELETE: {
-    "/": {
-      schema: yup.object().shape({
-        id: yup.string().required()
-      })
-    }
-  },
   POST: {
     "/": {
       schema: yup.object().shape({

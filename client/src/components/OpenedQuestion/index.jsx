@@ -10,15 +10,15 @@ import Answer from "./Answer";
 import { updateUserPoints } from "../../action/userAction";
 
 export default function Question(props) {
-  const [question, setquestion] = useState("");
-  const [questiondetail, setquestiondetail] = useState("");
-  const [tag, settag] = useState([]);
-  const [qdate, setqdate] = useState();
-  const [qlikes, setqlikes] = useState([]);
-  const [answers, setanswers] = useState([]);
-  const [postanswer, setpostanswer] = useState();
-  const [quser, setquser] = useState("");
-  const [statechange, setstatechange] = useState(1);
+  const [question, setQuestion] = useState("");
+  const [questiondetail, setQuestionDetail] = useState("");
+  const [tag, setTag] = useState([]);
+  const [qDate, setQDate] = useState();
+  const [qLikes, setQLikes] = useState([]);
+  const [answers, setAnswers] = useState([]);
+  const [postAnswer, setPostAnswer] = useState();
+  const [qUser, setQUser] = useState("");
+  const [stateChange, setStateChange] = useState(1);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const qid = props.match.params.qid;
@@ -28,42 +28,42 @@ export default function Question(props) {
       .get(`${process.env.REACT_APP_API_URL}/question?id=` + qid)
       .then((res) => {
         console.log(res.data);
-        setquestion(res.data.data.question);
-        settag(res.data.data.tags);
-        setqdate(res.data.data.date);
-        setqlikes(res.data.data.qlikes);
-        setanswers(res.data.data.answers);
-        setquser(res.data.data.userId);
-        setquestiondetail(res.data.data.questiondetail);
+        setQuestion(res.data.data.question);
+        setTag(res.data.data.tags);
+        setQDate(res.data.data.date);
+        setQLikes(res.data.data.qlikes);
+        setAnswers(res.data.data.answers);
+        setQUser(res.data.data.userId);
+        setQuestionDetail(res.data.data.questiondetail);
       })
       .catch((err) => console.log("In question fetch: ", err));
   }, [qid]);
 
-  const listanswer = () => {
+  const listAnswer = () => {
     if (user === null) {
       alert("For submit your answer you need to login first");
     } else {
-      if (postanswer.length > 10) {
+      if (postAnswer.length > 10) {
         const a = [];
         answers.forEach((o) => a.push(o.answer));
-        if (a.includes(postanswer) !== true) {
+        if (a.includes(postAnswer) !== true) {
           const userId = user._id;
-          const answerObj = { userId, answer: postanswer, qid };
+          const answerObj = { userId, answer: postAnswer, qid };
           axios
             .post(`${process.env.REACT_APP_API_URL}/answer/`, answerObj)
             .then((res) => {
               if (res.data.msg === "Answer Submitted") {
-                setanswers((answers) => [...answers, res.data.data]);
-                let userpoint = user.userlikes + 10;
-                userpoint < 0 && (userpoint = 0);
-                if (user._id !== quser._id)
-                  dispatch(updateUserPoints(userId, userpoint));
+                setAnswers((answers) => [...answers, res.data.data]);
+                let userPoint = user.userlikes + 10;
+                userPoint < 0 && (userPoint = 0);
+                if (user._id !== qUser._id)
+                  dispatch(updateUserPoints(userId, userPoint));
               } else {
                 alert("post answer failure because of some server side error");
               }
             });
-          document.getElementById("thanksforanswer").style.display = "block";
-          setstatechange(statechange + 1 + 1);
+          document.getElementById("thanksForAnswer").style.display = "block";
+          setStateChange(stateChange + 1 + 1);
         } else {
           alert("This answer is already posted.");
         }
@@ -76,72 +76,40 @@ export default function Question(props) {
   const questionLikeClick = () => {
     if (!user) {
       alert("for do this action you need to login first");
-    } else if (qlikes.includes(user._id) === true) {
-      const indexforpop = qlikes.indexOf(user._id);
-      setqlikes(qlikes.splice(indexforpop, 1));
-      setstatechange(statechange + 1 + 1);
-      const removeqlike = { qid, qlikes };
+    } else if (qLikes.includes(user._id) === true) {
+      const indexToPop = qLikes.indexOf(user._id);
+      setQLikes(qLikes.splice(indexToPop, 1));
+      setStateChange(stateChange + 1 + 1);
+      const removeQlike = { qid, qlikes: qLikes };
       axios
-        .post(`${process.env.REACT_APP_API_URL}/remove-qlike`, removeqlike)
+        .post(`${process.env.REACT_APP_API_URL}/remove-qlike`, removeQlike)
         .then((res) => {
           console.log(res.data.data);
         });
     } else {
       const uid = user._id;
-      setqlikes(qlikes.push(uid));
-      const addqlike = { uid, qid };
+      setQLikes(qLikes.push(uid));
+      const addQlike = { uid, qid };
       axios
-        .post(`${process.env.REACT_APP_API_URL}/add-qlike`, addqlike)
+        .post(`${process.env.REACT_APP_API_URL}/add-qlike`, addQlike)
         .then((res) => console.log(res.data.data));
-      setstatechange(statechange + 1 + 1);
+      setStateChange(stateChange + 1 + 1);
     }
   };
 
   const deleteQuestion = () => {
-    const deleteQues = { qid };
     axios
-      .post(`${process.env.REACT_APP_API_URL}/delete-question`, deleteQues)
+      .delete(`${process.env.REACT_APP_API_URL}/question/?id=${qid}`)
       .then((res) => {
-        if (res.data.status === "ok") {
-          const userdname = user._id;
-          let userpoint = user.userlikes - 5;
-          if (userpoint < 0) {
-            userpoint = 0;
-          }
-          const uid = { userdname, userpoint };
-          axios
-            .post(`${process.env.REACT_APP_API_URL}/update-user-point`, uid)
-            .then((res) => console.log(res.data.data));
-          if (ausernames.length > 0) {
-            ausernames.forEach((e) => {
-              const userdname = e;
-              if (user._id !== e) {
-                const auser = undefined;
-                let userpoint = auser.userlikes - 10;
-                if (userpoint < 0) {
-                  userpoint = 0;
-                }
-                const uid = { userdname, userpoint };
-                axios
-                  .post(
-                    `${process.env.REACT_APP_API_URL}/update-user-point`,
-                    uid
-                  )
-                  .then((res) => console.log(res.data.data + " alikes"));
-              }
-            });
-          }
-          alert(res.data.data);
-          props.history.push("/");
-        }
-      });
+        alert(res.data.msg);
+        props.history.push("/");
+      })
+      .catch(() => alert("Unable perform that action, try again later."));
   };
-
   let qd = questiondetail.replace(/(?:\r\n|\r|\n)/g, "<br/>");
-  const ausernames = answers.map((a) => a.uid);
 
   return question ? (
-    <div>
+    <>
       {/* question division */}
       <div>
         <div className="d-flex justify-content-between align-item-center">
@@ -150,7 +118,7 @@ export default function Question(props) {
           </div>
           <LikeButton
             uid={user?._id}
-            likesCount={qlikes}
+            likesCount={qLikes}
             likeClick={questionLikeClick}
           />
         </div>
@@ -161,19 +129,19 @@ export default function Question(props) {
         </h5>
         <div className="float-end m-1">
           Asked By{" "}
-          <NavLink style={{ fontFamily: "cursive" }} to={`/user/${quser?._id}`}>
-            {quser?.dname}
+          <NavLink style={{ fontFamily: "cursive" }} to={`/user/${qUser?._id}`}>
+            {qUser?.dname}
           </NavLink>
-          {handleDate(qdate) !== 0
-            ? " on " + handleDate(qdate) + " day ago"
+          {handleDate(qDate) !== 0
+            ? " on " + handleDate(qDate) + " day ago"
             : "today"}
           .
         </div>
       </div>
-      <hr className="col-sm-12" />
+      <hr className="w-100" />
       {/* delete, edit & copy question link */}
-      <div className="col-sm-12 px-2">
-        {user != null && user?._id === quser?._id && (
+      <div className="w-100 px-2">
+        {user != null && user?._id === qUser?._id && (
           <button
             className="btn btn-outline-danger"
             type="button"
@@ -186,7 +154,7 @@ export default function Question(props) {
             Delete Question
           </button>
         )}
-        {user != null && user?._id === quser?._id && (
+        {user != null && user?._id === qUser?._id && (
           <NavLink
             className="btn btn-outline-primary mx-3"
             to={{
@@ -220,9 +188,7 @@ export default function Question(props) {
           ))}
         </div>
       ) : (
-        <h3 className="text-secondary px-2">
-          <b>No answer given</b>
-        </h3>
+        <h3 className="text-secondary px-2">No answer given</h3>
       )}
       {/* add answer */}
       <div>
@@ -231,14 +197,14 @@ export default function Question(props) {
           <textarea
             className="w-100 "
             id="setAnswer"
-            onChange={(e) => setpostanswer(e.target.value)}
+            onChange={(e) => setPostAnswer(e.target.value)}
             style={{ height: "36vh" }}
           ></textarea>
         </div>
         <div className="col-sm-12 p-2">
           <button
             type="reset"
-            onClick={listanswer}
+            onClick={listAnswer}
             className="btn btn-success float-end postans"
           >
             Post Answer
@@ -246,9 +212,9 @@ export default function Question(props) {
         </div>
       </div>
       {/* thanks on post */}
-      <div
-        className="col-sm-12 bg-danger mb-2 px-2 p-1 mt-5 text-info"
-        id="thanksforanswer"
+      <p
+        className="w-100 bg-danger mb-2 px-2 p-1 mt-5 text-white fw-bold rounded"
+        id="thanksForAnswer"
         style={{ display: "none" }}
       >
         Thanks for contributing an answer to Stackinflow!
@@ -262,7 +228,7 @@ export default function Question(props) {
         <br />
         Making statements based on opinion; back them up with references or
         personal experience.
-      </div>
+      </p>
       <br />
       <div className="col-sm-12 px-2 h3" style={{ margin: "1rem 0rem" }}>
         Browse other questions tagged {/* attached tag on question's links */}
@@ -279,13 +245,13 @@ export default function Question(props) {
             ""
           );
         })}
-        {/* askQuestion link if user loged in else login link */}
+        {/* askQuestion link if user logged in else login link */}
         {user ? (
           <span>
-            &nbsp;or{" "}
+            or{" "}
             <NavLink
               style={{ fontFamily: "monospace" }}
-              className="btn btn-primary ayoq"
+              className="btn btn-primary"
               to={`/question/create`}
             >
               ask you questions.
@@ -301,7 +267,7 @@ export default function Question(props) {
           </span>
         )}
       </div>
-    </div>
+    </>
   ) : (
     <Spinner />
   );
