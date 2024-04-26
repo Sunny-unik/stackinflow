@@ -29,49 +29,36 @@ export default function Answer({ answerObj, user, answerId }) {
       // setstatechange(statechange + 1 + 1);
     }
   };
-  let amain;
+  let amain = answerObj.answer.replace(/(?:\r\n|\r|\n)/g, "\n");
 
   return (
-    <div className="m-2 mb-0" key={answerObj.uid}>
-      <div className="answersec">
-        <h4 className="col-sm-10 mx-2">
-          <div style={{ display: "none" }}>
-            {(amain = answerObj.answer.replace(/(?:\r\n|\r|\n)/g, "\n"))}
-          </div>
-          {amain.split("\n").map(function (i) {
-            return <p>{i}</p>;
-          })}
-        </h4>
-        <button
-          type="reset"
-          className="col-sm-1 float-end mx-4 likebtn"
-          style={{
-            height: "min-content",
-            border: "0",
-            width: "min-content",
-            fontSize: "large"
-          }}
-          onClick={() => answerLikeClick(answerObj.alikes, answerObj.date)}
-        >
-          <LikeButton
-            uid={user?._id}
-            likesCount={answerObj.alikes ? answerObj.alikes.length : 0}
-            likeClick={answerLikeClick}
-          />
-        </button>
-        <div className="col-sm-4 mx-2">
-          Given By{" "}
+    <div className="bg-info rounded mx-1 p-2 pb-3">
+      <div className="mx-2 fs-5 fw-normal">
+        {amain.split("\n").map((i) => (
+          <p>{i}</p>
+        ))}
+      </div>
+      <div className="w-100 d-flex flex-nowrap justify-content-between mx-auto align-items-end px-2">
+        <div>
+          Given by{" "}
           <NavLink
+            className="text-primary"
             style={{ fontFamily: "cursive" }}
-            to={`/user/${answerObj.uid}`}
+            to={`/user/${answerObj.userId.dname}`}
           >
-            {answerObj.uid}
+            {answerObj.userId.dname}
           </NavLink>{" "}
-          <br />{" "}
           {handleDate(answerObj.date) !== 0
             ? "on " + handleDate(answerObj.date) + " day ago"
             : "today"}
           .
+        </div>
+        <div>
+          <LikeButton
+            uid={user?._id}
+            qlikes={answerObj.alikes}
+            likeClick={answerLikeClick}
+          />
         </div>
       </div>
     </div>

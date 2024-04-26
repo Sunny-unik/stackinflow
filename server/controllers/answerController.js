@@ -1,5 +1,6 @@
 const answerSchema = require("../models/answerSchema");
 const questionSchema = require("../models/questionSchema");
+const userSchema = require("../models/userSchema");
 const { ObjectId } = require("mongoose").Types;
 
 const answerController = {
@@ -51,32 +52,30 @@ const answerController = {
   },
 
   createAnswer: async (req, res) => {
-    const answerObj = await new answerSchema(req.body);
+    const answerObj = new answerSchema(req.body);
     try {
+      const userData = await userSchema
+        .findOne({ _id: req.body.userId })
+        .select("_id dname userlikes");
+      if (!userData) throw new Error("Invalid userId");
       await answerObj.save();
-      const { _id, answer, userId, date, alikes } = answerObj;
-      await questionSchema
-        .updateOne({ _id: req.body.qid }, { $push: { answers: _id } })
-        .then((result) => {
-          if (result.acknowledged) {
-            res.send({
-              data: { _id, answer, userId, date, alikes },
-              msg: "Answer Submitted"
-            });
-          } else {
-            answerSchema
-              .deleteOne({ _id: _id })
-              .then((result) =>
-                res.send({ data: result, msg: "Error in post answer" })
-              )
-              .catch((err) =>
-                res.send({ data: err, msg: "Error in post answer" })
-              );
-          }
-        })
-        .catch((err) => res.send(err));
-    } catch (err) {
-      res.status(500).send(err);
+      const updateResult = await questionSchema.updateOne(
+        { _id: req.body.qid },
+        { $push: { answers: answerObj._id } }
+      );
+      if (updateResult.acknowledged) {
+        res.send({
+          data: { ...answerObj._doc, userId: userData },
+          status: "ok"
+        });
+        userData.userlikes = userData.userlikes + 10;
+        await userData.save();
+      } else {
+        answerSchema.deleteOne({ _id: _id });
+        throw new Error("answerId isn't updated on question");
+      }
+    } catch (error) {
+      res.status(500).send(error);
     }
   },
 

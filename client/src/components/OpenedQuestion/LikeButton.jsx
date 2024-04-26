@@ -5,7 +5,7 @@ export default function LikeButton({ uid, qlikes, likeClick }) {
   return (
     <button
       type="button"
-      className="btn likebtn py-0 px-3 m-1 mb-0"
+      className="btn likeButton py-0 px-3 m-1 mb-0"
       onClick={() => likeClick()}
       style={{ width: "min-content" }}
     >

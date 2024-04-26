@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import "../../css/qls.css";
 import Spinner from "../loadings/Spinner";
+import OverlayLoading from "../loadings/OverlayLoading";
 import handleDate from "../../helper/dateHelper";
 import LikeButton from "./LikeButton";
 import Answer from "./Answer";
-import { updateUserPoints } from "../../action/userAction";
 import Error from "../Error";
 
 export default function Question(props) {
@@ -16,11 +16,10 @@ export default function Question(props) {
     loading: true,
     error: null
   });
-  const [answers, setAnswers] = useState([]);
   const [postAnswer, setPostAnswer] = useState("");
   const { user } = useSelector((state) => state);
-  const dispatch = useDispatch();
   const qid = props.match.params.qid;
+  const thanksDivRef = useRef(null);
 
   useEffect(() => {
     axios
@@ -33,37 +32,38 @@ export default function Question(props) {
       });
   }, [qid]);
 
-  const listAnswer = () => {
-    if (user === null) {
-      alert("For submit your answer you need to login first");
-    } else {
-      if (postAnswer.length > 10) {
-        const a = [];
-        answers.forEach((o) => a.push(o.answer));
-        if (a.includes(postAnswer) !== true) {
-          const userId = user._id;
-          const answerObj = { userId, answer: postAnswer, qid };
-          axios
-            .post(`${process.env.REACT_APP_API_URL}/answer/`, answerObj)
-            .then((res) => {
-              if (res.data.msg === "Answer Submitted") {
-                setAnswers((answers) => [...answers, res.data.data]);
-                let userPoint = user.userlikes + 10;
-                userPoint < 0 && (userPoint = 0);
-                if (user._id !== question.data.userId._id)
-                  dispatch(updateUserPoints(userId, userPoint));
-              } else {
-                alert("post answer failure because of some server side error");
+  const listAnswer = async () => {
+    if (!user) return alert("For submit your answer you need to login first");
+    if (postAnswer.trim().length > 10) {
+      const existingUserNames = question.data.answers.map((o) => o.userId._id);
+      if (!existingUserNames.includes(user._id)) {
+        const answerObj = { answer: postAnswer, qid, userId: user._id };
+        try {
+          setQuestion({ ...question, loading: true });
+          const answerPostRes = await axios.post(
+            `${process.env.REACT_APP_API_URL}/answer/`,
+            answerObj
+          );
+          if (answerPostRes.data.data) {
+            setQuestion({
+              loading: false,
+              error: null,
+              data: {
+                ...question.data,
+                answers: [...question.data.answers, answerPostRes.data.data]
               }
             });
-          document.getElementById("thanksForAnswer").style.display = "block";
-        } else {
-          alert("This answer is already posted.");
+            thanksDivRef.current.style.display = "";
+          } else {
+            setQuestion({ ...question, loading: false });
+            alert("Post answer failed because of some server error");
+          }
+        } catch (error) {
+          setQuestion({ ...question, loading: false });
+          alert("Server error, try again later");
         }
-      } else {
-        alert("Your answer is too short please explain in detail");
-      }
-    }
+      } else alert("Users are not allowed to post more than 1 answer");
+    } else alert("Your answer is too short please explain in more detail");
   };
 
   const questionLikeClick = () => {
@@ -92,6 +92,7 @@ export default function Question(props) {
 
   return !question.loading ? (
     <>
+      {question.loading && <OverlayLoading />}
       {question.data ? (
         <>
           {/* question division */}
@@ -163,11 +164,9 @@ export default function Question(props) {
             <button
               className="btn btn-outline-dark mx-1 float-end"
               type="button"
-              onClick={() => {
-                navigator.clipboard.writeText(
-                  `${process.env.REACT_APP_API_URL}/question/${qid}`
-                );
-              }}
+              onClick={() =>
+                navigator.clipboard.writeText(window.location.href)
+              }
             >
               Copy Link
             </button>
@@ -176,34 +175,38 @@ export default function Question(props) {
           {question.data.answers?.length ? (
             <div>
               <h3 className="p-2"> Given Answers </h3>
-              {question.data.answers.map((a) => (
-                <Answer
-                  key={a._id}
-                  answerObj={a}
-                  user={user}
-                  answerId={a._id}
-                />
-              ))}
+              <div className="d-grid gap-2">
+                {question.data.answers.map((a) => (
+                  <Answer
+                    key={a._id}
+                    answerObj={a}
+                    user={user}
+                    answerId={a._id}
+                  />
+                ))}
+              </div>
             </div>
           ) : (
-            <h3 className="text-secondary px-2 mt-2">No answer given</h3>
+            <h3 className="text-secondary px-2 mt-2">
+              Not any answer is listed
+            </h3>
           )}
           {/* add answer */}
           <div>
-            <h3 className="m-2 mb-0">Add Your Answer</h3>
             <div className="col-sm-12 p-2">
               <textarea
-                className="w-100 "
+                className="w-100 p-2 rounded mt-2"
                 id="setAnswer"
                 onChange={(e) => setPostAnswer(e.target.value)}
                 style={{ height: "36vh" }}
+                placeholder="Add Your Answer"
               ></textarea>
             </div>
             <div className="col-sm-12 p-2">
               <button
                 type="reset"
                 onClick={listAnswer}
-                className="btn btn-success float-end postans"
+                className="btn btn-success float-end likeButton rounded"
               >
                 Post Answer
               </button>
@@ -211,10 +214,16 @@ export default function Question(props) {
           </div>
           {/* thanks on post */}
           <p
-            className="w-100 bg-danger mb-2 px-2 p-1 mt-5 text-white fw-bold rounded"
-            id="thanksForAnswer"
+            className="bg-secondary mb-2 p-2 mt-5 mx-2 text-white fw-bold rounded"
+            ref={thanksDivRef}
             style={{ display: "none" }}
           >
+            <button
+              className="bg-transparent border-0 rounded float-end fw-bold text-warning pointer"
+              onClick={() => (thanksDivRef.current.style.display = "none")}
+            >
+              X
+            </button>
             Thanks for contributing an answer to Stackinflow!
             <br />
             Please be sure to answer the question. Provide details and share
