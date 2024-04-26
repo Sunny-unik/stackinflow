@@ -144,9 +144,9 @@ export default function TopQuestions() {
                 return (
                   <QuestionBox
                     questionId={q._id}
-                    likesCount={q.qlikes.length}
+                    likesCount={q.qlikesCount}
                     questionTitle={q.question}
-                    answersCount={q.answers ? q.answers.length : 0}
+                    answersCount={q.answersCount}
                     tags={q.tags}
                     dataAos={"fade-up"}
                     userObj={

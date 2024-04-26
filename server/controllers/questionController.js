@@ -21,8 +21,8 @@ const questionController = {
         { $match: { userId: ObjectId(req.query.userId) } },
         {
           $addFields: {
-            qlikesCount: { $size: "$qlikes" },
-            answersCount: { $size: "$answers" }
+            answersCount: { $size: "$answers" },
+            qlikesCount: { $size: "$qlikes" }
           }
         },
         {
@@ -32,8 +32,8 @@ const questionController = {
             userId: 1,
             date: 1,
             tags: 1,
-            qlikesCount: 1,
-            answersCount: 1
+            answersCount: 1,
+            qlikesCount: 1
           }
         },
         {
@@ -71,14 +71,34 @@ const questionController = {
   },
 
   questionByTag: async (req, res) => {
-    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
+    const [limit, page] = [+req.query.limit || 15, +req.query.page || 0];
     await questionSchema
-      .find({ tags: { $in: req.query.tag } })
+      .aggregate()
+      .match({ tags: { $in: [req.query.tag] } })
       .sort({ date: -1 })
       .limit(limit * 1)
       .skip(page * 1 * limit)
-      .select("_id question userId date qlikes tags")
-      .populate("userId", "_id dname userlikes")
+      .addFields({
+        answersCount: { $size: "$answers" },
+        qlikesCount: { $size: "$qlikes" }
+      })
+      .project({
+        _id: 1,
+        question: 1,
+        userId: 1,
+        date: 1,
+        tags: 1,
+        answersCount: 1,
+        qlikesCount: 1
+      })
+      .lookup({
+        from: "users",
+        as: "userId",
+        localField: "userId",
+        foreignField: "_id",
+        pipeline: [{ $project: { _id: 1, dname: 1, userlikes: 1 } }]
+      })
+      .unwind("userId")
       .then((questions) => res.send({ data: questions, msg: "success" }))
       .catch((err) => res.status(500).send(err));
   },
@@ -96,12 +116,31 @@ const questionController = {
   questionsPerPage: async (req, res) => {
     const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
     await questionSchema
-      .find()
+      .aggregate()
       .sort({ date: -1 })
       .limit(limit * 1)
       .skip(page * 1 * limit)
-      .select("_id question userId date qlikes tags")
-      .populate("userId", "_id dname userlikes")
+      .addFields({
+        answersCount: { $size: "$answers" },
+        qlikesCount: { $size: "$qlikes" }
+      })
+      .project({
+        _id: 1,
+        question: 1,
+        userId: 1,
+        date: 1,
+        tags: 1,
+        answersCount: 1,
+        qlikesCount: 1
+      })
+      .lookup({
+        from: "users",
+        as: "userId",
+        localField: "userId",
+        foreignField: "_id",
+        pipeline: [{ $project: { _id: 1, dname: 1, userlikes: 1 } }]
+      })
+      .unwind("userId")
       .then((questions) => res.send({ data: questions, msg: "success" }))
       .catch((err) => res.status(500).send(err));
   },
@@ -109,10 +148,30 @@ const questionController = {
   oldestWithLimit: async (req, res) => {
     const limit = +req.query.limit || 10;
     await questionSchema
-      .find()
+      .aggregate()
+      .sort({ date: 1 })
       .limit(limit * 1)
-      .select("_id question userId date qlikes tags")
-      .populate("userId", "_id dname userlikes")
+      .addFields({
+        answersCount: { $size: "$answers" },
+        qlikesCount: { $size: "$qlikes" }
+      })
+      .project({
+        _id: 1,
+        question: 1,
+        userId: 1,
+        date: 1,
+        tags: 1,
+        answersCount: 1,
+        qlikesCount: 1
+      })
+      .lookup({
+        from: "users",
+        as: "userId",
+        localField: "userId",
+        foreignField: "_id",
+        pipeline: [{ $project: { _id: 1, dname: 1, userlikes: 1 } }]
+      })
+      .unwind("userId")
       .then((questions) => res.send({ data: questions, msg: "success" }))
       .catch((err) => res.status(500).send(err));
   },
@@ -121,18 +180,27 @@ const questionController = {
     const limit = +req.query.limit || 10;
     await questionSchema
       .aggregate()
-      .addFields({ qlikesCount: { $size: `$qlikes` } })
-      .sort({ qlikesCount: -1 })
+      .addFields({
+        qlikesCount: { $size: `$qlikes` },
+        answersCount: { $size: `$answers` }
+      })
+      .project({
+        _id: 1,
+        question: 1,
+        userId: 1,
+        date: 1,
+        tags: 1,
+        answersCount: 1,
+        qlikesCount: 1
+      })
+      .sort({ qlikesCount: -1, date: -1 })
       .limit(limit * 1)
       .lookup({
         from: "users",
         as: "userId",
         localField: "userId",
         foreignField: "_id",
-        pipeline: [
-          { $unwind: "$_id" },
-          { $project: { _id: 1, dname: 1, userlikes: 1 } }
-        ]
+        pipeline: [{ $project: { _id: 1, dname: 1, userlikes: 1 } }]
       })
       .unwind("userId")
       .then((questions) => res.send({ data: questions, msg: "success" }))
@@ -141,11 +209,23 @@ const questionController = {
 
   filterByAnswerWithLimit: async (req, res) => {
     const limit = +req.query.limit || 10;
-    const filterType = req.query.type === "ne" ? { $ne: 0 } : { $eq: 0 };
+    const filterType = req.query.type === "ne" ? { $ne: [] } : { $eq: [] };
     await questionSchema
       .aggregate()
-      .addFields({ answersCount: { $size: `$answers` } })
-      .match({ answersCount: filterType })
+      .match({ answers: filterType })
+      .addFields({
+        answersCount: { $size: `$answers` },
+        qlikesCount: { $size: "$qlikes" }
+      })
+      .project({
+        _id: 1,
+        question: 1,
+        userId: 1,
+        date: 1,
+        tags: 1,
+        answersCount: 1,
+        qlikesCount: 1
+      })
       .sort({ answersCount: -1, date: -1 })
       .limit(limit * 1)
       .lookup({
@@ -153,10 +233,7 @@ const questionController = {
         as: "userId",
         localField: "userId",
         foreignField: "_id",
-        pipeline: [
-          { $unwind: "$_id" },
-          { $project: { _id: 1, dname: 1, userlikes: 1 } }
-        ]
+        pipeline: [{ $project: { _id: 1, dname: 1, userlikes: 1 } }]
       })
       .unwind("userId")
       .then((questions) => res.send({ data: questions, msg: "success" }))
@@ -168,20 +245,48 @@ const questionController = {
       const { search, qid } = req.query;
       const keywords = search.trim().split(/\s+/);
       const searchQuery = keywords.map((k) => new RegExp(k, "i"));
-      const queries = [
+      const pipeline = [
         {
-          $or: [
-            { question: { $in: searchQuery } },
-            { tags: { $in: searchQuery } }
-          ]
-        }
+          $match: {
+            $or: [
+              { question: { $in: searchQuery } },
+              { tags: { $in: searchQuery } }
+            ]
+          }
+        },
+        // Exclude the document with the specified qid, if provided
+        ...(qid && qid !== "undefined"
+          ? [{ $match: { _id: { $ne: qid } } }]
+          : []),
+        {
+          $addFields: {
+            answersCount: { $size: "$answers" },
+            qlikesCount: { $size: "$qlikes" }
+          }
+        },
+        {
+          $project: {
+            _id: 1,
+            question: 1,
+            userId: 1,
+            date: 1,
+            tags: 1,
+            qlikesCount: 1,
+            answersCount: 1
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "userId",
+            pipeline: [{ $project: { _id: 1, dname: 1, userlikes: 1 } }]
+          }
+        },
+        { $unwind: { path: "$userId", preserveNullAndEmptyArrays: true } }
       ];
-      if (qid && qid !== "undefined") queries.push({ _id: { $ne: qid } });
-      const questions = await questionSchema
-        .find({ $and: queries })
-        .select("_id question userId date qlikes tags")
-        .populate("userId", "_id dname userlikes")
-        .exec(); // Use exec() for queries to return a promise
+      const questions = await questionSchema.aggregate(pipeline);
       res.send({ data: questions, msg: "success" });
     } catch (error) {
       res.status(500).send(error);
