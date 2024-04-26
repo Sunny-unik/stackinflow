@@ -3,8 +3,11 @@ import { FaSearch } from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
 
 export default function SearchBox() {
-  const initialSearch = useLocation().pathname.split("/")[2] || "";
-  const [questionSearch, setQuestionSearch] = useState(initialSearch);
+  const paths = useLocation().pathname.split("/");
+  const initialSearch = paths[2] || "";
+  const [questionSearch, setQuestionSearch] = useState(
+    paths[1] === "search" ? initialSearch : ""
+  );
 
   const handleKeyDown = useCallback((event) => {
     if (event.key === "Enter") event.target.nextSibling?.click();
