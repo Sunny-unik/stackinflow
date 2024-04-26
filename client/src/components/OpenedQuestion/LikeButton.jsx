@@ -1,8 +1,7 @@
-// import axios from "axios";
 import React from "react";
 import { FcDislike, FcLike, FcLikePlaceholder } from "react-icons/fc";
 
-export default function LikeButton({ uid, likesCount, likeClick }) {
+export default function LikeButton({ uid, qlikes, likeClick }) {
   return (
     <button
       type="button"
@@ -11,7 +10,7 @@ export default function LikeButton({ uid, likesCount, likeClick }) {
       style={{ width: "min-content" }}
     >
       {uid ? (
-        likesCount.toString().includes(uid) === true ? (
+        qlikes.includes(uid) ? (
           <FcLike />
         ) : (
           <FcLikePlaceholder />
@@ -19,11 +18,7 @@ export default function LikeButton({ uid, likesCount, likeClick }) {
       ) : (
         <FcDislike />
       )}
-      {likesCount
-        ? likesCount.length !== undefined
-          ? likesCount.length
-          : 0
-        : 0}
+      {qlikes.length || qlikes.length === 0 ? qlikes.length : "Not Found"}
     </button>
   );
 }

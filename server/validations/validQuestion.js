@@ -19,16 +19,10 @@ const schemaProvider = {
         questionDetail: yup.string().min(5).max(1080).required()
       })
     },
-    "/add-like": {
+    "/qlikes": {
       schema: yup.object().shape({
         id: yup.string().required(),
         userId: yup.string().required()
-      })
-    },
-    "/remove-like": {
-      schema: yup.object().shape({
-        id: yup.string().required(),
-        qlikes: yup.array().required()
       })
     }
   }

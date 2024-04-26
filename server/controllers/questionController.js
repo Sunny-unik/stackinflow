@@ -320,22 +320,19 @@ const questionController = {
       .catch((err) => res.status(500).send(err));
   },
 
-  addQlike: async (req, res) => {
-    await questionSchema
-      .updateOne({ _id: req.body.id }, { $push: { qlikes: req.body.userId } })
-      .then((result) =>
-        res.send({ data: result, msg: "Like added successfully!" })
-      )
-      .catch((error) => res.status(500).send(error));
-  },
-
-  removeQlike: async (req, res) => {
-    await questionSchema
-      .updateOne({ _id: req.body.id }, { $set: { qlikes: req.body.qlikes } })
-      .then((result) =>
-        res.send({ data: result, msg: "Like removed successfully!" })
-      )
-      .catch((error) => res.status(500).send(error));
+  updateQlikes: async (req, res) => {
+    try {
+      const question = await questionSchema.findOne({ _id: req.body.id });
+      if (!question) return res.status(404).send({ msg: "Question not found" });
+      const userIdIndex = question.qlikes.indexOf(req.body.userId);
+      userIdIndex !== -1
+        ? question.qlikes.splice(userIdIndex, 1)
+        : question.qlikes.push(req.body.userId);
+      const updatedQuestion = await question.save();
+      res.send({ data: updatedQuestion, msg: "Question updated successfully" });
+    } catch (error) {
+      res.status(500).send(error);
+    }
   },
 
   deleteQuestion: async (req, res) => {

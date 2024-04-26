@@ -3,8 +3,7 @@ const {
   listQuestions,
   questionsPerPage,
   createQuestion,
-  addQlike,
-  removeQlike,
+  updateQlikes,
   deleteQuestion,
   updateQuestion,
   questionsSearch,
@@ -34,8 +33,7 @@ router.get("/answer-filter", filterByAnswerWithLimit);
 router.get("/search", questionsSearch);
 router.get("/", questionById);
 router.post("/", auth, validQuestion(), createQuestion);
-router.put("/add-like", auth, validQuestion(), addQlike);
-router.put("/remove-like", auth, validQuestion(), removeQlike);
+router.put("/qlikes", auth, validQuestion(), updateQlikes);
 router.delete("/", auth, deleteQuestion);
 router.put("/", auth, validQuestion(), updateQuestion);
 
