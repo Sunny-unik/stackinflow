@@ -27,9 +27,7 @@ export default function Question(props) {
       .then((res) =>
         setQuestion({ data: res.data.data, loading: false, error: null })
       )
-      .catch((error) => {
-        setQuestion({ error, loading: false, data: null });
-      });
+      .catch((error) => setQuestion({ error, loading: false, data: null }));
   }, [qid]);
 
   const listAnswer = async () => {
@@ -67,7 +65,7 @@ export default function Question(props) {
   };
 
   const questionLikeClick = () => {
-    if (!user) return alert("for do this action you need to login first");
+    if (!user) return alert("For do this action you need to login first");
     axios
       .put(`${process.env.REACT_APP_API_URL}/question/qlikes`, {
         id: question.data._id,
@@ -75,7 +73,17 @@ export default function Question(props) {
       })
       .then((res) => {
         if (res.data.errors) return alert("Server error try again later");
-        setQuestion({ data: res.data.data, loading: false, error: null });
+        setQuestion((prevState) => {
+          return {
+            data: {
+              ...res.data.data,
+              answers: prevState.data.answers,
+              userId: prevState.data.userId
+            },
+            loading: false,
+            error: null
+          };
+        });
       })
       .catch(() => alert("Server error try again later"));
   };
@@ -137,12 +145,10 @@ export default function Question(props) {
           <div className="w-100 px-2">
             {user != null && user?._id === question.data.userId?._id && (
               <button
-                className="btn btn-outline-danger"
-                type="button"
+                className="btn btn-outline-danger mb-2"
                 onClick={() => {
-                  if (window.confirm("Are you sure to delete this question?")) {
+                  if (window.confirm("Are you sure to delete this question?"))
                     deleteQuestion();
-                  }
                 }}
               >
                 Delete Question
@@ -150,7 +156,7 @@ export default function Question(props) {
             )}
             {user != null && user?._id === question.data.userId?._id && (
               <NavLink
-                className="btn btn-outline-primary mx-3"
+                className="btn btn-outline-primary m-2 mt-0"
                 to={{
                   pathname: `/question/${qid}/edit`,
                   questionTitle: question,
@@ -180,8 +186,8 @@ export default function Question(props) {
                   <Answer
                     key={a._id}
                     answerObj={a}
-                    user={user}
-                    answerId={a._id}
+                    userId={user?._id}
+                    setQuestion={setQuestion}
                   />
                 ))}
               </div>

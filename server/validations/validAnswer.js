@@ -11,16 +11,10 @@ const schemaProvider = {
     }
   },
   PUT: {
-    "/add-like": {
+    "/alike": {
       schema: yup.object().shape({
         id: yup.string().required(),
         userId: yup.string().required()
-      })
-    },
-    "/remove-like": {
-      schema: yup.object().shape({
-        id: yup.string().required(),
-        alikes: yup.array().required()
       })
     }
   },

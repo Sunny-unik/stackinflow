@@ -79,22 +79,19 @@ const answerController = {
     }
   },
 
-  addAlike: async (req, res) => {
-    await answerSchema
-      .updateOne({ _id: req.body.id }, { $push: { alikes: req.body.userId } })
-      .then((result) =>
-        res.send({ data: result, msg: "Like added successfully!" })
-      )
-      .catch((error) => res.send(error));
-  },
-
-  removeAlike: async (req, res) => {
-    await answerSchema
-      .updateOne({ _id: req.body.id }, { $set: { alikes: req.body.alikes } })
-      .then((result) =>
-        res.send({ data: result, msg: "Like removed successfully!" })
-      )
-      .catch((err) => res.send(err));
+  updateAlike: async (req, res) => {
+    try {
+      const answer = await answerSchema.findOne({ _id: req.body.id });
+      if (!answer) return res.status(404).send({ msg: "Answer not found" });
+      const userIdIndex = answer.alikes.indexOf(req.body.userId);
+      userIdIndex !== -1
+        ? answer.alikes.splice(userIdIndex, 1)
+        : answer.alikes.push(req.body.userId);
+      const updatedAnswer = await answer.save();
+      res.send({ data: updatedAnswer, msg: "Answer updated successfully" });
+    } catch (error) {
+      res.status(500).send(error);
+    }
   },
 
   deleteAnswer: async (req, res) => {

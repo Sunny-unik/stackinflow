@@ -4,39 +4,44 @@ import { NavLink } from "react-router-dom";
 import handleDate from "../../helper/dateHelper";
 import LikeButton from "./LikeButton";
 
-export default function Answer({ answerObj, user, answerId }) {
-  const answerLikeClick = (al, ad) => {
-    if (!user) {
-      alert("for do this action you need to login first");
-    } else if (al.includes(user._id) === true) {
-      const indexforpop = al.indexOf(user._id);
-      al.splice(indexforpop, 1);
-      const removealike = { ad, al, qid: answerId };
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/remove-alike`, removealike)
-        .then((res) => {
-          console.log(res.data.data);
+export default function Answer({ answerObj, userId, setQuestion }) {
+  const answerLikeClick = () => {
+    if (!userId) return alert("For do this action you need to login first");
+    axios
+      .put(`${process.env.REACT_APP_API_URL}/answer/alike`, {
+        userId,
+        id: answerObj._id
+      })
+      .then((res) => {
+        const updatedAnswer = { ...res.data.data, userId: answerObj.userId };
+        setQuestion((prevState) => {
+          return {
+            data: {
+              ...prevState.data,
+              answers: [
+                ...prevState.data.answers.filter(
+                  (a) => a._id !== updatedAnswer._id
+                ),
+                updatedAnswer
+              ].sort((x, y) => y.alikes.length - x.alikes.length)
+            },
+            error: null,
+            loading: false
+          };
         });
-      // setstatechange(statechange + 1 + 1);
-    } else {
-      const uid = user._id;
-      const addqlike = { uid, qid: answerId, ad };
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/add-alike`, addqlike)
-        .then((res) => {
-          console.log(res.data.data);
-        });
-      // setstatechange(statechange + 1 + 1);
-    }
+      })
+      .catch(() => alert("Server failure, try again later!"));
   };
-  let amain = answerObj.answer.replace(/(?:\r\n|\r|\n)/g, "\n");
 
   return (
-    <div className="bg-info rounded mx-1 p-2 pb-3">
+    <div className="border border-primary border-1 rounded mx-1 p-2 pb-3">
       <div className="mx-2 fs-5 fw-normal">
-        {amain.split("\n").map((i) => (
-          <p>{i}</p>
-        ))}
+        {answerObj.answer
+          .replace(/(?:\r\n|\r|\n)/g, "\n")
+          .split("\n")
+          .map((t, i) => (
+            <p key={answerObj._id + "-para-" + i}>{t}</p>
+          ))}
       </div>
       <div className="w-100 d-flex flex-nowrap justify-content-between mx-auto align-items-end px-2">
         <div>
@@ -55,7 +60,7 @@ export default function Answer({ answerObj, user, answerId }) {
         </div>
         <div>
           <LikeButton
-            uid={user?._id}
+            uid={userId}
             qlikes={answerObj.alikes}
             likeClick={answerLikeClick}
           />

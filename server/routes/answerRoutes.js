@@ -1,7 +1,6 @@
 const express = require("express");
 const {
-  addAlike,
-  removeAlike,
+  updateAlike,
   createAnswer,
   listAnswer,
   deleteAnswer,
@@ -15,8 +14,7 @@ const router = express.Router();
 router.get("/list", listAnswer);
 router.get("/per-user", answersPerUser);
 router.post("/", auth, validAnswer(), createAnswer);
-router.put("/add-like", auth, validAnswer(), addAlike);
-router.put("/remove-like", auth, validAnswer(), removeAlike);
+router.put("/alike", auth, validAnswer(), updateAlike);
 router.delete("/", auth, validAnswer(), deleteAnswer);
 
 module.exports = router;

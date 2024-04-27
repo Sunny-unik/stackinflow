@@ -300,7 +300,8 @@ const questionController = {
         path: "answers",
         select: "_id answer date userId alikes",
         strictPopulate: false,
-        populate: [{ path: "userId", select: "_id dname userlikes" }]
+        populate: [{ path: "userId", select: "_id dname userlikes" }],
+        options: { sort: { alikes: -1 } } // Sort by alikes array length in descending order
       })
       .populate("userId", "_id dname userlikes")
       .then((question) => res.send({ data: question, msg: "success" }))

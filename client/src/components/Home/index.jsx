@@ -58,7 +58,7 @@ export default function Home(props) {
               </li>
             </ul>
             <div
-              className="col-xl-10 col-sm-10 p-0 overflow-hidden border border-primary"
+              className="col-xl-10 col-sm-10 p-0 overflow-hidden border border-2"
               id="mainSection"
             >
               <Switch>
