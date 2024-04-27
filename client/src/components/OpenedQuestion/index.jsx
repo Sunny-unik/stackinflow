@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../../css/qls.css";
 import Spinner from "../loadings/Spinner";
 import OverlayLoading from "../loadings/OverlayLoading";
@@ -9,6 +9,7 @@ import handleDate from "../../helper/dateHelper";
 import LikeButton from "./LikeButton";
 import Answer from "./Answer";
 import Error from "../Error";
+import { authenticateUser } from "../../action/userAction";
 
 export default function Question(props) {
   const [question, setQuestion] = useState({
@@ -20,6 +21,7 @@ export default function Question(props) {
   const { user } = useSelector((state) => state);
   const qid = props.match.params.qid;
   const thanksDivRef = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     axios
@@ -52,6 +54,7 @@ export default function Question(props) {
               }
             });
             thanksDivRef.current.style.display = "";
+            dispatch(authenticateUser());
           } else {
             setQuestion({ ...question, loading: false });
             alert("Post answer failed because of some server error");
@@ -203,7 +206,7 @@ export default function Question(props) {
               <textarea
                 className="w-100 p-2 rounded mt-2"
                 id="setAnswer"
-                onChange={(e) => setPostAnswer(e.target.value)}
+                onChange={(e) => setPostAnswer(e.target.value.trim())}
                 style={{ height: "36vh" }}
                 placeholder="Add Your Answer"
               ></textarea>

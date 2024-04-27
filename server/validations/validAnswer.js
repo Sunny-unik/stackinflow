@@ -21,7 +21,8 @@ const schemaProvider = {
   DELETE: {
     "/": {
       schema: yup.object().shape({
-        answerId: yup.string().required()
+        answerId: yup.string().required(),
+        userId: yup.string().required()
       })
     }
   }

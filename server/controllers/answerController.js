@@ -95,10 +95,24 @@ const answerController = {
   },
 
   deleteAnswer: async (req, res) => {
-    answerSchema
-      .deleteOne({ _id: req.body.answerId })
-      .then((result) => res.send({ data: result, msg: "Answer is deleted!" }))
-      .catch((err) => res.send(err));
+    const { answerId, userId } = req.body;
+    let responseSent = false;
+    try {
+      const answer = await answerSchema.findById(answerId);
+      const isAuthor = answer.userId.equals(userId);
+      if (!isAuthor)
+        return res.status(401).send("No rights to perform that action");
+      const deleteData = await answer.delete();
+      res.send({ data: deleteData, msg: "Answer deleted successfully" });
+      responseSent = true;
+      await userSchema.updateOne({ _id: userId }, { $inc: { userlikes: -10 } });
+      await questionSchema.updateOne(
+        { _id: answer.qid },
+        { $pull: { answers: answerId } }
+      );
+    } catch (error) {
+      !responseSent && res.status(500).send("Server Error");
+    }
   }
 };
 

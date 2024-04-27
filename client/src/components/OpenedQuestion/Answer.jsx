@@ -3,6 +3,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import handleDate from "../../helper/dateHelper";
 import LikeButton from "./LikeButton";
+import DeleteButton from "./DeleteButton";
 
 export default function Answer({ answerObj, userId, setQuestion }) {
   const answerLikeClick = () => {
@@ -59,6 +60,13 @@ export default function Answer({ answerObj, userId, setQuestion }) {
           .
         </div>
         <div>
+          {userId === answerObj.userId._id && (
+            <DeleteButton
+              userId={userId}
+              answerObj={answerObj}
+              setQuestion={setQuestion}
+            />
+          )}
           <LikeButton
             uid={userId}
             qlikes={answerObj.alikes}
