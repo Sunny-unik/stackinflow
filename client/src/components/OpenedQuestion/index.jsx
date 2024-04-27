@@ -123,10 +123,12 @@ export default function Question(props) {
             </div>
             <h5 className="px-2 my-1">
               {question.data.questiondetail
-                .replace(/(?:\r\n|\r|\n)/g, "<br/>")
-                .split("<br/>")
+                .replace(/(?:\r\n|\r|\n)/g, "\n")
+                .split("\n")
                 .map((item, i) => (
-                  <p key={"questionDescriptionPara-" + i}>{item}</p>
+                  <p className="mb-0" key={"questionDescriptionPara-" + i}>
+                    {item}
+                  </p>
                 ))}
             </h5>
             <div className="float-end m-1">
@@ -139,7 +141,7 @@ export default function Question(props) {
               </NavLink>
               {handleDate(question.data.date) !== 0
                 ? " on " + handleDate(question.data.date) + " day ago"
-                : "today"}
+                : " today"}
               .
             </div>
           </div>
@@ -162,9 +164,9 @@ export default function Question(props) {
                 className="btn btn-outline-primary m-2 mt-0"
                 to={{
                   pathname: `/question/${qid}/edit`,
-                  questionTitle: question,
+                  questionTitle: question.data.question,
                   questionDetails: question.data.questiondetail,
-                  questionTags: question.data.tag
+                  questionTags: question.data.tags
                 }}
               >
                 Edit Question

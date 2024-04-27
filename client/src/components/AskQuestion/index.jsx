@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import AskQuestionGuide from "./AskQuestionGuide";
 import TagsDropdown from "./TagsDropdown";
+import { authenticateUser } from "../../action/userAction";
 
 export default function AskQuestion(props) {
   const { questionTitle, questionDetails, questionTags } = props.location;
@@ -15,6 +16,7 @@ export default function AskQuestion(props) {
   );
   const [loader, setLoader] = useState(false);
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (questionId) {
@@ -60,32 +62,7 @@ export default function AskQuestion(props) {
     return !errors.length;
   }, [askQDescription, askQTitle, askTags]);
 
-  const validUniqueTitle = useCallback(async () => {
-    let validTitle = true;
-    try {
-      const res = await axios.get(
-        `${
-          process.env.REACT_APP_API_URL
-        }/question/search?search=${askQTitle.trim()}&qid=${questionId}`
-      );
-      if (res.data.data.length) validTitle = false;
-    } catch (err) {
-      validTitle = null;
-    }
-    if (!validTitle) {
-      alert(
-        validTitle === null
-          ? "Some server-side error occurred, try again later."
-          : "This question title is already listed."
-      );
-      setLoader(false);
-      return false;
-    }
-    return true;
-  }, [askQTitle, questionId]);
-
   const postQuestion = useCallback(async () => {
-    if (!(await validUniqueTitle())) return false;
     axios
       .post(`${process.env.REACT_APP_API_URL}/question`, {
         question: askQTitle.trim(),
@@ -93,13 +70,15 @@ export default function AskQuestion(props) {
         userId: user._id,
         questiondetail: askQDescription.trim()
       })
-      .then(() => alert("Question listed successfully."))
+      .then(() => {
+        alert("Question listed successfully.");
+        dispatch(authenticateUser());
+      })
       .catch(() => alert("Some server-side error occurred, try again later."))
       .finally(() => setLoader(false));
-  }, [askTags, askQDescription, askQTitle, user?._id, validUniqueTitle]);
+  }, [askTags, askQDescription, askQTitle, user?._id, dispatch]);
 
   const updateQuestion = useCallback(async () => {
-    if (!(await validUniqueTitle())) return false;
     axios
       .put(`${process.env.REACT_APP_API_URL}/question/`, {
         question: askQTitle.trim(),
@@ -119,14 +98,7 @@ export default function AskQuestion(props) {
         )
       )
       .finally(() => setLoader(false));
-  }, [
-    askQTitle,
-    askQDescription,
-    questionId,
-    askTags,
-    props.history,
-    validUniqueTitle
-  ]);
+  }, [askQTitle, askQDescription, questionId, askTags, props.history]);
 
   return (
     <div className="bg-light" style={{ borderLeft: "2px solid lightgrey" }}>
