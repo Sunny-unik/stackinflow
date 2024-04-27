@@ -58,16 +58,48 @@ const questionController = {
   },
 
   userLikedQuestions: async (req, res) => {
-    const [limit, page] = [+req.query.limit || 8, +req.query.page || 0];
-    await questionSchema
-      .find({ qlikes: { $in: req.query.userId } })
-      .sort({ date: -1 })
-      .limit(limit * 1)
-      .skip(page * 1 * limit)
-      .select("_id question userId date qlikes tags")
-      .populate("userId", "_id dname userlikes")
-      .then((questions) => res.send({ data: questions, msg: "success" }))
-      .catch((err) => res.status(500).send(err));
+    const [limit, page] = [+req.query.limit || 15, +req.query.page || 0];
+    try {
+      const pipeline = [
+        { $match: { qlikes: { $in: [req.query.userId] } } },
+        { $sort: { date: -1 } },
+        { $skip: page * limit },
+        { $limit: limit },
+        {
+          $addFields: {
+            qlikesCount: { $size: "$qlikes" },
+            answersCount: { $size: "$answers" }
+          }
+        },
+        {
+          $project: {
+            _id: 1,
+            question: 1,
+            userId: 1,
+            date: 1,
+            qlikes: 1,
+            tags: 1,
+            qlikesCount: 1,
+            answersCount: 1
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "userId",
+            pipeline: [{ $project: { _id: 1, dname: 1, userlikes: 1 } }]
+          }
+        },
+        { $unwind: { path: "$userId", preserveNullAndEmptyArrays: true } }
+      ];
+      const questions = await questionSchema.aggregate(pipeline);
+      res.send({ data: questions, msg: "success" });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("Server Error");
+    }
   },
 
   questionByTag: async (req, res) => {

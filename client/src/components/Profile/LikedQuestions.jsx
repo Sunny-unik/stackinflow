@@ -41,9 +41,9 @@ export default function LikedQuestions() {
                 <QuestionBox
                   key={q._id + "_selfLiked"}
                   questionId={q._id}
-                  likesCount={q.qlikes.length}
+                  likesCount={q.qlikesCount}
                   questionTitle={q.question}
-                  answersCount={q.answers ? q.answers.length : 0}
+                  answersCount={q.answersCount}
                   tags={q.tags}
                   dataAos={"fade-left"}
                   userObj={q.userId ? q.userId : (q.userId = { dname: "404" })}
