@@ -2,8 +2,10 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-export default function Editprofile(props) {
-  const user = useSelector((state) => state.user);
+export default function EditProfile(props) {
+  const user = useSelector((state) => state.user),
+    id = user._id;
+
   useEffect(() => {
     if (user === null) {
       alert("User need to login first");
@@ -11,65 +13,37 @@ export default function Editprofile(props) {
     }
   });
 
-  const obid = useSelector((state) => state.user._id);
-  const udname = useSelector((state) => state.user.dname);
-  const uname = useSelector((state) => state.user.name);
-  const utitle = useSelector((state) => state.user.title);
-  const uabout = useSelector((state) => state.user.about);
-  const uweblink = useSelector((state) => state.user.weblink);
-  const ugitlink = useSelector((state) => state.user.gitlink);
-  const utwitter = useSelector((state) => state.user.twitter);
-  const uaddress = useSelector((state) => state.user.address);
+  const [dname, setDname] = useState(user.dname);
+  const [name, setName] = useState(user.name);
+  const [title, setTitle] = useState(user.title || "");
+  const [about, setAbout] = useState(user.about || "");
+  const [weblink, setWeblink] = useState(user.weblink || "");
+  const [gitlink, setGitlink] = useState(user.gitlink || "");
+  const [twitter, setTwitter] = useState(user.twitter || "");
+  const [address, setAddress] = useState(user.address || "");
 
-  const [dname, setdname] = useState(udname);
-  const [name, setname] = useState(uname);
-  const [title, settitle] = useState(utitle);
-  const [about, setabout] = useState(uabout);
-  const [weblink, setweblink] = useState(uweblink);
-  const [gitlink, setgitlink] = useState(ugitlink);
-  const [twitter, settwitter] = useState(utwitter);
-  const [address, setaddress] = useState(uaddress);
-
-  function setValue(e) {
-    e.target.name === "edname" && setdname(e.target.value);
-    e.target.name === "ename" && setname(e.target.value);
-    e.target.name === "etitle" && settitle(e.target.value);
-    e.target.name === "eabout" && setabout(e.target.value);
-    e.target.name === "eweblink" && setweblink(e.target.value);
-    e.target.name === "egitlink" && setgitlink(e.target.value);
-    e.target.name === "etwitter" && settwitter(e.target.value);
-    e.target.name === "eaddress" && setaddress(e.target.value);
-  }
-
-  function sendvalues() {
-    const dn = { dname, obid };
+  const validateInfo = () => {
+    const errors = [];
+    if (!name || !name.trim()) errors.push("please enter your name");
+    if (!dname || !dname.trim()) errors.push("please enter username");
+    if (!!errors.length) {
+      const errorsString = errors.join(",\n");
+      return alert(
+        `${errorsString.charAt(0).toUpperCase()}${errorsString.slice(1)}.`
+      );
+    }
     axios
-      .post(`${process.env.REACT_APP_API_URL}/valid-dname`, dn)
+      .post(`${process.env.REACT_APP_API_URL}/user/valid-dname`, { dname, id })
       .then((res) => {
-        if (res.data.status === "ok") {
-          hidereg();
-        } else {
-          if (res.data.status !== obid) alert(res.data.data);
-          else hidereg();
-        }
+        if (res.data.status === "ok") return updateUserDetails();
+        res.data.data !== id ? alert(res.data.msg) : updateUserDetails();
       });
-  }
+  };
 
-  function hidereg() {
-    let isvalid = true;
-    // eslint-disable-next-line
-    if (name === "" || name === null || name === " ") {
-      isvalid = false;
-      alert("please enter your name");
-    }
-    // eslint-disable-next-line
-    if (dname === "" || dname === null || dname === " ") {
-      isvalid = false;
-      alert("please enter username");
-    }
-    if (isvalid === true) {
-      const updateuserdetails = {
-        obid,
+  const updateUserDetails = () => {
+    axios
+      .put(`${process.env.REACT_APP_API_URL}/`, {
+        id,
         dname,
         name,
         title,
@@ -78,20 +52,10 @@ export default function Editprofile(props) {
         gitlink,
         twitter,
         address
-      };
-      axios
-        .post(
-          `${process.env.REACT_APP_API_URL}/update-user-details`,
-          updateuserdetails
-        )
-        .then((res) => {
-          alert(res.data.data);
-        })
-        .catch((err) => {
-          alert("Some error in update user details 😯", err);
-        });
-    }
-  }
+      })
+      .then((res) => alert(res.data.msg))
+      .catch(() => alert("Some error in update user details, try again later"));
+  };
 
   return (
     <div className="py-1">
@@ -108,10 +72,10 @@ export default function Editprofile(props) {
           <br />
           <input
             type="text"
-            name="edname"
+            name="dnameInput"
             value={dname}
-            onChange={(e) => setValue(e)}
-            id="edname"
+            onChange={({ target }) => setDname(target.value)}
+            id="dnameInput"
             placeholder="Display Name"
             required
             className="col-md-9"
@@ -123,10 +87,10 @@ export default function Editprofile(props) {
           <br />
           <input
             type="text"
-            name="ename"
+            name="nameInput"
             value={name}
-            onChange={(e) => setValue(e)}
-            id="ename"
+            onChange={({ target }) => setName(target.value)}
+            id="nameInput"
             placeholder="Your Name"
             required
             className="col-md-9"
@@ -138,10 +102,10 @@ export default function Editprofile(props) {
           <br />
           <input
             type="text"
-            name="etitle"
+            name="titleInput"
             value={title}
-            onChange={(e) => setValue(e)}
-            id="etitle"
+            onChange={({ target }) => setTitle(target.value)}
+            id="titleInput"
             placeholder="Work Title"
             required
             className="col-md-9"
@@ -160,10 +124,10 @@ export default function Editprofile(props) {
               style={{ width: "80%" }}
               type="text"
               className="rounded"
-              name="eweblink"
+              name="weblinkInput"
               value={weblink}
-              onChange={(e) => setValue(e)}
-              id="eweblink"
+              onChange={({ target }) => setWeblink(target.value)}
+              id="weblinkInput"
               placeholder="Website Link"
               required
             />
@@ -176,10 +140,10 @@ export default function Editprofile(props) {
               style={{ width: "80%" }}
               type="text"
               className="rounded"
-              name="egitlink"
+              name="gitlinkInput"
               value={gitlink}
-              onChange={(e) => setValue(e)}
-              id="egitlink"
+              onChange={({ target }) => setGitlink(target.value)}
+              id="gitlinkInput"
               placeholder="Github Link"
               required
             />
@@ -192,10 +156,10 @@ export default function Editprofile(props) {
               style={{ width: "80%" }}
               type="text"
               className="rounded"
-              name="etwitter"
+              name="twitterInput"
               value={twitter}
-              onChange={(e) => setValue(e)}
-              id="etwitter"
+              onChange={({ target }) => setTwitter(target.value)}
+              id="twitterInput"
               placeholder="Twitter Link"
               required
             />
@@ -209,10 +173,10 @@ export default function Editprofile(props) {
           <br />
           <textarea
             type="text"
-            name="eabout"
+            name="aboutInput"
             value={about}
-            onChange={(e) => setValue(e)}
-            id="eabout"
+            onChange={({ target }) => setAbout(target.value)}
+            id="aboutInput"
             placeholder="explain about yourself"
             className="col-md-12"
             required
@@ -225,10 +189,10 @@ export default function Editprofile(props) {
           <br />
           <input
             type="text"
-            name="eaddress"
+            name="addressInput"
             value={address}
-            onChange={(e) => setValue(e)}
-            id="eaddress"
+            onChange={({ target }) => setAddress(target.value)}
+            id="addressInput"
             placeholder="Address"
             className="col-md-12"
             required
@@ -239,11 +203,10 @@ export default function Editprofile(props) {
         <div className="col-md-12 text-right">
           <button
             type="button"
-            className="updateprofile btn btn-success float-end"
-            onClick={sendvalues}
+            className="btn btn-success float-end"
+            onClick={validateInfo}
           >
-            {" "}
-            Update User Details{" "}
+            Update User Details
           </button>
         </div>
       </div>
