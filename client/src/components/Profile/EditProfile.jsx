@@ -1,18 +1,14 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { authenticateUser } from "../../action/userAction";
 
-export default function EditProfile(props) {
+export default function EditProfile() {
   const user = useSelector((state) => state.user),
-    id = user._id;
+    id = user._id,
+    dispatch = useDispatch();
 
-  useEffect(() => {
-    if (user === null) {
-      alert("User need to login first");
-      props.history.push("/login");
-    }
-  });
-
+  const [disableAttribute, setDisableAttribute] = useState(true);
   const [dname, setDname] = useState(user.dname);
   const [name, setName] = useState(user.name);
   const [title, setTitle] = useState(user.title || "");
@@ -22,28 +18,44 @@ export default function EditProfile(props) {
   const [twitter, setTwitter] = useState(user.twitter || "");
   const [address, setAddress] = useState(user.address || "");
 
+  const setValue = ({ target }) => {
+    const getSetState = {
+      dnameInput: [dname, setDname],
+      nameInput: [name, setName],
+      titleInput: [title, setTitle],
+      aboutInput: [about, setAbout],
+      weblinkInput: [weblink, setWeblink],
+      gitlinkInput: [gitlink, setGitlink],
+      twitterInput: [twitter, setTwitter],
+      addressInput: [address, setAddress]
+    };
+    console.log(this);
+    getSetState[target.name][1](target.value);
+    const isSame = Object.keys(getSetState).some((key) => {
+      const initialFieldValue = user[key.split("Input")[0]];
+      return key === target.name
+        ? target.value !== initialFieldValue
+        : getSetState[key][0] !== initialFieldValue;
+    });
+    setDisableAttribute(!isSame);
+  };
+
   const validateInfo = (e) => {
     e.preventDefault();
     const errors = [];
     if (!name || !name.trim()) errors.push("please enter your name");
-    if (!dname || !dname.trim()) errors.push("please enter username");
-    if (!!errors.length) {
-      const errorsString = errors.join(",\n");
-      return alert(
-        `${errorsString.charAt(0).toUpperCase()}${errorsString.slice(1)}.`
-      );
-    }
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/user/valid-dname`, { dname, id })
-      .then((res) => {
-        if (res.data.status === "ok") return updateUserDetails();
-        res.data.data !== id ? alert(res.data.msg) : updateUserDetails();
-      });
+    if (!dname) errors.push("please enter username");
+    if (dname.includes(" ")) errors.push("username cannot include space");
+    if (!errors.length) return updateUserDetails();
+    const errorsString = errors.join(",\n");
+    return alert(
+      `${errorsString.charAt(0).toUpperCase()}${errorsString.slice(1)}.`
+    );
   };
 
   const updateUserDetails = () => {
     axios
-      .put(`${process.env.REACT_APP_API_URL}/`, {
+      .put(`${process.env.REACT_APP_API_URL}/user/`, {
         id,
         dname,
         name,
@@ -54,7 +66,16 @@ export default function EditProfile(props) {
         twitter,
         address
       })
-      .then((res) => alert(res.data.msg))
+      .then(({ data }) => {
+        if (!data.errors?.length) {
+          dispatch(authenticateUser());
+          return alert(data.msg);
+        }
+        const errorsString = data.errors.join(",\n");
+        alert(
+          `${errorsString.charAt(0).toUpperCase()}${errorsString.slice(1)}.`
+        );
+      })
       .catch(() => alert("Some error in update user details, try again later"));
   };
 
@@ -66,7 +87,11 @@ export default function EditProfile(props) {
       >
         &nbsp;Edit Your Profile
       </h1>
-      <form className="container bg-light py-3 m-0 row" onSubmit={validateInfo}>
+      <form
+        className="container bg-light py-3 m-0 row"
+        onSubmit={validateInfo}
+        {...(disableAttribute ? { disabled: true } : {})}
+      >
         <div className="col-md-6 d-grid gap-2 my-2">
           <b>Basic Details</b>
           <div className="form-floating">
@@ -74,7 +99,7 @@ export default function EditProfile(props) {
               type="text"
               name="dnameInput"
               value={dname}
-              onChange={({ target }) => setDname(target.value)}
+              onChange={setValue}
               id="dnameInput"
               placeholder="john-doe"
               required
@@ -87,7 +112,7 @@ export default function EditProfile(props) {
               type="text"
               name="nameInput"
               value={name}
-              onChange={({ target }) => setName(target.value)}
+              onChange={setValue}
               id="nameInput"
               placeholder="John Doe"
               required
@@ -100,7 +125,7 @@ export default function EditProfile(props) {
               type="text"
               name="titleInput"
               value={title}
-              onChange={({ target }) => setTitle(target.value)}
+              onChange={setValue}
               id="titleInput"
               placeholder="Software Developer"
               className="form-control"
@@ -116,7 +141,7 @@ export default function EditProfile(props) {
               className="form-control"
               name="weblinkInput"
               value={weblink}
-              onChange={({ target }) => setWeblink(target.value)}
+              onChange={setValue}
               id="weblinkInput"
               placeholder="https://example.com/johnDoe"
             />
@@ -128,7 +153,7 @@ export default function EditProfile(props) {
               className="form-control"
               name="gitlinkInput"
               value={gitlink}
-              onChange={({ target }) => setGitlink(target.value)}
+              onChange={setValue}
               id="gitlinkInput"
               placeholder="https://github.com/johnDoe"
             />
@@ -140,7 +165,7 @@ export default function EditProfile(props) {
               className="form-control"
               name="twitterInput"
               value={twitter}
-              onChange={({ target }) => setTwitter(target.value)}
+              onChange={setValue}
               id="twitterInput"
               placeholder="https://twitter.com/@johnDoe"
             />
@@ -149,11 +174,24 @@ export default function EditProfile(props) {
         </div>
         <div className="my-3 d-grid gap-2">
           <div className="form-floating">
+            <input
+              type="text"
+              name="addressInput"
+              value={address}
+              onChange={setValue}
+              id="addressInput"
+              placeholder="River Street, Columbia"
+              className="form-control"
+            />
+            <label htmlFor="addressInput">Your Address</label>
+          </div>
+          <div className="form-floating">
             <textarea
               type="text"
               name="aboutInput"
               value={about}
-              onChange={({ target }) => setAbout(target.value)}
+              rows="3"
+              onChange={setValue}
               id="aboutInput"
               placeholder="I'm a software developer working on google....."
               className="form-control"
@@ -161,22 +199,13 @@ export default function EditProfile(props) {
             />
             <label htmlFor="aboutInput">Explain about yourself</label>
           </div>
-          <div className="form-floating">
-            <input
-              type="text"
-              name="addressInput"
-              value={address}
-              onChange={({ target }) => setAddress(target.value)}
-              id="addressInput"
-              placeholder="River Street, Columbia"
-              className="form-control"
-            />
-            <label htmlFor="addressInput">Your Address</label>
-          </div>
         </div>
         <div className="mt-2">
-          <button className="btn btn-success float-end">
-            Update User Details
+          <button
+            className="btn btn-success float-end"
+            {...(disableAttribute ? { disabled: true } : {})}
+          >
+            Update Details
           </button>
         </div>
       </form>
