@@ -9,7 +9,11 @@ import Spinner from "../loadings/Spinner";
 
 export default function AskedQuestions() {
   const user = useSelector((state) => state.user);
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState({
+    loading: true,
+    data: null,
+    error: null
+  });
 
   useEffect(() => {
     axios

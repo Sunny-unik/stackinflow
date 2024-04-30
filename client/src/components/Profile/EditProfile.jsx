@@ -22,7 +22,8 @@ export default function EditProfile(props) {
   const [twitter, setTwitter] = useState(user.twitter || "");
   const [address, setAddress] = useState(user.address || "");
 
-  const validateInfo = () => {
+  const validateInfo = (e) => {
+    e.preventDefault();
     const errors = [];
     if (!name || !name.trim()) errors.push("please enter your name");
     if (!dname || !dname.trim()) errors.push("please enter username");
@@ -58,159 +59,127 @@ export default function EditProfile(props) {
   };
 
   return (
-    <div className="py-1">
-      <div>
-        <h1>
-          <b> Edit Your Profile </b>
-        </h1>
-      </div>
-      <div className="container bg-light py-3 m-0 row ">
-        <div className="col-md-6">
-          <label>
-            <b>Display name</b>
-          </label>
-          <br />
-          <input
-            type="text"
-            name="dnameInput"
-            value={dname}
-            onChange={({ target }) => setDname(target.value)}
-            id="dnameInput"
-            placeholder="Display Name"
-            required
-            className="col-md-9"
-          />
-          <br />
-          <label>
-            <b>Your Name</b>
-          </label>
-          <br />
-          <input
-            type="text"
-            name="nameInput"
-            value={name}
-            onChange={({ target }) => setName(target.value)}
-            id="nameInput"
-            placeholder="Your Name"
-            required
-            className="col-md-9"
-          />
-          <br />
-          <label>
-            <b>Work Title</b>
-          </label>
-          <br />
-          <input
-            type="text"
-            name="titleInput"
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-            id="titleInput"
-            placeholder="Work Title"
-            required
-            className="col-md-9"
-          />
-          <br />
-        </div>
-        <div className="col-md-6">
-          <label>
-            <b>Web Preference</b>
-          </label>
-          <br />
-          <div>
-            Website link
-            <br />
+    <div className="py-1 border">
+      <h1
+        className="p-1 pb-2 mb-0"
+        style={{ borderBottom: "2px solid lightgrey" }}
+      >
+        &nbsp;Edit Your Profile
+      </h1>
+      <form className="container bg-light py-3 m-0 row" onSubmit={validateInfo}>
+        <div className="col-md-6 d-grid gap-2 my-2">
+          <b>Basic Details</b>
+          <div className="form-floating">
             <input
-              style={{ width: "80%" }}
               type="text"
-              className="rounded"
+              name="dnameInput"
+              value={dname}
+              onChange={({ target }) => setDname(target.value)}
+              id="dnameInput"
+              placeholder="john-doe"
+              required
+              className="form-control"
+            />
+            <label htmlFor="dnameInput">Your Username</label>
+          </div>
+          <div className="form-floating">
+            <input
+              type="text"
+              name="nameInput"
+              value={name}
+              onChange={({ target }) => setName(target.value)}
+              id="nameInput"
+              placeholder="John Doe"
+              required
+              className="form-control"
+            />
+            <label htmlFor="nameInput">Your Name</label>
+          </div>
+          <div className="form-floating">
+            <input
+              type="text"
+              name="titleInput"
+              value={title}
+              onChange={({ target }) => setTitle(target.value)}
+              id="titleInput"
+              placeholder="Software Developer"
+              className="form-control"
+            />
+            <label htmlFor="titleInput">Your Work Title</label>
+          </div>
+        </div>
+        <div className="col-md-6 d-grid gap-2 my-2">
+          <b>Other Profile links</b>
+          <div className="form-floating">
+            <input
+              type="text"
+              className="form-control"
               name="weblinkInput"
               value={weblink}
               onChange={({ target }) => setWeblink(target.value)}
               id="weblinkInput"
-              placeholder="Website Link"
-              required
+              placeholder="https://example.com/johnDoe"
             />
-            <br />
+            <label htmlFor="weblinkInput">Portfolio link</label>
           </div>
-          <div>
-            Github Link
-            <br />
+          <div className="form-floating">
             <input
-              style={{ width: "80%" }}
               type="text"
-              className="rounded"
+              className="form-control"
               name="gitlinkInput"
               value={gitlink}
               onChange={({ target }) => setGitlink(target.value)}
               id="gitlinkInput"
-              placeholder="Github Link"
-              required
+              placeholder="https://github.com/johnDoe"
             />
-            <br />
+            <label htmlFor="gitlinkInput">Github link</label>
           </div>
-          <div>
-            Twitter link
-            <br />
+          <div className="form-floating">
             <input
-              style={{ width: "80%" }}
               type="text"
-              className="rounded"
+              className="form-control"
               name="twitterInput"
               value={twitter}
               onChange={({ target }) => setTwitter(target.value)}
               id="twitterInput"
-              placeholder="Twitter Link"
-              required
+              placeholder="https://twitter.com/@johnDoe"
             />
-            <br />
+            <label htmlFor="twitterInput">Twitter link</label>
           </div>
         </div>
-        <div className="col-md-12">
-          <label>
-            <b>About Me</b>
-          </label>
-          <br />
-          <textarea
-            type="text"
-            name="aboutInput"
-            value={about}
-            onChange={({ target }) => setAbout(target.value)}
-            id="aboutInput"
-            placeholder="explain about yourself"
-            className="col-md-12"
-            required
-          />
+        <div className="my-3 d-grid gap-2">
+          <div className="form-floating">
+            <textarea
+              type="text"
+              name="aboutInput"
+              value={about}
+              onChange={({ target }) => setAbout(target.value)}
+              id="aboutInput"
+              placeholder="I'm a software developer working on google....."
+              className="form-control"
+              spellCheck={true}
+            />
+            <label htmlFor="aboutInput">Explain about yourself</label>
+          </div>
+          <div className="form-floating">
+            <input
+              type="text"
+              name="addressInput"
+              value={address}
+              onChange={({ target }) => setAddress(target.value)}
+              id="addressInput"
+              placeholder="River Street, Columbia"
+              className="form-control"
+            />
+            <label htmlFor="addressInput">Your Address</label>
+          </div>
         </div>
-        <div className="col-md-12">
-          <label>
-            <b>Address</b>
-          </label>
-          <br />
-          <input
-            type="text"
-            name="addressInput"
-            value={address}
-            onChange={({ target }) => setAddress(target.value)}
-            id="addressInput"
-            placeholder="Address"
-            className="col-md-12"
-            required
-          />
-          <br />
-          <br />
-        </div>
-        <div className="col-md-12 text-right">
-          <button
-            type="button"
-            className="btn btn-success float-end"
-            onClick={validateInfo}
-          >
+        <div className="mt-2">
+          <button className="btn btn-success float-end">
             Update User Details
           </button>
         </div>
-      </div>
-      <br />
+      </form>
     </div>
   );
 }

@@ -24,10 +24,10 @@ const userSchema = new Schema(
     userlikes: { type: Number, default: 0 },
     about: { type: String },
     address: { type: String },
-    gitlink: { type: String, default: "#" },
+    gitlink: { type: String },
     title: { type: String },
-    twitter: { type: String, default: "#" },
-    weblink: { type: String, default: "#" },
+    twitter: { type: String },
+    weblink: { type: String },
     profile: { type: String, default: "" },
     otp: {
       type: String,

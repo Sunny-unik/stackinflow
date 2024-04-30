@@ -109,3 +109,8 @@ a {
   background-color: #0d6efd;
   color: aliceblue;
 }
+
+input[required] + label::after {
+  content: "*";
+  color: red;
+}
