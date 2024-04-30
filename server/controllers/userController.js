@@ -56,7 +56,7 @@ const userController = {
 
   authenticate: async (req, res) => {
     await userSchema
-      .findOne({ dname: req.decoded.dname })
+      .findOne({ _id: req.decoded.userId })
       .then((result) => {
         result.password = undefined;
         res.send({ status: "ok", data: result });
@@ -79,19 +79,15 @@ const userController = {
     let isDnameValid;
     await userSchema
       .findOne({
-        $and: [
-          { dname: req.body.dname },
-          { _id: { $ne: userId } },
-          { isVerifiedEmail: true }
-        ]
+        $and: [{ dname: req.body.dname }, { _id: { $ne: userId } }]
       })
       .select("dname")
       .then((result) => {
-        isDnameValid = result ?? "valid dname";
-        res && res.send(isDnameValid);
+        isDnameValid = result;
+        res.send({ data: result });
       })
       .catch((err) => res && res.status(500).send(err));
-    return isDnameValid === "valid dname" ? true : false;
+    return !isDnameValid;
   },
 
   removeUnverified: (req, res) => {

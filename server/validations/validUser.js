@@ -39,12 +39,12 @@ const schemaProvider = {
         id: yup.string().required(),
         name: yup.string().min(2).max(46).required(),
         dname: yup.string().min(4).max(16).required(),
-        title: yup.string().required(),
-        about: yup.string().required(),
-        weblink: yup.string().required(),
-        gitlink: yup.string().required(),
-        twitter: yup.string().required(),
-        address: yup.string().required()
+        title: yup.string(),
+        about: yup.string(),
+        weblink: yup.string(),
+        gitlink: yup.string(),
+        twitter: yup.string(),
+        address: yup.string()
       })
     },
     "/points": {
