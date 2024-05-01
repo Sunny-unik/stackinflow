@@ -63,7 +63,7 @@ export default function Signup(props) {
         `${process.env.REACT_APP_API_URL}/user/dname`,
         { dname: dName }
       );
-      if (result.data === "valid dname") await createAccountAndVerify();
+      if (!result.data?._id) await createAccountAndVerify();
       else alert("Entered username is already registered");
     } catch (error) {
       throw error;
