@@ -92,7 +92,7 @@ export default function User(props) {
                         </h4>
                       </>
                     )}
-                    <h4 className="d-flex gap-3 justify-content-center">
+                    <div className="fw-bold fs-4 mb-2 d-flex justify-content-center gap-3">
                       {user.data.weblink && (
                         <a {...getAnchorOptions(null, user.data.weblink)}>
                           <abbr title={user.data.weblink}>
@@ -100,7 +100,6 @@ export default function User(props) {
                           </abbr>
                         </a>
                       )}
-                      &middot;
                       {user.data.gitlink && (
                         <a {...getAnchorOptions(null, user.data.gitlink)}>
                           <abbr title={user.data.gitlink}>
@@ -108,7 +107,6 @@ export default function User(props) {
                           </abbr>
                         </a>
                       )}
-                      &middot;
                       {user.data.twitter && (
                         <a {...getAnchorOptions(null, user.data.twitter)}>
                           <abbr title={user.data.twitter}>
@@ -116,7 +114,8 @@ export default function User(props) {
                           </abbr>
                         </a>
                       )}
-                    </h4>
+                    </div>
+                    <hr className="mt-3" />
                     <h4>
                       Total Points :
                       <span className="px-2">
@@ -126,11 +125,11 @@ export default function User(props) {
                   </div>
                 </div>
               </div>
-              <div className="col-sm-10">
+              <div className="w-100" style={{ textAlign: "justify" }}>
                 {user.data.about && (
                   <>
                     <label htmlFor="about">About</label>
-                    <h3 id="about">{user.data.about}</h3>
+                    <h5 id="about">{user.data.about}</h5>
                   </>
                 )}
               </div>

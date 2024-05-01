@@ -14,7 +14,9 @@ export default function Footer() {
         </NavLink>
       </ul>
       <p className="fPara">
-        Copyright © 2021 Stackinflow Pvt. Ltd. All rights reserved.
+        Copyright © 2021 Stackinflow
+        <span className="text-white mx-2">&middot;</span>
+        All rights reserved.
       </p>
       <p className="fPara">
         Made by{" "}
