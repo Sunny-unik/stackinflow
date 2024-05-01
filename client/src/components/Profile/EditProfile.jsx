@@ -74,7 +74,10 @@ export default function EditProfile() {
       })
       .then(({ data }) => {
         if (!data.errors?.length) {
-          data.data && dispatch(authenticateUser());
+          if (data.data?.modifiedCount) {
+            dispatch(authenticateUser());
+            setDisableAttribute(true);
+          }
           return alert(data.msg);
         }
         const errorsString = data.errors.join(",\n");

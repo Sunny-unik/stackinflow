@@ -13,6 +13,7 @@ import Footer from "../Footer";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import { IoLocationSharp } from "react-icons/io5";
 import { FcCollaboration } from "react-icons/fc";
+import Spinner from "../loadings/Spinner";
 
 export default function Profile() {
   const user = useSelector((state) => state.user);
@@ -62,7 +63,7 @@ export default function Profile() {
           <div className="col-md-5 col-sm-10 text-center col-lg-4 mx-auto">
             <div
               className="w-75 m-auto pt-4"
-              data-aos="flip-up"
+              data-aos="fade-left"
               data-aos-once="true"
               data-aos-duration="600"
             >
@@ -73,7 +74,7 @@ export default function Profile() {
                 src={
                   profile
                     ? `${process.env.REACT_APP_API_URL}/${profile}`
-                    : "assets/img/profile.jpg"
+                    : "/assets/img/profile.jpg"
                 }
                 alt="user profile"
               />
@@ -89,71 +90,84 @@ export default function Profile() {
               {uploadPercentage ? `${uploadPercentage}% uploaded` : null}
             </div>
           </div>
-          <div
-            data-aos="fade-left"
-            data-aos-duration="600"
-            className="px-md-4 pt-4 col-md-8 col-lg-7 col-sm-12 profileContent text-center"
-          >
-            <label htmlFor="user_name">User's Name</label>
-            <h2 id="user_name">{name}</h2>
-            <label htmlFor="user_dName">Display Name</label>
-            <h3 id="user_dName">{dname}</h3>
-            {title && (
-              <>
-                <label htmlFor="user_title">Title</label>
-                <h3 id="user_title">{title}</h3>
-              </>
-            )}
-            <label htmlFor="user_email">User Email</label>
-            <h3 className="user_email">{email}</h3>
-            {address && (
-              <>
-                <label htmlFor="user_address">Address</label>
-                <h4 id="user_address">
-                  <IoLocationSharp /> {address}
-                </h4>
-              </>
-            )}
-            <hr />
-            {weblink || gitlink || twitter ? (
-              <div className="fw-bold fs-4 mb-2 d-flex justify-content-center gap-2">
-                {weblink && "#" !== weblink && (
-                  <a target="_blank" href={weblink} rel="noreferrer">
-                    <abbr title={weblink}>
-                      <FcCollaboration />
-                    </abbr>
-                  </a>
+          {user ? (
+            <>
+              <div
+                data-aos="flip-up"
+                data-aos-once="true"
+                data-aos-duration="600"
+                className="px-md-4 pt-4 col-md-8 col-lg-7 col-sm-12 profileContent text-center"
+              >
+                <label htmlFor="user_name">User's Name</label>
+                <h2 id="user_name">{name}</h2>
+                <label htmlFor="user_dName">Display Name</label>
+                <h3 id="user_dName">{dname}</h3>
+                {title && (
+                  <>
+                    <label htmlFor="user_title">Title</label>
+                    <h5 id="user_title">{title}</h5>
+                  </>
                 )}
-                {gitlink && "#" !== gitlink && (
-                  <a target="_blank" href={gitlink} rel="noreferrer">
-                    <abbr title={gitlink}>
-                      <FaGithub />
-                    </abbr>
-                  </a>
+                <label htmlFor="user_email">User Email</label>
+                <h5 className="user_email">{email}</h5>
+                {address && (
+                  <>
+                    <label htmlFor="user_address">Address</label>
+                    <h4 id="user_address">
+                      <IoLocationSharp /> {address}
+                    </h4>
+                  </>
                 )}
-                {twitter && "#" !== twitter && (
-                  <a target="_blank" href={twitter} rel="noreferrer">
-                    <abbr title={twitter}>
-                      <FaTwitter />
-                    </abbr>
-                  </a>
-                )}
+                <hr />
+                {weblink || gitlink || twitter ? (
+                  <div className="fw-bold fs-4 mb-2 d-flex justify-content-center gap-3">
+                    {weblink && "#" !== weblink && (
+                      <a target="_blank" href={weblink} rel="noreferrer">
+                        <abbr title={weblink}>
+                          <FcCollaboration />
+                        </abbr>
+                      </a>
+                    )}
+                    {gitlink && "#" !== gitlink && (
+                      <a target="_blank" href={gitlink} rel="noreferrer">
+                        <abbr title={gitlink}>
+                          <FaGithub />
+                        </abbr>
+                      </a>
+                    )}
+                    {twitter && "#" !== twitter && (
+                      <a target="_blank" href={twitter} rel="noreferrer">
+                        <abbr title={twitter}>
+                          <FaTwitter />
+                        </abbr>
+                      </a>
+                    )}
+                  </div>
+                ) : null}
+                <p className="fs-5 fw-bold">
+                  Total Points: {user && (userlikes === null ? 0 : userlikes)}
+                </p>
               </div>
-            ) : null}
-            <h4>
-              Total Points: {user && (userlikes === null ? 0 : userlikes)}
-            </h4>
-          </div>
+            </>
+          ) : (
+            <div className="my-auto">
+              <Spinner />
+            </div>
+          )}
         </div>
         {about && (
           <div className="col-sm-12">
-            <label htmlFor="user_about">About</label>
-            <h3 id="user_about">{about}</h3>
+            <label className="fw-bold" htmlFor="user_about">
+              About:
+            </label>
+            <p className="fs-5" id="user_about">
+              {about}
+            </p>
           </div>
         )}
       </div>
       <hr className="mb-0" />
-      {user && (
+      {user ? (
         <div className="px-0 container row mx-auto">
           <div
             id="profile-tabs-bar"
@@ -207,6 +221,8 @@ export default function Profile() {
             </div>
           </div>
         </div>
+      ) : (
+        <Spinner />
       )}
       <Footer />
     </React.Fragment>
