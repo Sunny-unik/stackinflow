@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useLocation, Switch, Route, NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import "../../css/profile.css";
@@ -14,6 +14,7 @@ import { FaGithub, FaTwitter } from "react-icons/fa";
 import { IoLocationSharp } from "react-icons/io5";
 import { FcCollaboration } from "react-icons/fc";
 import Spinner from "../loadings/Spinner";
+import { authenticateUser } from "../../action/userAction";
 
 export default function Profile() {
   const user = useSelector((state) => state.user);
@@ -34,6 +35,7 @@ export default function Profile() {
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const profileInput = useRef(null);
   const currentPath = useLocation().pathname.split("/").at(-1);
+  const dispatch = useDispatch();
 
   const sendValues = () => {
     const selectedProfile = profileInput.current?.files[0];
@@ -41,8 +43,9 @@ export default function Profile() {
     const formData = new FormData();
     formData.append("uid", _id);
     formData.append("profile", selectedProfile);
+    formData.append("oldProfile", profile);
     axios
-      .post(`${process.env.REACT_APP_API_URL}/update-user`, formData, {
+      .put(`${process.env.REACT_APP_API_URL}/user/profile`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         onUploadProgress: (progressEvent) => {
           console.log("file Uploading Progress.......", progressEvent);
@@ -51,7 +54,11 @@ export default function Profile() {
           );
         }
       })
-      .then((res) => alert(res.data.data))
+      .then(({ data }) => {
+        if (!data.data?.modifiedCount) throw new Error();
+        dispatch(authenticateUser());
+        alert(data.msg);
+      })
       .catch(() => alert("Server error, try again later"))
       .finally(() => setUploadPercentage(0));
   };
@@ -68,7 +75,7 @@ export default function Profile() {
               data-aos-duration="600"
             >
               <img
-                className="col-sm-12 m-auto"
+                className="col-sm-12 m-auto rounded"
                 height="225"
                 width="225"
                 src={

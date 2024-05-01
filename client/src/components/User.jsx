@@ -56,12 +56,12 @@ export default function User(props) {
                     data-aos-duration="600"
                   >
                     <img
-                      className="col-sm-12"
+                      className="col-sm-12 rounded"
                       height="225rem"
                       width="225rem"
                       src={
-                        user.profile
-                          ? `${process.env.REACT_APP_API_URL}/${user.profile}`
+                        user.data.profile
+                          ? `${process.env.REACT_APP_API_URL}/${user.data.profile}`
                           : "../assets/img/profile.jpg"
                       }
                       alt="user profile"

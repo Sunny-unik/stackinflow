@@ -113,6 +113,7 @@ export default function PopularUsers(props) {
                     >
                       <div className="card-img mt-3 mb-2">
                         <img
+                          className="rounded"
                           height="50rem"
                           width="60rem"
                           src={

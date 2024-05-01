@@ -218,16 +218,18 @@ const userController = {
       (async () => {
         await userSchema
           .updateOne(
-            { _id: req.body.id },
+            { _id: req.body.uid },
             { $set: { profile: req.files.profile[0].filename } }
           )
           .then((result) => {
             res.send({ data: result, msg: "Profile Updated" });
             try {
               const oldProfile = req.body.oldProfile;
-              fs.unlinkSync(
-                `${__dirname}/../uploads/userProfiles/${oldProfile}`
-              );
+              if (oldProfile) {
+                fs.unlinkSync(
+                  `${__dirname}/../uploads/userProfiles/${oldProfile}`
+                );
+              }
               console.log(oldProfile + " deleted successfully");
             } catch (error) {
               console.log("Old profile delete error: ", error);
@@ -352,7 +354,7 @@ const userController = {
       .sort({ [search ? "dname" : "userlikes"]: -1, _id: 1 })
       .limit(limit * 1)
       .skip(page * 1 * limit)
-      .select("_id name dname userlikes gitlink twitter weblink")
+      .select("_id name dname userlikes gitlink twitter weblink profile")
       .then((users) => res.send({ data: users, msg: "success" }))
       .catch((err) => res.status(500).send(err));
   }
