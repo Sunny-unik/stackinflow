@@ -36,7 +36,8 @@ const userController = {
         filterData && filterData.length
           ? res
               .cookie("stackinflowToken", filterData[1], {
-                sameSite: "strict",
+                sameSite: "None",
+                secure: true,
                 path: "/",
                 expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
                 httpOnly: true
