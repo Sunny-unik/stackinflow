@@ -224,11 +224,9 @@ const userController = {
             res.send({ data: result, msg: "Profile Updated" });
             try {
               const oldProfile = req.body.oldProfile;
-              if (oldProfile) {
-                fs.unlinkSync(
-                  `${__dirname}/../uploads/userProfiles/${oldProfile}`
-                );
-              }
+              const filePath = `${__dirname}/../uploads/userProfiles/${oldProfile}`;
+              if (oldProfile && !fs.existsSync(oldProfile))
+                fs.unlinkSync(filePath);
               console.log(oldProfile + " deleted successfully");
             } catch (error) {
               console.log("Old profile delete error: ", error);
