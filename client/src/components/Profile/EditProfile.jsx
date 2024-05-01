@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authenticateUser } from "../../action/userAction";
+import { isHttpValid } from "../../helper/validateUrl";
 
 export default function EditProfile() {
   const user = useSelector((state) => state.user),
@@ -29,7 +30,6 @@ export default function EditProfile() {
       twitterInput: [twitter, setTwitter],
       addressInput: [address, setAddress]
     };
-    console.log(this);
     getSetState[target.name][1](target.value);
     const isSame = Object.keys(getSetState).some((key) => {
       const initialFieldValue = user[key.split("Input")[0]];
@@ -43,6 +43,12 @@ export default function EditProfile() {
   const validateInfo = (e) => {
     e.preventDefault();
     const errors = [];
+    const invalidLinks = Object.entries({
+      portfolio: weblink,
+      git: gitlink,
+      twitter
+    }).filter(([_, v]) => !!v && !isHttpValid(v));
+    invalidLinks.forEach((a) => errors.push(`please enter valid ${a[0]} url`));
     if (!name || !name.trim()) errors.push("please enter your name");
     if (!dname) errors.push("please enter username");
     if (dname.includes(" ")) errors.push("username cannot include space");
