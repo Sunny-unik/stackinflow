@@ -6,6 +6,7 @@ const { sign } = require("jsonwebtoken");
 const errorHandler = require("../helpers/ErrorHandler");
 const bcrypt = require("bcrypt");
 const { getOtp } = require("../helpers/otpManager");
+const isHttpValid = require("../helpers/validateUrl");
 
 const userController = {
   checkLogin: async (req, res) => {
@@ -181,20 +182,28 @@ const userController = {
     const validDname = await userController.validDname(req, undefined);
     if (!validDname)
       return res.send({ data: null, msg: "Entered username is already taken" });
+    const { name, dname, title, about, weblink, gitlink, twitter, address } =
+      req.body;
+    if (weblink && !isHttpValid(weblink))
+      return res.send({ data: null, msg: "Enter valid portfolio url" });
+    if (gitlink && !isHttpValid(gitlink))
+      return res.send({ data: null, msg: "Enter valid git url" });
+    if (twitter && !isHttpValid(twitter))
+      return res.send({ data: null, msg: "Enter valid twitter url" });
 
-    await userSchema
+    userSchema
       .updateOne(
         { _id: req.body.id },
         {
           $set: {
-            name: req.body.name,
-            dname: req.body.dname,
-            title: req.body.title,
-            about: req.body.about,
-            weblink: req.body.weblink,
-            gitlink: req.body.gitlink,
-            twitter: req.body.twitter,
-            address: req.body.address
+            name,
+            dname,
+            title,
+            about,
+            weblink,
+            gitlink,
+            twitter,
+            address
           }
         }
       )

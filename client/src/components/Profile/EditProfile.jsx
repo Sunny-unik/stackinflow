@@ -74,7 +74,7 @@ export default function EditProfile() {
       })
       .then(({ data }) => {
         if (!data.errors?.length) {
-          dispatch(authenticateUser());
+          data.data && dispatch(authenticateUser());
           return alert(data.msg);
         }
         const errorsString = data.errors.join(",\n");
