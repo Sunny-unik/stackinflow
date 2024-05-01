@@ -4,7 +4,7 @@ module.exports = (req, res, next) => {
   try {
     const token = req.cookies.stackinflowToken;
     if (!token) return res.send("cookie not found");
-    const decode = verify(token, "verySecretCode");
+    const decode = verify(token, process.env.JWT_SECRET);
     req.decoded = decode;
     next();
   } catch (error) {

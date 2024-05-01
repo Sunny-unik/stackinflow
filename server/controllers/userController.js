@@ -15,10 +15,8 @@ const userController = {
         user.password = undefined;
         const token = sign(
           { dname: user.dname, userId: user._id },
-          "verySecretCode",
-          {
-            expiresIn: "7d"
-          }
+          process.env.JWT_SECRET,
+          { expiresIn: "7d" }
         );
         return [user, token];
       }
